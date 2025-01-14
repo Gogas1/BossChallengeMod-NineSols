@@ -124,6 +124,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private void OnDestroy() {
         UnloadRequested = true;
         UIController.Unload();
+        LocalizationManager.OnLocalizeEvent -= OnLocalizationChange;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         harmony.UnpatchSelf();
     }
