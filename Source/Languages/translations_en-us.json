@@ -1,0 +1,46 @@
+{
+  "toast_message1": "Some mod settings are disabled by default",
+  "toast_message2": "This can be configured in the configurator (F1 by default)",
+  "toast_message3": "Battle result records are saved to the game's root folder",
+  "toast_message4": "File: BossReviveChallengeRecords.json",
+
+  "kill_counter": "Killed:",
+  "kill_counter_hs": "Maximum:",
+  "kill_counter_last": "Prev result:",
+  "speed_temp": "Speed-up",
+  "speed_perm": "Speed-up (perm)",
+  "timer": "Timer",
+  "parry_damage": "Prec parries",
+  "damage_buildup": "Damage buildup",
+  "regeneration": "Regeneration",
+  "knockback": "Knockback",
+  "knockout": "Knock out",
+  "random_arrow": "Rand. arrow",
+  "random_talisman": "Rand. talisman",
+  "endurance": "Endurance",
+
+  "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
+  "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
+
+  "config_scaling_enabled_description": "Enable Speed Scaling.\n Bosses will gain linear speed scaling with each death.",
+  "config_scaling_minspeed_description": "Scaling: Initial Speed.\n The starting value for speed scaling.",
+  "config_scaling_maxspeed_description": "Scaling: Maximum Speed.\n The maximum value for speed scaling.",
+  "config_scaling_scaling_cycle_description": "Maximum Speed Scaling After Deaths.\n Speed scaling will reach its maximum after this amount of deaths.",
+
+  "config_scaling_modifiers_enabled_description": "Enable Modifiers Number Scaling.\n Bosses will receive more modifiers.",
+  "config_scaling_maxmodifiers_description": "Scaling: modifiers number. \n Max value of increase in number of modifiers",
+  "config_scaling_modifiers_scaling_cycle_description": "Max Modifiers Number Scaling After Deaths.\n Modifiers number increase will max after this amount of deaths",
+
+  "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the boss fight.",
+  "config_repeating_enabled_description": "Repeating modifiers.\n Modifiers can be repeated multiple times in a row.",
+  "config_modifiers_speed_enabled_description": "Speed Modifier.\n +25% boss speed increase. Stacks multiplicatively with speed scaling.",
+  "config_modifiers_timer_enabled_description": "Timer Modifier.\n Starts a timer to kill the boss. When the time runs out, Yi dies.",
+  "config_modifiers_parry_damage_enabled_description": "Modifier to disable imprecise parries.\n Imprecise parries do not protect Yi.",
+  "config_modifiers_internal_damage_enabled_description": "Internal Damage Accumulation Modifier.\n Yi accumulates internal damage over time. In exchange, Yi will not receive internal damage from parries of attacks of the modifier's owner.",
+  "config_modifiers_regeneration_enabled_description": "Regeneration modifier.\nThe enemy will slowly regenerate their health. The total health restored is equal to half of the total health in all phases.",
+  "config_modifiers_knockback_enabled_description": "Knockback modifier.\n Knockback from enemy attacks is doubled.",
+  "config_modifiers_knockout_enabled_description": "Knock out modifier. \n All attacks that hit apply strongest knock out force to Yi",
+  "config_modifiers_random_arrow_enabled_description": "Random arrow modifier.\n The selected arrow changes randomly after shooting. It cannot be changed by player.",
+  "config_modifiers_random_talisman_enabled_description": "Random talisman modifier.\n The selected talisman changes randomly after exlosion. It cannot be changed by player.\n(Current talisman mode will display above the selected arrow, it may take few uses to display)",
+  "config_modifiers_endurance_enabled_description": "Endurance modifier.\n Enemy cannot be stunned. The stun after parrying some attacks and Lady Ethereal's stun will still apply."
+}
