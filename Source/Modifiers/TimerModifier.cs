@@ -18,6 +18,8 @@ namespace BossChallengeMod.Modifiers {
         private int stopwatch;
         private bool startStopwatch;
 
+        public bool ForcePause { get; set; } = false;
+
         public override void Awake() {
             base.Awake();
             Key = "timer";
@@ -49,7 +51,7 @@ namespace BossChallengeMod.Modifiers {
             UIController.UpdateTimer(remainingTime);
 
             while (remainingTime > 0 && start) {
-                if(!Monster!.postureSystem.IsMonsterEmptyPosture) {
+                if(!Monster!.postureSystem.IsMonsterEmptyPosture && !ForcePause) {
                     remainingTime -= (int)(Time.deltaTime * 1000);
                 }
                 UIController.UpdateTimer(remainingTime >= 0 ? remainingTime : 0);
