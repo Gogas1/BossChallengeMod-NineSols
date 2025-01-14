@@ -17,6 +17,8 @@ namespace BossChallengeMod.BossPatches {
 
         public ChallengeConfiguration ChallengeConfiguration { get; set; }
 
+        protected string resetBossStateExitEventType = "RestoreBoss_exit";
+
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             try {
                 var result = new List<MonsterState>();
@@ -85,6 +87,28 @@ namespace BossChallengeMod.BossPatches {
                 throw ex;
             }
         }
+
+        public override IEnumerable<RCGEventSender> CreateSenders(MonsterBase monster, IEnumerable<MonsterState> monsterStates) {
+            var result = base.CreateSenders(monster, monsterStates).ToList();
+
+            foreach (var state in monsterStates) {
+                switch (state) {
+                    case ResetBossState resState:
+                        if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+                            var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
+                            var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
+                            result.Add(resStateEnterSender);
+                        }
+
+                        continue;
+                    default:
+                        continue;
+                }
+            }
+
+            return result;
+        }
+
         public override IEnumerable<RCGEventReceiver> CreateReceivers(MonsterBase monster, IEnumerable<MonsterState> monsterStates) {
             try {
                 var result = base.CreateReceivers(monster, monsterStates).ToList();
@@ -111,27 +135,6 @@ namespace BossChallengeMod.BossPatches {
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
-        }
-
-        public override IEnumerable<RCGEventSender> CreateSenders(MonsterBase monster, IEnumerable<MonsterState> monsterStates) {
-            var result = new List<RCGEventSender>();
-
-            foreach (var state in monsterStates) {
-                switch (state) {
-                    case ResetBossState resState:
-                        if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
-                            var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
-                            var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
-                            result.Add(resStateEnterSender);
-                        }
-
-                        continue;
-                    default:
-                        continue;
-                }
-            }
-
-            return result;
         }
 
         protected void PatchGroundBreaking(MonsterBase monster) {
@@ -184,7 +187,7 @@ namespace BossChallengeMod.BossPatches {
                 var parentStateComponent = GameObject.Find(fromPath).GetComponent<GeneralState>();
                 var targetStateComponent = GameObject.Find(toPath).GetComponent<GeneralState>();
 
-                var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
+                var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
 
                 var transitionComponent = CreateTransition(
                     parentStateComponent.gameObject,
