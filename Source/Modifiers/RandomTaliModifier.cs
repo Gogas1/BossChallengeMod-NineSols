@@ -23,7 +23,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void OnDestroy() {
-            BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes.Remove(this);
+            BossChallengeMod.Instance.GlobalModifiersFlags.BlockTalismanVotes.Remove(this);
         }
     }
 }

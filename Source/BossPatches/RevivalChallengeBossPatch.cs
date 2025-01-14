@@ -133,6 +133,7 @@ namespace BossChallengeMod.BossPatches {
                     Key = "timer",
                 };
                 timerModifier.Incompatibles.Add(timerModifier.Key);
+                timerModifier.Incompatibles.Add("regeneration");
                 modifierController.ModifierConfigs.Add(timerModifier);
             }
 

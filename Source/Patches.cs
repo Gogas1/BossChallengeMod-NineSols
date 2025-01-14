@@ -77,28 +77,31 @@ public class Patches {
     [HarmonyPatch(typeof(PlayerParryState), "NonAccurateParry")]
     [HarmonyPostfix]
     public static void ParryDamageModifier_Patch(PlayerParryState __instance, ref EffectHitData hitData, ref ParryParam param, ref DamageDealer bindDamage) {
+        if (bindDamage.Owner == null) return;
         var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
         if (modifiers != null) {
-            if(modifiers.FirstOrDefault(m => m.Key == "parry_damage")?.enabled ?? false) {
+            if (modifiers.FirstOrDefault(m => m.Key == "parry_damage")?.enabled ?? false) {
                 var playerHealth = Player.i.health;
                 playerHealth.CurrentInternalInjury = 0;
                 playerHealth.ResetRecoverableTime();
             }
 
-            if(modifiers.FirstOrDefault(m => m.Key == "damage_buildup")?.enabled ?? false) {
+            if (modifiers.FirstOrDefault(m => m.Key == "damage_buildup")?.enabled ?? false) {
                 var playerHealth = Player.i.health;
                 var damageAmount = bindDamage.DamageAmount;
                 playerHealth.RecoverInternalInjury(damageAmount / 2);
             }
         }
+
     }
 
     [HarmonyPatch(typeof(PlayerParryState), nameof(PlayerParryState.Parried))]
     [HarmonyPrefix]
     public static void ParryMethodPatch(ref ParryParam param, ref DamageDealer bindDamage) {
+        if(bindDamage.Owner == null) return;
         var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
-        if(modifiers != null) {
-            if(modifiers.FirstOrDefault(m => m.Key == "knockback")?.enabled ?? false) {
+        if (modifiers != null) {
+            if (modifiers.FirstOrDefault(m => m.Key == "knockback")?.enabled ?? false) {
                 param.knockBackValue = param.knockBackValue * 2;
             }
         }

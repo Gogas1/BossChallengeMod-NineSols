@@ -36,70 +36,101 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateEnter() {
-            if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter + 1) {
-                EffectHitData effectHitData = new EffectHitData();
-                effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
-                monster.HittedByPlayerDecreasePosture(effectHitData);
+            try {
+                Log.Info("OnStateEnter");
+                if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter + 1) {
+                    EffectHitData effectHitData = new EffectHitData();
+                    effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
+                    monster.HittedByPlayerDecreasePosture(effectHitData);
 
-                return;
-            }
-
-            ResetAnimationQueue();
-            monster.UnFreeze();
-            monster.HurtClearHintFxs();
-            monster.monsterCore.DisablePushAway();
-            SwitchDamageReceivers(false);
-            for (int i = 0; i < base.monster.attackSensors.Length; i++) {
-                if (base.monster.attackSensors[i] != null) {
-                    base.monster.attackSensors[i].ClearQueue();
+                    return;
                 }
-            }
-            base.monster.VelX = 0f;
-            if (AnimationsQueue.Any()) {
-                PlayAnimation(AnimationsQueue.Dequeue(), false);
-            } else {
-                End();
-            }
 
-            ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
-            ResetMustEnqAttacks(monster);
-            ResetSequenceManagersAttacks(monster);
+                ResetAnimationQueue();
+                monster.UnFreeze();
+                monster.HurtClearHintFxs();
+                monster.monsterCore.DisablePushAway();
+                SwitchDamageReceivers(false);
+                for (int i = 0; i < base.monster.attackSensors.Length; i++) {
+                    if (base.monster.attackSensors[i] != null) {
+                        base.monster.attackSensors[i].ClearQueue();
+                    }
+                }
+                base.monster.VelX = 0f;
+                if (AnimationsQueue.Any()) {
+                    Log.Info("Here");
+                    PlayAnimation(AnimationsQueue.Dequeue(), false);
+                } else {
+                    Log.Info("End invoke");
+                    End();
+                }
+
+                ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
+                ResetMustEnqAttacks(monster);
+                ResetSequenceManagersAttacks(monster);
+            } catch (Exception ex) {
+                Log.Error($"OnStateEnter ex: {ex.Message}, {ex.StackTrace}");
+            }
         }
 
         private void End() {
-            if (monster.fsm.HasState(exitState)) {
-                monster.ChangeStateIfValid(exitState);
-            }            
+            try {
+                Log.Info("End");
+                if (monster.fsm.HasState(exitState)) {
+                    monster.ChangeStateIfValid(exitState);
+                }            
+
+            } catch (Exception ex) {
+                Log.Error($"End ex: {ex.Message}, {ex.StackTrace}");
+            }
         }
 
         public override void OnStateExit() {
-            if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter)
-                return;
+            try {
+                Log.Info("OnStateExit");
+                if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter)
+                    return;
 
-            monster.PhaseIndex = 0;
-            monster.animator.SetInteger(ResetBossState.PhaseIndexHash, base.monster.PhaseIndex);
-            monster.postureSystem.RestorePosture();
-            SwitchDamageReceivers(true);
-            monster.monsterCore.EnablePushAway();
-            monster.postureSystem.GenerateCurrentDieHandleStacks();
+                monster.PhaseIndex = 0;
+                monster.animator.SetInteger(ResetBossState.PhaseIndexHash, base.monster.PhaseIndex);
+                monster.postureSystem.RestorePosture();
+                SwitchDamageReceivers(true);
+                monster.monsterCore.EnablePushAway();
+                monster.postureSystem.GenerateCurrentDieHandleStacks();
+
+            } catch (Exception ex) {
+                Log.Error($"OnStateExit ex: {ex.Message}, {ex.StackTrace}");
+            }
         }
 
         public override void AnimationEvent(AnimationEvents.AnimationEvent e) {
-            if (e == AnimationEvents.AnimationEvent.Done) {
-                if (AnimationsQueue.Any()) {
-                    PlayAnimation(AnimationsQueue.Dequeue(), true);
-                } else {
-                    End();
+            try {
+                Log.Info("AnimationEvent");
+                if (e == AnimationEvents.AnimationEvent.Done) {
+                    if (AnimationsQueue.Any()) {
+                        PlayAnimation(AnimationsQueue.Dequeue(), true);
+                    } else {
+                        End();
+                    }
                 }
+
+            } catch (Exception ex) {
+                Log.Error($"AnimationEvent ex: {ex.Message}, {ex.StackTrace}");
             }
         }
 
         public override MonsterBase.States GetStateType() {
-            if (this.stateTypeScriptable != null) {
-                return this.stateTypeScriptable.overrideStateType;
-            }
+            try {
+                if (this.stateTypeScriptable != null) {
+                    return this.stateTypeScriptable.overrideStateType;
+                }
 
-            return StateType;
+                return StateType;
+
+            } catch (Exception ex) {
+                Log.Error($"GetStateType ex: {ex.Message}, {ex.StackTrace}");
+                throw ex;
+            }
         }
 
         public void AssignMonster(MonsterBase monster) {

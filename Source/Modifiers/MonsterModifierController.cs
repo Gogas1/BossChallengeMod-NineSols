@@ -76,9 +76,9 @@ namespace BossChallengeMod.Modifiers {
             if (!challengeConfiguration.EnableModifiersScaling) return 1;
 
             int baseScalingValue = 1;
-            float progress = iteration / MathF.Max(3, 1);
+            float progress = iteration / MathF.Max(challengeConfiguration.MaxModifiersScalingCycle, 1);
             float progressMultiplier = MathF.Min(1, progress);
-            int scalingDiff = Math.Abs(3 - 1);
+            int scalingDiff = Math.Abs(challengeConfiguration.MaxModifiersNumber - 1);
             var result = baseScalingValue + (int)(scalingDiff * progressMultiplier);
             return result;
         }
