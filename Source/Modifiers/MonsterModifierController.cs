@@ -29,7 +29,7 @@ namespace BossChallengeMod.Modifiers {
 
         public void Awake() {
             FindModifiers();
-            modifiersNumber = CalculateModifiersNumber(0);
+            modifiersNumber = CalculateModifiersNumber(1);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
 
