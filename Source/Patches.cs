@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection.Emit;
 
 namespace BossChallengeMod;
 
@@ -72,6 +73,38 @@ public class Patches {
             //    }
             //}
         }
+    }
+
+    [HarmonyPatch(typeof(ButterflyBossFightLogic), nameof(ButterflyBossFightLogic.SetPhase))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> SetPhaseTranspiler(IEnumerable<CodeInstruction> instructions) {
+        var codes = instructions.ToList();
+        if(codes.Count >= 219) {
+            codes[213].opcode = OpCodes.Nop;
+            codes[214].opcode = OpCodes.Nop;
+            codes[215].opcode = OpCodes.Nop;
+            codes[216].opcode = OpCodes.Nop;
+            codes[217].opcode = OpCodes.Nop;
+            codes[218].opcode = OpCodes.Nop;
+            Log.Info("------------Set Phase cleared");
+        }
+        return instructions;
+    }
+
+    [HarmonyPatch(typeof(ButterflyBossFightLogic), nameof(ButterflyBossFightLogic.ChangingPhase))]
+    [HarmonyTranspiler]
+    public static IEnumerable<CodeInstruction> ChangingPhaseTranspiler(IEnumerable<CodeInstruction> instructions) {
+        var codes = instructions.ToList();
+        if (codes.Count >= 6) {
+            codes[0].opcode = OpCodes.Nop;
+            codes[1].opcode = OpCodes.Nop;
+            codes[2].opcode = OpCodes.Nop;
+            codes[3].opcode = OpCodes.Nop;
+            codes[4].opcode = OpCodes.Nop;
+            codes[5].opcode = OpCodes.Nop;
+            Log.Info("-----------Changing Phase cleared");
+        }
+        return instructions;
     }
 
     [HarmonyPatch(typeof(PlayerParryState), "NonAccurateParry")]
