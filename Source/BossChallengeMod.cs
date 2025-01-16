@@ -52,11 +52,30 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<bool> isRandomTalismanModifierEnabled = null!;
     private ConfigEntry<bool> isEnduranceModifierEnabled = null!;
 
+    private ConfigEntry<bool> isCounterUIEnabled = null!;
+    private ConfigEntry<bool> useCustomCounterPosition = null!;
+    private ConfigEntry<float> counterCustomXPosition = null!;
+    private ConfigEntry<float> counterCustomYPosition = null!;
+    private ConfigEntry<float> counterScale = null!;
+
+    private ConfigEntry<bool> isTimerUIEnabled = null!;
+    private ConfigEntry<bool> useCustomTimerPosition = null!;
+    private ConfigEntry<float> timerCustomXPosition = null!;
+    private ConfigEntry<float> timerCustomYPosition = null!;
+    private ConfigEntry<float> timerScale = null!;
+
+    private ConfigEntry<bool> isTalismanModeUIEnabled = null!;
+    private ConfigEntry<bool> useCustomTalismanModePosition = null!;
+    private ConfigEntry<float> talismanModeCustomXPosition = null!;
+    private ConfigEntry<float> talismanModeCustomYPosition = null!;
+    private ConfigEntry<float> talismanModeScale = null!;
+
     public UIController UIController { get; private set; } = null!;
     public MonsterUIController MonsterUIController { get; private set; } = null!;
     public LocalizationResolver LocalizationResolver { get; private set; } = null!;
     public ChallengeConfigurationManager ChallengeConfigurationManager { get; private set; } = null!;
     public GlobalModifiersFlags GlobalModifiersFlags { get; private set; } = null!;
+    public UIConfiguration UIConfiguration { get; private set; } = null!;
 
     public static BossChallengeMod Instance { get; private set; } = null!;
 
@@ -82,12 +101,16 @@ public class BossChallengeMod : BaseUnityPlugin {
         IRecordsRepository recordsRepo = new JsonRecordsRepository();
         ChallengeConfigurationManager = new ChallengeConfigurationManager(recordsRepo);
         GlobalModifiersFlags = new GlobalModifiersFlags();
-        InitializeConfiguration();
+        InitializeChallengeConfiguration();
         HandleConfigurationValues();
 
-        LocalizationManager.OnLocalizeEvent += OnLocalizationChange;
 
-        UIController = new UIController();
+        LocalizationManager.OnLocalizeEvent += OnLocalizationChange;
+        
+        InitializeUIConfiguration();
+        UIController = new UIController(UIConfiguration);
+        
+        
         MonsterUIController = new MonsterUIController();
 
         InitializePatches();
@@ -118,7 +141,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     private void OnLocalizationChange() {
         LocalizationResolver.LoadLanguage(GetLanguageCode());
-        InitializeConfiguration();
+        InitializeChallengeConfiguration();
     }
 
     private void OnDestroy() {
@@ -273,7 +296,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         return defaultBossPatch;
     }
 
-    private void InitializeConfiguration() {
+    private void InitializeChallengeConfiguration() {
 
         isCyclingEnabled = Config.Bind(
             "1. General",
@@ -555,5 +578,133 @@ public class BossChallengeMod : BaseUnityPlugin {
             ToastManager.Toast(LocalizationResolver.Localize($"toast_message{i}"));
             yield return new WaitForSeconds(4);
         }
+    }
+
+    private void InitializeUIConfiguration() {
+        UIConfiguration = new UIConfiguration();
+
+        isCounterUIEnabled = Config.Bind(
+            "4. UI",
+            "4.1.1 Right panel(killer counter and modifiers list) UI enabled",
+            true,
+            LocalizationResolver.Localize("config_ui_counter_enabled_description"));
+        isCounterUIEnabled.SettingChanged += (_, _) => { UIConfiguration.CounterUIEnabled = isCounterUIEnabled.Value; };
+
+        useCustomCounterPosition = Config.Bind(
+            "4. UI",
+            "4.1.2 Use custom right panel position",
+            false,
+            LocalizationResolver.Localize("config_ui_counter_custom_description"));
+        useCustomCounterPosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomCounterPosition = useCustomCounterPosition.Value; };
+
+        counterCustomXPosition = Config.Bind(
+            "4. UI",
+            "4.1.3 Custom right panel X position",
+            0f,
+            LocalizationResolver.Localize("config_ui_counter_custom_x_description"));
+        counterCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.CounterXPos = counterCustomXPosition.Value; };
+
+        counterCustomYPosition = Config.Bind(
+            "4. UI",
+            "4.1.4 Custom right panel Y position",
+            0f,
+            LocalizationResolver.Localize("config_ui_counter_custom_y_description"));
+        counterCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.CounterYPos = counterCustomYPosition.Value; };
+
+        counterScale = Config.Bind(
+            "4. UI",
+            "4.1.5 Right panel UI scale",
+            1f,
+            LocalizationResolver.Localize("config_ui_counter_scale_description"));
+        counterScale.SettingChanged += (_, _) => { UIConfiguration.CounterUIScale = counterScale.Value; };
+
+
+        isTimerUIEnabled = Config.Bind(
+            "4. UI",
+            "4.2.1 Timer UI enabled",
+            true,
+            LocalizationResolver.Localize("config_ui_timer_enabled_description"));
+        isTimerUIEnabled.SettingChanged += (_, _) => { UIConfiguration.TimerUIEnabled = isTimerUIEnabled.Value; };
+
+        useCustomTimerPosition = Config.Bind(
+            "4. UI",
+            "4.2.2 Use custom timer position",
+            false,
+            LocalizationResolver.Localize("config_ui_timer_custom_description"));
+        useCustomTimerPosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomTimerPosition = useCustomTimerPosition.Value; };
+
+        timerCustomXPosition = Config.Bind(
+            "4. UI",
+            "4.2.3 Custom timer X position",
+            0f,
+            LocalizationResolver.Localize("config_ui_timer_custom_x_description"));
+        timerCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.TimerXPos = timerCustomXPosition.Value; };
+
+        timerCustomYPosition = Config.Bind(
+            "4. UI",
+            "4.2.4 Custom timer Y position",
+            0f,
+            LocalizationResolver.Localize("config_ui_timer_custom_y_description"));
+        timerCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.TimerYPos = timerCustomYPosition.Value; };
+
+        timerScale = Config.Bind(
+            "4. UI",
+            "4.2.5 Timer UI scale",
+            1f,
+            LocalizationResolver.Localize("config_ui_timer_scale_description"));
+        timerScale.SettingChanged += (_, _) => { UIConfiguration.TimerUIScale = timerScale.Value; };
+
+
+        isTalismanModeUIEnabled = Config.Bind(
+            "4. UI",
+            "4.3.1 Talisman Mode UI enabled",
+            true,
+            LocalizationResolver.Localize("config_ui_talisman_mode_enabled_description"));
+        isTalismanModeUIEnabled.SettingChanged += (_, _) => { UIConfiguration.TalismanModeUIEnabled = isTalismanModeUIEnabled.Value; };
+
+        useCustomTalismanModePosition = Config.Bind(
+            "4. UI",
+            "4.3.2 Use custom talisman mode position",
+            false,
+            LocalizationResolver.Localize("config_ui_talisman_mode_custom_description"));
+        useCustomTalismanModePosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomTalismanModePosition = useCustomTalismanModePosition.Value; };
+
+        talismanModeCustomXPosition = Config.Bind(
+            "4. UI",
+            "4.3.3 Custom talisman mode X position",
+            0f,
+            LocalizationResolver.Localize("config_ui_talisman_mode_custom_x_description"));
+        talismanModeCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value; };
+
+        talismanModeCustomYPosition = Config.Bind(
+            "4. UI",
+            "4.3.4 Custom talisman mode Y position",
+            0f,
+            LocalizationResolver.Localize("config_ui_talisman_mode_custom_y_description"));
+        talismanModeCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value; };
+
+        talismanModeScale = Config.Bind(
+            "4. UI",
+            "4.3.5 Talisman mode UI scale",
+            1f,
+            LocalizationResolver.Localize("config_ui_talisman_mode_scale_description"));
+        talismanModeScale.SettingChanged += (_, _) => { UIConfiguration.TalismanUIScale = talismanModeScale.Value; };
+    }
+
+    private void HandleUIConfigurationValues() {
+        UIConfiguration.CounterUIEnabled = isCounterUIEnabled.Value;
+        UIConfiguration.UseCustomCounterPosition = useCustomCounterPosition.Value;
+        UIConfiguration.CounterXPos = counterCustomXPosition.Value;
+        UIConfiguration.CounterYPos = counterCustomYPosition.Value;
+
+        UIConfiguration.TimerUIEnabled = isTimerUIEnabled.Value;
+        UIConfiguration.UseCustomTimerPosition = useCustomTimerPosition.Value;
+        UIConfiguration.TimerXPos = timerCustomXPosition.Value;
+        UIConfiguration.TimerYPos = timerCustomYPosition.Value;
+
+        UIConfiguration.TalismanModeUIEnabled = isTalismanModeUIEnabled.Value;
+        UIConfiguration.UseCustomTalismanModePosition = useCustomTalismanModePosition.Value;
+        UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value;
+        UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value;
     }
 }

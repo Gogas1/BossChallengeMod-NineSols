@@ -14,6 +14,7 @@ using ClipperLibClone;
 using System.Collections;
 using BossChallengeMod.Helpers;
 using UnityEngine.SceneManagement;
+using BossChallengeMod.Configuration;
 
 namespace BossChallengeMod.UI {
     public class UIController {
@@ -23,6 +24,8 @@ namespace BossChallengeMod.UI {
         private CurrentTalismanUIContoller talismanUIController;
 
         public Action? OnModifiersRaisedAnimationDone;
+
+        private UIConfiguration _configuration;
 
         private UIControllerAnimationState animationState = UIControllerAnimationState.KillCounterCollapsed;
         public UIControllerAnimationState CurrentAnimationState {
@@ -55,7 +58,7 @@ namespace BossChallengeMod.UI {
         private GameObject bottomPanel;
         private GameObject bottomLeftPanel;
 
-        public UIController() {
+        public UIController(UIConfiguration configuration) {
             rightPanel = CreateRightPanelObject();
             bottomPanel = CreateBottomPanelObject();
             bottomLeftPanel = CreateBottomLeftPanelObject();
@@ -64,6 +67,8 @@ namespace BossChallengeMod.UI {
             modifiersController = CreateModifiersControllerGUI();
             timerController = bottomPanel.AddChildrenComponent<TimerController>("TimerUI");
             talismanUIController = bottomLeftPanel.AddChildrenComponent<CurrentTalismanUIContoller>("TalismanUI");
+            _configuration = configuration;
+            ResolveConfigurationEvents(_configuration);
         }
 
         private void RestoreUI() {
@@ -80,15 +85,20 @@ namespace BossChallengeMod.UI {
             parentObject.transform.parent = canvas.transform;
 
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-            float width = canvasRect.rect.width;
-            float height = canvasRect.rect.height;
-
-            float coordsX = width - width / 10f;
-            float coordsY = height - height / 4.5f;
+            float coordsX, coordsY;
+            CalculateRightPanelPosition(canvasRect, out coordsX, out coordsY);
 
             parentObject.transform.position = new Vector3(coordsX, coordsY);
 
             return parentObject;
+        }
+
+        private void CalculateRightPanelPosition(RectTransform canvasRect, out float coordsX, out float coordsY) {
+            float width = canvasRect.rect.width;
+            float height = canvasRect.rect.height;
+
+            coordsX = width - width / 10f;
+            coordsY = height - height / 4.5f;
         }
 
         public GameObject CreateBottomPanelObject() {
@@ -97,15 +107,20 @@ namespace BossChallengeMod.UI {
             parentObject.transform.parent = canvas.transform;
 
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-            float width = canvasRect.rect.width;
-            float height = canvasRect.rect.height;
-
-            float coordsX = width - width / 2f;
-            float coordsY = height / 10f;
+            float coordsX, coordsY;
+            CalculateBottomPanelPosition(canvasRect, out coordsX, out coordsY);
 
             parentObject.transform.position = new Vector3(coordsX, coordsY);
 
             return parentObject;
+        }
+
+        private void CalculateBottomPanelPosition(RectTransform canvasRect, out float coordsX, out float coordsY) {
+            float width = canvasRect.rect.width;
+            float height = canvasRect.rect.height;
+
+            coordsX = width - width / 2f;
+            coordsY = height / 10f;
         }
 
         public GameObject CreateBottomLeftPanelObject() {
@@ -114,15 +129,20 @@ namespace BossChallengeMod.UI {
             parentObject.transform.parent = canvas.transform;
 
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-            float width = canvasRect.rect.width;
-            float height = canvasRect.rect.height;
-
-            float coordsX = width / 13.71f;
-            float coordsY = height / 4.15f;
+            float coordsX, coordsY;
+            CalculateBottomLeftPanelPosition(canvasRect, out coordsX, out coordsY);
 
             parentObject.transform.position = new Vector3(coordsX, coordsY);
 
             return parentObject;
+        }
+
+        private void CalculateBottomLeftPanelPosition(RectTransform canvasRect, out float coordsX, out float coordsY) {
+            float width = canvasRect.rect.width;
+            float height = canvasRect.rect.height;
+
+            coordsX = width / 13.71f;
+            coordsY = height / 4.15f;
         }
 
         private ModifiersUIController CreateModifiersControllerGUI() {
@@ -250,6 +270,180 @@ namespace BossChallengeMod.UI {
                 bottomPanel == null ||
                 timerController == null) {
                 RestoreUI();
+            }
+        }
+
+        private void ResolveConfigurationEvents(UIConfiguration configuration) {
+            configuration.OnCounterUIEnabledChanged += ToggleCounterUI;
+            configuration.OnUseCustomCounterPositionChanged += ToggleCustomCounterUIPosition;
+            configuration.OnCounterXPosChanged += ChangeCounterXPosition;
+            configuration.OnCounterYPosChanged += ChangeCounterYPosition;
+            configuration.OnCounterUIScaleChanged += ChangeCounterScale;
+
+            configuration.OnEnableTimerUIChanged += ToggleTimerUI;
+            configuration.OnUseCustomTimerPositionChanged += ToggleCustomTimerUIPosition;
+            configuration.OnTimerXPosChanged += ChangeTimerXPosition;
+            configuration.OnTimerYPosChanged += ChangeTimerYPosition;
+            configuration.OnTimerUIScaleChanged += ChangeTimerScale;
+
+            configuration.OnEnableTalismanModeUIChanged += ToggleTalismanModeUI;
+            configuration.OnUseCustomTalismanModePositionChanged += ToggleCustomTalismanModeUIPosition;
+            configuration.OnTalismanModeXPosChanged += ChangeTalismanModeXPosition;
+            configuration.OnTalismanModeYPosChanged += ChangeTalismanModeYPosition;
+            configuration.OnTalismanUIScaleChanged += ChangeTalismanScale;
+        }
+
+        private void UnsubscribeConfigurationEvents(UIConfiguration configuration) {
+            configuration.OnCounterUIEnabledChanged -= ToggleCounterUI;
+            configuration.OnUseCustomCounterPositionChanged -= ToggleCustomCounterUIPosition;
+            configuration.OnCounterXPosChanged -= ChangeCounterXPosition;
+            configuration.OnCounterYPosChanged -= ChangeCounterYPosition;
+            configuration.OnCounterUIScaleChanged -= ChangeCounterScale;
+
+            configuration.OnEnableTimerUIChanged -= ToggleTimerUI;
+            configuration.OnUseCustomTimerPositionChanged -= ToggleCustomTimerUIPosition;
+            configuration.OnTimerXPosChanged -= ChangeTimerXPosition;
+            configuration.OnTimerYPosChanged -= ChangeTimerYPosition;
+            configuration.OnTimerUIScaleChanged -= ChangeTimerScale;
+
+            configuration.OnEnableTalismanModeUIChanged -= ToggleTalismanModeUI;
+            configuration.OnUseCustomTalismanModePositionChanged -= ToggleCustomTalismanModeUIPosition;
+            configuration.OnTalismanModeXPosChanged -= ChangeTalismanModeXPosition;
+            configuration.OnTalismanModeYPosChanged -= ChangeTalismanModeYPosition;
+            configuration.OnTalismanUIScaleChanged -= ChangeTalismanScale;
+        }
+
+        public void ToggleCounterUI(bool toggle) {
+            rightPanel.gameObject.SetActive(toggle);
+        }
+        public void ToggleCustomCounterUIPosition(bool toggle) {
+            if(rightPanel != null) {
+                if (toggle) {
+                    float posX = _configuration.CounterXPos;
+                    float posY = _configuration.CounterYPos;
+
+                    rightPanel.transform.position = new Vector3(posX, posY);
+
+                } else {
+                    var canvas = NineSolsAPICore.FullscreenCanvas.transform;
+                    RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+                    float posX, posY;
+                    CalculateRightPanelPosition(canvasRect, out posX, out posY);
+                    rightPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeCounterXPosition(float posX) {
+            if(rightPanel != null) {
+                if (_configuration.UseCustomCounterPosition) {
+                    float posY = _configuration.CounterYPos;
+
+                    rightPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeCounterYPosition(float posY) {
+            if (rightPanel != null) {
+                if (_configuration.UseCustomCounterPosition) {
+                    float posX = _configuration.CounterXPos;
+
+                    rightPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeCounterScale(float scale) {
+            if (rightPanel != null) {
+                rightPanel.transform.localScale = new Vector3(scale, scale);
+            }
+        }
+
+
+        public void ToggleTimerUI(bool toggle) {
+            timerController.gameObject.SetActive(toggle);
+        }
+        public void ToggleCustomTimerUIPosition(bool toggle) {
+            if (bottomPanel != null) {
+                if (toggle) {
+                    float posX = _configuration.CounterXPos;
+                    float posY = _configuration.CounterYPos;
+
+                    bottomPanel.transform.position = new Vector3(posX, posY);
+
+                } else {
+                    var canvas = NineSolsAPICore.FullscreenCanvas.transform;
+                    RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+                    float posX, posY;
+                    CalculateBottomPanelPosition(canvasRect, out posX, out posY);
+                    bottomPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeTimerXPosition(float posX) {
+            if (bottomPanel != null) {
+                if (_configuration.UseCustomTimerPosition) {
+                    float posY = _configuration.TimerYPos;
+
+                    bottomPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeTimerYPosition(float posY) {
+            if (bottomPanel != null) {
+                if (_configuration.UseCustomTimerPosition) {
+                    float posX = _configuration.TimerXPos;
+
+                    bottomPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeTimerScale(float scale) {
+            if (bottomPanel != null) {
+                bottomPanel.transform.localScale = new Vector3(scale, scale);
+            }
+        }
+
+
+        public void ToggleTalismanModeUI(bool toggle) {
+            bottomLeftPanel.gameObject.SetActive(toggle);
+        }
+        public void ToggleCustomTalismanModeUIPosition(bool toggle) {
+            if (bottomLeftPanel != null) {
+                if (toggle) {
+                    float posX = _configuration.TalismanModeXPos;
+                    float posY = _configuration.TalismanModeYPos;
+
+                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+
+                } else {
+                    var canvas = NineSolsAPICore.FullscreenCanvas.transform;
+                    RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+                    float posX, posY;
+                    CalculateBottomLeftPanelPosition(canvasRect, out posX, out posY);
+                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeTalismanModeXPosition(float posX) {
+            if (bottomLeftPanel != null) {
+                if (_configuration.UseCustomTalismanModePosition) {
+                    float posY = _configuration.TalismanModeYPos;
+
+                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeTalismanModeYPosition(float posY) {
+            if (bottomLeftPanel != null) {
+                if (_configuration.UseCustomTalismanModePosition) {
+                    float posX = _configuration.TalismanModeXPos;
+
+                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+                }
+            }
+        }
+        public void ChangeTalismanScale(float scale) {
+            if (bottomLeftPanel != null) {
+                bottomLeftPanel.transform.localScale = new Vector3(scale, scale);
             }
         }
     }

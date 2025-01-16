@@ -4,6 +4,25 @@
   "toast_message3": "Записи результатов боя сохраняются в корневую папку игры",
   "toast_message4": "Файл: BossReviveChallengeRecords.json",
 
+  "config_ui_counter_enabled_description": "Включить отображение счётчика убийств и списка модификаторов",
+  "config_ui_counter_custom_description": "Включить размещение счётчика убийств и списка модификаторов по собственным координатам",
+  "config_ui_counter_custom_x_description": "X позиция счётчика убийств и списка модификаторов",
+  "config_ui_counter_custom_y_description": "Y позиция счётчика убийств и списка модификаторов",
+  "config_ui_counter_scale_description": "Масштаб счётчика убийств и списка модификаторов",
+
+  "config_ui_timer_enabled_description": "Включить отображение таймера",
+  "config_ui_timer_custom_description": "Включить размещение таймера по собственным координатам",
+  "config_ui_timer_custom_x_description": "X позиция таймера",
+  "config_ui_timer_custom_y_description": "Y позиция таймера",
+  "config_ui_timer_scale_description": "Масштаб таймера",
+
+  "config_ui_talisman_mode_enabled_description": "Включить отображение индикатора текущего талисмана",
+  "config_ui_talisman_mode_custom_description": "Включить размещение индикатора текущего талисмана по собственным координатам",
+  "config_ui_talisman_mode_custom_x_description": "X позиция индикатора текущего талисмана",
+  "config_ui_talisman_mode_custom_y_description": "Y позиция индикатора текущего талисмана",
+  "config_ui_talisman_mode_scale_description": "Масштаб индикатора текущего талисмана",
+
+
   "kill_counter": "Убито:",
   "kill_counter_hs": "Максимум:",
   "kill_counter_last": "Пред. результат:",

@@ -4,6 +4,24 @@
   "toast_message3": "Battle result records are saved to the game's root folder",
   "toast_message4": "File: BossReviveChallengeRecords.json",
 
+  "config_ui_counter_enabled_description": "启用显示当前术式模式",
+  "config_ui_counter_custom_description": "启用自定义当前术式模式位置",
+  "config_ui_counter_custom_x_description": "当前术式模式的X坐标",
+  "config_ui_counter_custom_y_description": "当前术式模式的Y坐标",
+  "config_ui_counter_scale_description": "当前术式模式的缩放比例",
+
+  "config_ui_timer_enabled_description": "启用显示计时器",
+  "config_ui_timer_custom_description": "启用自定义计时器位置",
+  "config_ui_timer_custom_x_description": "计时器的X坐标",
+  "config_ui_timer_custom_y_description": "计时器的Y坐标",
+  "config_ui_timer_scale_description": "计时器的缩放比例",
+
+  "config_ui_talisman_mode_enabled_description": "启用显示当前护符指示器",
+  "config_ui_talisman_mode_custom_description": "启用自定义当前护符指示器位置",
+  "config_ui_talisman_mode_custom_x_description": "当前护符指示器的X坐标",
+  "config_ui_talisman_mode_custom_y_description": "当前护符指示器的Y坐标",
+  "config_ui_talisman_mode_scale_description": "当前护符指示器的缩放比例",
+
   "kill_counter": "击杀数：",
   "kill_counter_hs": "最高纪录：",
   "kill_counter_last": "上次结果：",
