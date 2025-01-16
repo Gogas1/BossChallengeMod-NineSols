@@ -99,7 +99,6 @@ namespace BossChallengeMod.BossPatches {
             } 
             else {
                 GameObject.Destroy(component);
-                Log.Error("");
                 return null;
             }
         }
@@ -107,69 +106,35 @@ namespace BossChallengeMod.BossPatches {
         protected void ResolveStateMappingEvents(StateMapping<MonsterBase.States> stateMapping, MonsterState state) {
             stateMapping.hasEnterRoutine = false;
             stateMapping.EnterCall = () => {
-                try {
-                    state.ResolveProxy().OnStateEnter();
-                    if (state.ResolveProxy().stateEvents.StateEnterEvent != null) {
-                        state.ResolveProxy().stateEvents.StateEnterEvent.Invoke();
-                    }
-
-                } catch (Exception ex) {
-                    Log.Error($"ResolveStateMappingEvents exception {ex.Message} \n{ex.StackTrace}");
+                state.ResolveProxy().OnStateEnter();
+                if (state.ResolveProxy().stateEvents.StateEnterEvent != null) {
+                    state.ResolveProxy().stateEvents.StateEnterEvent.Invoke();
                 }
             };
             stateMapping.hasExitRoutine = false;
             stateMapping.ExitCall = () => {
-                try {
-                    state.ResolveProxy().OnStateExit();
-                    if (state.ResolveProxy().stateEvents.StateExitEvent != null) {
-                        state.ResolveProxy().stateEvents.StateExitEvent.Invoke();
-                    }
-
-                } catch (Exception ex) {
-                    Log.Error($"ExitCall exception {ex.Message} \n{ex.StackTrace}");
+                state.ResolveProxy().OnStateExit();
+                if (state.ResolveProxy().stateEvents.StateExitEvent != null) {
+                    state.ResolveProxy().stateEvents.StateExitEvent.Invoke();
                 }
             };
             stateMapping.Finally = () => {
-                try {
-                    state.ResolveProxy().OnStateFinally();
-                } catch (Exception ex) {
-                    Log.Error($"Finally exception {ex.Message} \n{ex.StackTrace}");
-                }
+                state.ResolveProxy().OnStateFinally();
             };
             stateMapping.Update = () => {
-                try {
-                    state.ResolveProxy().OnStateUpdate();
-                } catch (Exception ex) {
-                    Log.Error($"Update exception {ex.Message} \n{ex.StackTrace}");
-                }
+                state.ResolveProxy().OnStateUpdate();
             };
             stateMapping.SpriteUpdate = () => {
-                try {
-                    state.ResolveProxy().OnSpriteUpdate();
-                } catch (Exception ex) {
-                    Log.Error($"SpriteUpdate exception {ex.Message} \n{ex.StackTrace}");
-                }
+                state.ResolveProxy().OnSpriteUpdate();
             };
             stateMapping.LateUpdate = () => {
-                try {
-                    state.ResolveProxy().OnStateLateUpdate();
-                } catch (Exception ex) {
-                    Log.Error($"LateUpdate exception {ex.Message} \n{ex.StackTrace}");
-                }
+                state.ResolveProxy().OnStateLateUpdate();
             };
             stateMapping.FixedUpdate = () => {
-                try {
-                    state.ResolveProxy().OnStateFixedUpdate();
-                } catch (Exception ex) {
-                    Log.Error($"FixedUpdate exception {ex.Message} \n{ex.StackTrace}");
-                }
+                state.ResolveProxy().OnStateFixedUpdate();
             };
             stateMapping.OnCollisionEnter = (Collision c) => {
-                try {
-                    state.ResolveProxy().OnStateCollisionEnter(c);
-                } catch (Exception ex) {
-                    Log.Error($"OnCollisionEnter exception {ex.Message} \n{ex.StackTrace}");
-                }
+                state.ResolveProxy().OnStateCollisionEnter(c);
             };
         }
 

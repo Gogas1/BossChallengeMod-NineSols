@@ -16,24 +16,19 @@ public class Patches {
     [HarmonyPrefix]
     public static void CheckInit_Prefix(MonsterBase __instance, out IEnumerable<MonsterState> __state) {
         __state = new List<MonsterState>();
-        if(__instance.tag == "Boss") {
-            try {
-                GeneralBossPatch? bossPatch = null;
+        if (__instance.tag == "Boss") {
+            GeneralBossPatch? bossPatch = null;
 
-                if(!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
-                    bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
-                }
+            if (!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
+                bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
+            }
 
-                if (bossPatch != null) {
-                    bossPatch.PatchMonsterPostureSystem(__instance);
-                    __state = bossPatch.PatchMonsterStates(__instance);
-                    var senders = bossPatch.CreateSenders(__instance, __state);
-                    var receivers = bossPatch.CreateReceivers(__instance, __state);
-                    bossPatch.ProcessEventHandlers(receivers, senders);
-                }
-
-            } catch (Exception ex) {
-                Log.Error($"{ex.Message} \n{ex.StackTrace}");
+            if (bossPatch != null) {
+                bossPatch.PatchMonsterPostureSystem(__instance);
+                __state = bossPatch.PatchMonsterStates(__instance);
+                var senders = bossPatch.CreateSenders(__instance, __state);
+                var receivers = bossPatch.CreateReceivers(__instance, __state);
+                bossPatch.ProcessEventHandlers(receivers, senders);
             }
         }
     }
@@ -42,19 +37,14 @@ public class Patches {
     [HarmonyPostfix]
     public static void CheckInit_Postfix(MonsterBase __instance, IEnumerable<MonsterState> __state) {
         if (__instance.tag == "Boss") {
-            try {
-                GeneralBossPatch? bossPatch = null;
+            GeneralBossPatch? bossPatch = null;
 
-                if (!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
-                    bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
-                }
-
-                bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
-                bossPatch?.PostfixPatch(__instance);
-              
-            } catch (Exception ex) {
-                Log.Error($"{ex.Message} \n{ex.StackTrace}");
+            if (!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
+                bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
             }
+
+            bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
+            bossPatch?.PostfixPatch(__instance);
         }
     }
 
@@ -86,7 +76,6 @@ public class Patches {
             codes[216].opcode = OpCodes.Nop;
             codes[217].opcode = OpCodes.Nop;
             codes[218].opcode = OpCodes.Nop;
-            Log.Info("------------Set Phase cleared");
         }
         return instructions;
     }
@@ -102,7 +91,6 @@ public class Patches {
             codes[3].opcode = OpCodes.Nop;
             codes[4].opcode = OpCodes.Nop;
             codes[5].opcode = OpCodes.Nop;
-            Log.Info("-----------Changing Phase cleared");
         }
         return instructions;
     }

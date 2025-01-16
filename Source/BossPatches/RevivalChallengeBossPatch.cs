@@ -47,12 +47,8 @@ namespace BossChallengeMod.BossPatches {
                     var modifiersController = InitializeModifiers(monsterBase);
 
                     stateEnterEventActions += () => {
-                        try {
-                            modifiersController.RollModifiers();
-                            modifiersController.ApplyModifiers(killCounter.KillCounter);
-                        } catch (Exception e) {
-                            Log.Info($"{e.Message}, {e.StackTrace}");
-                        }
+                        modifiersController.RollModifiers();
+                        modifiersController.ApplyModifiers(killCounter.KillCounter);
                     };
 
                     BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
