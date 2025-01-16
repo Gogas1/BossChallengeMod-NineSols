@@ -6,7 +6,7 @@ namespace = "Gogas1"
 name = "BossChallengeMod"
 versionNumber = "0.1.0"
 description = "Adds resurrection and modifiers to bosses"
-websiteUrl = "https://github.com/Gogas1/BossChallengeMod-NineSols.git"
+websiteUrl = "https://github.com/Gogas1/BossChallengeMod-NineSols"
 containsNsfwContent = false
 
 [package.dependencies]

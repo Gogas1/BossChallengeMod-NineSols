@@ -15,8 +15,8 @@
   "regeneration": "Regeneration",
   "knockback": "Knockback",
   "knockout": "Knock out",
-  "random_arrow": "Rand. arrow",
-  "random_talisman": "Rand. talisman",
+  "random_arrow": "Rand arrow",
+  "random_talisman": "Rand talisman",
   "endurance": "Endurance",
 
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
