@@ -1,8 +1,8 @@
 ﻿{
-  "toast_message1": "部分模組設定預設為停用",
-  "toast_message2": "這可以在配置器中進行配置（預設為F1）",
-  "toast_message3": "戰鬥結果記錄保存在遊戲根目錄中",
-  "toast_message4": "檔案：BossReviveChallengeRecords.json",
+  "toast_message1": "Some mod settings are disabled by default",
+  "toast_message2": "This can be configured in the configurator (F1 by default)",
+  "toast_message3": "Battle result records are saved to the game's root folder",
+  "toast_message4": "File: BossReviveChallengeRecords.json",
 
   "kill_counter": "擊殺數：",
   "kill_counter_hs": "最高紀錄：",
@@ -29,7 +29,7 @@
   "config_scaling_modifiers_scaling_cycle_description": "達到最大修改器數量縮放的死亡次數。\n修改器數量增加將在這些死亡次數後達到最大值",
   "config_modifiers_enabled_description": "啟用修改器。\n啟用或停用影響首領戰的修改器。",
   "config_repeating_enabled_description": "重複修改器。\n修改器可以連續重複多次。",
-  "config_modifiers_speed_enabled_description": "速度修改器。\n+25% 首領速度提升。與速度縮放以乘法疊加。",
+  "config_modifiers_speed_enabled_description": "速度修改器。\n+20% 首領速度提升。與速度縮放以乘法疊加。",
   "config_modifiers_timer_enabled_description": "計時器修改器。\n啟動擊殺首領的計時器。時間耗盡時，羿死亡。",
   "config_modifiers_parry_damage_enabled_description": "停用不精準格擋的修改器。\n不精準格擋無法保護羿。",
   "config_modifiers_internal_damage_enabled_description": "內部傷害累積修改器。\n羿會隨著時間累積內部傷害。作為交換，羿不會受到來自修改器持有者攻擊的格擋造成的內部傷害。",

@@ -33,7 +33,7 @@
 
   "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the boss fight.",
   "config_repeating_enabled_description": "Repeating modifiers.\n Modifiers can be repeated multiple times in a row.",
-  "config_modifiers_speed_enabled_description": "Speed Modifier.\n +25% boss speed increase. Stacks multiplicatively with speed scaling.",
+  "config_modifiers_speed_enabled_description": "Speed Modifier.\n +20% boss speed increase. Stacks multiplicatively with speed scaling.",
   "config_modifiers_timer_enabled_description": "Timer Modifier.\n Starts a timer to kill the boss. When the time runs out, Yi dies.",
   "config_modifiers_parry_damage_enabled_description": "Modifier to disable imprecise parries.\n Imprecise parries do not protect Yi.",
   "config_modifiers_internal_damage_enabled_description": "Internal Damage Accumulation Modifier.\n Yi accumulates internal damage over time. In exchange, Yi will not receive internal damage from parries of attacks of the modifier's owner.",

@@ -21,7 +21,7 @@ namespace BossChallengeMod.Modifiers {
 
         public void Update() {
             if (Monster != null) {
-                Monster.animator.speed = Monster.animator.speed * 1.25f;
+                Monster.animator.speed = Monster.animator.speed * 1.2f;
             }
         }
 
