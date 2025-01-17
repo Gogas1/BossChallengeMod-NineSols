@@ -35,11 +35,22 @@ namespace BossChallengeMod.UI {
 
         public void Show() {
             state = UIAnimationStates.Show;
+            if(BossChallengeMod.Instance.UIConfiguration.UseCustomTimerPosition) {
+                timerText.gameObject.SetActive(true);
+                timerText.transform.localPosition = new Vector3(timerText.transform.localPosition.x, visibleYPosition);
+                return;
+            }
+
             StartCoroutine(AnimateTimerShow());
         }
 
         public void Hide() {
             state = UIAnimationStates.Hide;
+            if (BossChallengeMod.Instance.UIConfiguration.UseCustomTimerPosition) {
+                timerText.gameObject.SetActive(false);
+                return;
+            }
+
             StartCoroutine(AnimateTimerHide());
         }
 
@@ -73,7 +84,7 @@ namespace BossChallengeMod.UI {
             }
         }
 
-        private IEnumerator AnimateTimerHide() {
+        private IEnumerator AnimateTimerHide() {            
             if (state == UIAnimationStates.Hide) {
                 float elapsedTime = 0f;
                 while (elapsedTime < animationHideDuration && state == UIAnimationStates.Hide) {

@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "Gogas1"
 name = "BossChallengeMod"
-versionNumber = "0.1.1"
+versionNumber = "0.1.2"
 description = "Adds resurrection and modifiers to bosses"
 websiteUrl = "https://github.com/Gogas1/BossChallengeMod-NineSols"
 containsNsfwContent = false
