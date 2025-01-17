@@ -363,5 +363,10 @@ MigrationBackup/
 FodyWeavers.xsd
 
 /thunderstore/build
+/thunderstore/build/dll
 /thunderstore/build/dll/BossChallengeMod.dll
 /thunderstore/build/Gogas1-BossChallengeMod-0.1.0.zip
+/thunderstore/build/dll/translations_en-us.json
+/thunderstore/build/dll/translations_ru-ru.json
+/thunderstore/build/dll/translations_zh-cn.json
+/thunderstore/build/dll/translations_zh-tw.json

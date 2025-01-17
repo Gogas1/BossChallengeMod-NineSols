@@ -37,6 +37,7 @@
   "random_talisman": "隨機護符",
   "endurance": "耐力",
   "config_cycling_enabled_description": "啟用首領復活。\n首領將恢復生命值並返回第一階段，而不是死亡。",
+  "config_single_recording_enabled_description": "記錄戰鬥結果，而不受配置影響。預設情況下，每種唯一的配置狀態（包括第1、2、3節）都會生成結果，以便每種設定的挑戰難度都有自己的結果。啟用此設定後，將會記錄並使用統一的結果，而不考慮挑戰設定。",
   "config_cycles_number_description": "首領死亡次數。\n首領將在指定死亡次數後死亡（包括本次）。",
   "config_scaling_enabled_description": "啟用速度縮放。\n首領每次死亡後將獲得線性速度提升。",
   "config_scaling_minspeed_description": "縮放：初始速度。\n速度縮放的起始值。",

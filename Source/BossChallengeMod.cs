@@ -28,6 +28,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     public Dictionary<string, GeneralBossPatch> BossPatches { get; private set; } = new Dictionary<string, GeneralBossPatch>();
 
     private ConfigEntry<bool> isCyclingEnabled = null!;
+    private ConfigEntry<bool> useSingleRecordsKey = null!;
     private ConfigEntry<int> maxCycles = null!;
 
     private ConfigEntry<bool> isSpeedScalingEnabled = null!;
@@ -109,7 +110,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         
         InitializeUIConfiguration();
         UIController = new UIController(UIConfiguration);
-        
+        HandleUIConfigurationValues();
         
         MonsterUIController = new MonsterUIController();
 
@@ -309,9 +310,20 @@ public class BossChallengeMod : BaseUnityPlugin {
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
 
+        useSingleRecordsKey = Config.Bind(
+            "1. General",
+            "1.2 Record regardless of configuration",
+            false,
+            LocalizationResolver.Localize("config_single_recording_enabled_description"));
+        useSingleRecordsKey.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.UseSingleRecordKey = useSingleRecordsKey.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
         maxCycles = Config.Bind(
             "1. General",
-            "1.2 Boss deaths number",
+            "1.3 Boss deaths number",
             -1,
             LocalizationResolver.Localize("config_cycles_number_description"));
         maxCycles.SettingChanged += (_, _) => {
@@ -537,6 +549,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private void HandleConfigurationValues() {
         var config = ChallengeConfigurationManager.ChallengeConfiguration;
         config.EnableRestoration = isCyclingEnabled.Value;
+        config.UseSingleRecordKey = useSingleRecordsKey.Value;
         config.MaxCycles = maxCycles.Value;
 
         config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
@@ -696,15 +709,18 @@ public class BossChallengeMod : BaseUnityPlugin {
         UIConfiguration.UseCustomCounterPosition = useCustomCounterPosition.Value;
         UIConfiguration.CounterXPos = counterCustomXPosition.Value;
         UIConfiguration.CounterYPos = counterCustomYPosition.Value;
+        UIConfiguration.CounterUIScale = counterScale.Value;
 
         UIConfiguration.TimerUIEnabled = isTimerUIEnabled.Value;
         UIConfiguration.UseCustomTimerPosition = useCustomTimerPosition.Value;
         UIConfiguration.TimerXPos = timerCustomXPosition.Value;
         UIConfiguration.TimerYPos = timerCustomYPosition.Value;
+        UIConfiguration.TimerUIScale = timerScale.Value;
 
         UIConfiguration.TalismanModeUIEnabled = isTalismanModeUIEnabled.Value;
         UIConfiguration.UseCustomTalismanModePosition = useCustomTalismanModePosition.Value;
         UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value;
         UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value;
+        UIConfiguration.TalismanUIScale = talismanModeScale.Value;
     }
 }

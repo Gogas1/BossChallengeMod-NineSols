@@ -40,6 +40,8 @@
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
 
+  "config_single_recording_enabled_description": "Record fight results regardless of the configuration. By default, results are created for each unique configuration state (sections 1, 2, 3 are considered), so each configured challenge difficulty has its own results. Enabling this setting will record and use a single result regardless of the challenge settings.",
+
   "config_scaling_enabled_description": "Enable Speed Scaling.\n Bosses will gain linear speed scaling with each death.",
   "config_scaling_minspeed_description": "Scaling: Initial Speed.\n The starting value for speed scaling.",
   "config_scaling_maxspeed_description": "Scaling: Maximum Speed.\n The maximum value for speed scaling.",

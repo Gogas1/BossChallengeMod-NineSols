@@ -18,7 +18,7 @@ To configure the mod, use the mod configurator (one of this mod's dependencies).
 
 # Features
 
-When activated, the boss will not die, but will restore health and return to the first phase. Health and healing charges do not reset, so the player's goal is to kill the boss as many times as possible in one run. If boss scaling are activated, power ups will be applied after each boss death. If modifiers are activated, random modifiers will be applied after each death. The UI displays the boss's kill count in the current fight, the highest kill count, and the result of the last attempt for the current mod configuration.
+When activated, the boss will not die, but will restore health and return to the first phase. Health and healing charges do not reset, so the player's goal is to kill the boss as many times as possible in one run. If boss scaling are activated, power ups will be applied after each boss death. If modifiers are activated, random modifiers will be applied after each death. The UI displays the boss's kill count in the current fight, the highest kill count, and the result of the last attempt for the current mod configuration. By default, results are created for each unique configuration state, so each configured challenge difficulty has its own results.
 
 Features list:
 

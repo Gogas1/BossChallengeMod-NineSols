@@ -63,7 +63,7 @@ namespace BossChallengeMod.KillCounting {
                 BestCount = KillCounter;
             }
             if (UseRecording) {
-                StartCoroutine(challengeConfigurationManager.SaveRecordForBoss(monster, challengeConfiguration, BestCount, KillCounter));
+                StartCoroutine(challengeConfigurationManager.SaveRecordForBoss(monster, challengeConfiguration, BestCount, KillCounter, challengeConfiguration.UseSingleRecordKey));
             }
         }
 

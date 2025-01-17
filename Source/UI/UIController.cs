@@ -54,19 +54,19 @@ namespace BossChallengeMod.UI {
             }
         }
 
-        private GameObject rightPanel;
-        private GameObject bottomPanel;
-        private GameObject bottomLeftPanel;
+        private RectTransform rightPanel;
+        private RectTransform bottomPanel;
+        private RectTransform bottomLeftPanel;
 
         public UIController(UIConfiguration configuration) {
             rightPanel = CreateRightPanelObject();
             bottomPanel = CreateBottomPanelObject();
             bottomLeftPanel = CreateBottomLeftPanelObject();
 
-            bossCounterTextController = rightPanel.AddChildrenComponent<KillCounterController>("KillCounter");
+            bossCounterTextController = rightPanel.gameObject.AddChildrenComponent<KillCounterController>("KillCounter");
             modifiersController = CreateModifiersControllerGUI();
-            timerController = bottomPanel.AddChildrenComponent<TimerController>("TimerUI");
-            talismanUIController = bottomLeftPanel.AddChildrenComponent<CurrentTalismanUIContoller>("TalismanUI");
+            timerController = bottomPanel.gameObject.AddChildrenComponent<TimerController>("TimerUI");
+            talismanUIController = bottomLeftPanel.gameObject.AddChildrenComponent<CurrentTalismanUIContoller>("TalismanUI");
             _configuration = configuration;
             ResolveConfigurationEvents(_configuration);
         }
@@ -74,79 +74,113 @@ namespace BossChallengeMod.UI {
         private void RestoreUI() {
             rightPanel = CreateRightPanelObject();
             bottomPanel = CreateBottomPanelObject();
-            bossCounterTextController = rightPanel.AddChildrenComponent<KillCounterController>("KillCounter");
+            bottomLeftPanel = CreateBottomLeftPanelObject();
+
+            bossCounterTextController = rightPanel.gameObject.AddChildrenComponent<KillCounterController>("KillCounter");
             modifiersController = CreateModifiersControllerGUI();
-            timerController = bottomPanel.AddChildrenComponent<TimerController>("TimerUI");
+            timerController = bottomPanel.gameObject.AddChildrenComponent<TimerController>("TimerUI");
+            talismanUIController = bottomLeftPanel.gameObject.AddChildrenComponent<CurrentTalismanUIContoller>("TalismanUI");
         }
 
-        public GameObject CreateRightPanelObject() {
+        public RectTransform CreateRightPanelObject() {
             var canvas = NineSolsAPICore.FullscreenCanvas.transform;
+
             GameObject parentObject = new GameObject("BossChallenge_RightPanelUI");
-            parentObject.transform.parent = canvas.transform;
+            parentObject.transform.SetParent(canvas, false);
+            RectTransform rectTransform = parentObject.AddComponent<RectTransform>();
 
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
             float coordsX, coordsY;
             CalculateRightPanelPosition(canvasRect, out coordsX, out coordsY);
 
-            parentObject.transform.position = new Vector3(coordsX, coordsY);
+            rectTransform.anchorMin = new Vector2(0, 0);
+            rectTransform.anchorMax = new Vector2(0, 0);
+            rectTransform.pivot = new Vector2(0, 0f);
+            rectTransform.anchoredPosition = new Vector2(coordsX, coordsY);
+            rectTransform.sizeDelta = new Vector2(200, 200);
 
-            return parentObject;
+            return rectTransform;
         }
 
         private void CalculateRightPanelPosition(RectTransform canvasRect, out float coordsX, out float coordsY) {
             float width = canvasRect.rect.width;
             float height = canvasRect.rect.height;
 
+            CalculateRightPanelPosition(width, height, out coordsX, out coordsY);
+        }
+
+        private void CalculateRightPanelPosition(float width, float height, out float coordsX, out float coordsY) {
             coordsX = width - width / 10f;
             coordsY = height - height / 4.5f;
         }
 
-        public GameObject CreateBottomPanelObject() {
+        public RectTransform CreateBottomPanelObject() {
             var canvas = NineSolsAPICore.FullscreenCanvas.transform;
+
             GameObject parentObject = new GameObject("BossChallenge_BottomPanelUI");
-            parentObject.transform.parent = canvas.transform;
+            parentObject.transform.SetParent(canvas, false);
+            RectTransform rectTransform = parentObject.AddComponent<RectTransform>();
 
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
             float coordsX, coordsY;
             CalculateBottomPanelPosition(canvasRect, out coordsX, out coordsY);
 
-            parentObject.transform.position = new Vector3(coordsX, coordsY);
+            rectTransform.anchorMin = new Vector2(0, 0);
+            rectTransform.anchorMax = new Vector2(0, 0);
+            rectTransform.pivot = new Vector2(0, 0f);
+            rectTransform.anchoredPosition = new Vector2(coordsX, coordsY);
+            rectTransform.sizeDelta = new Vector2(100, 100);
 
-            return parentObject;
+            return rectTransform;
         }
 
         private void CalculateBottomPanelPosition(RectTransform canvasRect, out float coordsX, out float coordsY) {
             float width = canvasRect.rect.width;
             float height = canvasRect.rect.height;
 
+            CalculateBottomPanelPosition(width, height, out coordsX, out coordsY);
+        }
+
+        private void CalculateBottomPanelPosition(float width, float height, out float coordsX, out float coordsY) {
             coordsX = width - width / 2f;
             coordsY = height / 10f;
         }
 
-        public GameObject CreateBottomLeftPanelObject() {
+        public RectTransform CreateBottomLeftPanelObject() {
             var canvas = NineSolsAPICore.FullscreenCanvas.transform;
+
             GameObject parentObject = new GameObject("BossChallenge_BottomLeftPanelUI");
-            parentObject.transform.parent = canvas.transform;
+            parentObject.transform.SetParent(canvas, false);
+            RectTransform rectTransform = parentObject.AddComponent<RectTransform>();
 
             RectTransform canvasRect = canvas.GetComponent<RectTransform>();
             float coordsX, coordsY;
             CalculateBottomLeftPanelPosition(canvasRect, out coordsX, out coordsY);
 
-            parentObject.transform.position = new Vector3(coordsX, coordsY);
+            rectTransform.anchorMin = new Vector2(0, 0);
+            rectTransform.anchorMax = new Vector2(0, 0);
+            rectTransform.pivot = new Vector2(0, 0f);
+            rectTransform.anchoredPosition = new Vector2(coordsX, coordsY);
+            rectTransform.sizeDelta = new Vector2(100, 100);
 
-            return parentObject;
+            // Return the created GameObject
+            return rectTransform;
         }
 
         private void CalculateBottomLeftPanelPosition(RectTransform canvasRect, out float coordsX, out float coordsY) {
             float width = canvasRect.rect.width;
             float height = canvasRect.rect.height;
 
+            CalculateBottomLeftPanelPosition(width, height, out coordsX, out coordsY);
+        }
+
+        private void CalculateBottomLeftPanelPosition(float width, float height, out float coordsX, out float coordsY) {
             coordsX = width / 13.71f;
             coordsY = height / 4.15f;
         }
 
         private ModifiersUIController CreateModifiersControllerGUI() {
-            var modifiers = rightPanel.AddChildrenComponent<ModifiersUIController>("ModifiersUI");
+            var modifiers = rightPanel.gameObject.AddChildrenComponent<ModifiersUIController>("ModifiersUI");
             modifiers.transform.localPosition = new Vector3(0, -21f);
             return modifiers;
         }
@@ -258,6 +292,7 @@ namespace BossChallengeMod.UI {
         }
 
         public void Unload() {
+            UnsubscribeConfigurationEvents(_configuration);
             if(rightPanel != null) GameObject.Destroy(rightPanel);
             if (bottomPanel != null) GameObject.Destroy(bottomPanel);
             if (bottomLeftPanel != null) GameObject.Destroy(bottomLeftPanel);
@@ -322,14 +357,14 @@ namespace BossChallengeMod.UI {
                     float posX = _configuration.CounterXPos;
                     float posY = _configuration.CounterYPos;
 
-                    rightPanel.transform.position = new Vector3(posX, posY);
+                    rightPanel.anchoredPosition = new Vector3(posX, posY);
 
                 } else {
                     var canvas = NineSolsAPICore.FullscreenCanvas.transform;
                     RectTransform canvasRect = canvas.GetComponent<RectTransform>();
                     float posX, posY;
                     CalculateRightPanelPosition(canvasRect, out posX, out posY);
-                    rightPanel.transform.position = new Vector3(posX, posY);
+                    rightPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
@@ -338,7 +373,7 @@ namespace BossChallengeMod.UI {
                 if (_configuration.UseCustomCounterPosition) {
                     float posY = _configuration.CounterYPos;
 
-                    rightPanel.transform.position = new Vector3(posX, posY);
+                    rightPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
@@ -347,13 +382,13 @@ namespace BossChallengeMod.UI {
                 if (_configuration.UseCustomCounterPosition) {
                     float posX = _configuration.CounterXPos;
 
-                    rightPanel.transform.position = new Vector3(posX, posY);
+                    rightPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
         public void ChangeCounterScale(float scale) {
             if (rightPanel != null) {
-                rightPanel.transform.localScale = new Vector3(scale, scale);
+                rightPanel.localScale = new Vector3(scale, scale);
             }
         }
 
@@ -374,7 +409,7 @@ namespace BossChallengeMod.UI {
                     RectTransform canvasRect = canvas.GetComponent<RectTransform>();
                     float posX, posY;
                     CalculateBottomPanelPosition(canvasRect, out posX, out posY);
-                    bottomPanel.transform.position = new Vector3(posX, posY);
+                    bottomPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
@@ -383,7 +418,7 @@ namespace BossChallengeMod.UI {
                 if (_configuration.UseCustomTimerPosition) {
                     float posY = _configuration.TimerYPos;
 
-                    bottomPanel.transform.position = new Vector3(posX, posY);
+                    bottomPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
@@ -392,13 +427,13 @@ namespace BossChallengeMod.UI {
                 if (_configuration.UseCustomTimerPosition) {
                     float posX = _configuration.TimerXPos;
 
-                    bottomPanel.transform.position = new Vector3(posX, posY);
+                    bottomPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
         public void ChangeTimerScale(float scale) {
             if (bottomPanel != null) {
-                bottomPanel.transform.localScale = new Vector3(scale, scale);
+                bottomPanel.localScale = new Vector3(scale, scale);
             }
         }
 
@@ -419,7 +454,7 @@ namespace BossChallengeMod.UI {
                     RectTransform canvasRect = canvas.GetComponent<RectTransform>();
                     float posX, posY;
                     CalculateBottomLeftPanelPosition(canvasRect, out posX, out posY);
-                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+                    bottomLeftPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
@@ -428,7 +463,7 @@ namespace BossChallengeMod.UI {
                 if (_configuration.UseCustomTalismanModePosition) {
                     float posY = _configuration.TalismanModeYPos;
 
-                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+                    bottomLeftPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
@@ -437,13 +472,33 @@ namespace BossChallengeMod.UI {
                 if (_configuration.UseCustomTalismanModePosition) {
                     float posX = _configuration.TalismanModeXPos;
 
-                    bottomLeftPanel.transform.position = new Vector3(posX, posY);
+                    bottomLeftPanel.anchoredPosition = new Vector3(posX, posY);
                 }
             }
         }
         public void ChangeTalismanScale(float scale) {
             if (bottomLeftPanel != null) {
-                bottomLeftPanel.transform.localScale = new Vector3(scale, scale);
+                bottomLeftPanel.localScale = new Vector3(scale, scale);
+            }
+        }
+
+        public void RecalculatePositions(int width, int height) {
+            if (!_configuration.UseCustomCounterPosition) {
+                float posX, posY;
+                CalculateRightPanelPosition(width, height, out posX, out posY);
+                rightPanel.anchoredPosition = new Vector3(posX, posY);
+            }
+
+            if (!_configuration.UseCustomTimerPosition) {
+                float posX, posY;
+                CalculateBottomPanelPosition(width, height, out posX, out posY);
+                bottomPanel.anchoredPosition = new Vector3(posX, posY);
+            }
+
+            if(!_configuration.UseCustomTalismanModePosition) {
+                float posX, posY;
+                CalculateBottomLeftPanelPosition(width, height, out posX, out posY);
+                bottomLeftPanel.anchoredPosition = new Vector3(posX, posY);
             }
         }
     }

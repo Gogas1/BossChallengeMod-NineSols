@@ -19,11 +19,19 @@ namespace BossChallengeMod.Configuration.Repositories {
             return await Task.Run(() => GetRecordForConfiguration(configuration));
         }
 
+        public Task<RecordEntry?> GetRecordForKeyAsync(string key) {
+            throw new NotImplementedException();
+        }
+
         public void SaveBossRecordForConfiguration(ChallengeConfiguration configuration, BossEntry bossEntry) {
             throw new NotImplementedException();
         }
 
         public Task SaveBossRecordForConfigurationAsync(ChallengeConfiguration configuration, BossEntry bossEntry) {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveBossRecordForKeyAsync(string key, BossEntry bossEntry) {
             throw new NotImplementedException();
         }
     }

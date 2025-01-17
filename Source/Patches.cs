@@ -229,10 +229,26 @@ public class Patches {
     }
 
     [HarmonyPatch(typeof(CollectionRotateSelectorButton), "SubmitImplementation")]
+    [HarmonyPrefix]
+    public static bool ArrowSelectionPatchPrefix(CollectionRotateSelectorButton __instance) {
+        if (__instance.gameObject.name == "PlayerStatusSelectableButton_Arrow" && BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes.Any()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    [HarmonyPatch(typeof(CollectionRotateSelectorButton), "SubmitImplementation")]
     [HarmonyPostfix]
     public static void FooSelectionPatchPostfix(CollectionRotateSelectorButton __instance) {
         if (__instance.gameObject.name == "PlayerStatusSelectableButton_ControlStyle") {
             BossChallengeMod.Instance.UIController.UpdateTalisman(__instance.image.sprite);
         }
+    }
+
+    [HarmonyPatch(typeof(ResolutionSetting), "OnChanged")]
+    [HarmonyPostfix]
+    public static void ResolutionChangedPatch(ref Resolution resolution) {
+        BossChallengeMod.Instance.UIController?.RecalculatePositions(resolution.width, resolution.height);
     }
 }

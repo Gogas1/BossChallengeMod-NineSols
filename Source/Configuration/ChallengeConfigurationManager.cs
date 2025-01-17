@@ -22,7 +22,10 @@ namespace BossChallengeMod.Configuration {
         }
 
         public async Task<BossEntry> GetRecordForBoss(MonsterBase monsterBase, ChallengeConfiguration challengeConfiguration) {
-            var targetRecordEntry = await _recordsRepository.GetRecordForConfigurationAsync(challengeConfiguration);
+            var targetRecordEntry = !challengeConfiguration.UseSingleRecordKey ?
+                await _recordsRepository.GetRecordForConfigurationAsync(challengeConfiguration) :
+                await _recordsRepository.GetRecordForKeyAsync("uni");
+
             if (targetRecordEntry == null) {
                 return new BossEntry() {
                     Boss = monsterBase.gameObject.name,
@@ -41,20 +44,33 @@ namespace BossChallengeMod.Configuration {
             return targetBossEntry;
         }
 
-        public IEnumerator SaveRecordForBoss(MonsterBase monsterBase, int bestValue, int lastValue) {
-            yield return SaveRecordForBoss(monsterBase, ChallengeConfiguration, bestValue, lastValue);
+        public IEnumerator SaveRecordForBoss(MonsterBase monsterBase, int bestValue, int lastValue, bool useSingleKey = false) {
+            yield return SaveRecordForBoss(monsterBase, ChallengeConfiguration, bestValue, lastValue, useSingleKey);
         }
 
-        public IEnumerator SaveRecordForBoss(MonsterBase monsterBase, ChallengeConfiguration challengeConfiguration, int bestValue, int lastValue) {
-            taskQueue.Enqueue(() => {
-                _recordsRepository.SaveBossRecordForConfigurationAsync(
-                    challengeConfiguration,
-                    new BossEntry() {
-                        Boss = monsterBase.gameObject.name,
-                        BestValue = bestValue,
-                        LastValue = lastValue
-                    });
-            });
+        public IEnumerator SaveRecordForBoss(MonsterBase monsterBase, ChallengeConfiguration challengeConfiguration, int bestValue, int lastValue, bool useSingleKey = false) {
+            if(!useSingleKey) {
+                taskQueue.Enqueue(() => {
+                    _recordsRepository.SaveBossRecordForConfigurationAsync(
+                        challengeConfiguration,
+                        new BossEntry() {
+                            Boss = monsterBase.gameObject.name,
+                            BestValue = bestValue,
+                            LastValue = lastValue
+                        });
+                });
+            }
+            else {
+                taskQueue.Enqueue(() => {
+                    _recordsRepository.SaveBossRecordForKeyAsync(
+                        "uni",
+                        new BossEntry() {
+                            Boss = monsterBase.gameObject.name,
+                            BestValue = bestValue,
+                            LastValue = lastValue
+                        });
+                });
+            }
 
             if (!isInProcess) {
                 isInProcess = true;

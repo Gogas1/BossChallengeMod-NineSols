@@ -5,6 +5,7 @@ using System.Text;
 namespace BossChallengeMod.Configuration {
     public struct ChallengeConfiguration {
         public bool EnableRestoration;
+        public bool UseSingleRecordKey;
         public int MaxCycles;
 
         public bool EnableSpeedScaling;
