@@ -36,6 +36,10 @@
   "random_arrow": "Rand arrow",
   "random_talisman": "Rand talisman",
   "endurance": "Endurance",
+  "qi_shield": "Qi Shield",
+  "timer_shield": "Cooldown shield",
+  "qi_overload": "Qi-Overload",
+  "distance_shield": "Distance shield",
 
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
@@ -63,5 +67,8 @@
   "config_modifiers_random_arrow_enabled_description": "Random arrow modifier.\n The selected arrow changes randomly after shooting. It cannot be changed by player.",
   "config_modifiers_random_talisman_enabled_description": "Random talisman modifier.\n The selected talisman changes randomly after exlosion. It cannot be changed by player.\n(Current talisman mode will display above the selected arrow, it may take few uses to display)",
   "config_modifiers_endurance_enabled_description": "Endurance modifier.\n Enemy cannot be stunned. The stun after parrying some attacks and Lady Ethereal's stun will still apply.",
-  "config_modifiers_qi_shield_enabled_description": "Qi shield modifier.\n Enemy will receive shield after talisman explosion."
+  "config_modifiers_qi_shield_enabled_description": "Qi shield modifier.\n Enemy will receive shield after talisman explosion.",
+  "config_modifiers_cooldown_shield_enabled_description": "Cooldown Shield Modifier.\nThe enemy will constantly receive a shield with a slight delay.",
+  "config_modifiers_distance_shield_enabled_description": "Distance Shield Modifier.\nThe enemy will receive a shield if they are far away from the Yi.",
+  "config_modifiers_qi_overload_enabled_description": "Qi Overload Modifier.\nGaining Qi charges above the maximum will deal internal damage. If you have no health, the accumulated charges will be lost upon gaining six extra charges. Spending Chi charges resets the extra charges counter."
 }

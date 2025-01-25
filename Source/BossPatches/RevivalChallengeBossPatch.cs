@@ -209,13 +209,29 @@ namespace BossChallengeMod.BossPatches {
                 modifierController.ModifierConfigs.Add(qiShieldModifier);
             }
 
-            if (config.ImpactShieldModifierEnabled) {
+            if (config.TimedShieldModifierEnabled) {
                 var impactShieldModifier = new ModifierConfig() {
                     Key = "timer_shield"
                 };
                 impactShieldModifier.Incompatibles.Add(impactShieldModifier.Key);
                 impactShieldModifier.Incompatibles.AddRange(["qi_shield"]);
                 modifierController.ModifierConfigs.Add(impactShieldModifier);
+            }
+
+            if (config.QiOverloadModifierEnabled) {
+                var qiOverloadModifier = new ModifierConfig() {
+                    Key = "qi_overload"
+                };
+                qiOverloadModifier.Incompatibles.Add(qiOverloadModifier.Key);
+                modifierController.ModifierConfigs.Add(qiOverloadModifier);
+            }
+
+            if (config.DistanceShieldModifierEnabled) {
+                var distanceShieldModifier = new ModifierConfig() {
+                    Key = "distance_shield"
+                };
+                distanceShieldModifier.Incompatibles.Add(distanceShieldModifier.Key);
+                modifierController.ModifierConfigs.Add(distanceShieldModifier);
             }
         }
 
@@ -263,6 +279,12 @@ namespace BossChallengeMod.BossPatches {
 
             var impactShieldModifier = modifiersFolder.AddChildrenComponent<TimedShieldModifier>("ImpactShieldModifier");
             result.Add(impactShieldModifier);
+
+            var qiOverloadModifier = modifiersFolder.AddChildrenComponent<QiOverloadModifier>("QiOverloadModifier");
+            result.Add(qiOverloadModifier);
+
+            var distanceShieldModifier = modifiersFolder.AddChildrenComponent<DistanceShieldModifier>("DistanceShieldModifier");
+            result.Add(distanceShieldModifier);
 
             return result;
         }

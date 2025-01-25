@@ -263,6 +263,50 @@ public class Patches {
             }
         }
     }
+
+    private static int overloadCounter = 0;
+    private static int overloadThreshold = 6;
+    [HarmonyPatch(typeof(PlayerEnergy), nameof(PlayerEnergy.Gain))]
+    [HarmonyPrefix]
+    public static bool OnQiGain(PlayerEnergy __instance, float amount) {
+        if(__instance == Player.i.chiContainer) {
+            if(BossChallengeMod.Instance.GlobalModifiersFlags.EnableQiOverloadVotes.Any()) {
+                int extraCharges = Math.Max(0, (int)(__instance.Value + amount - __instance.MaxValue));
+
+                if(extraCharges > 0) {
+                    if(Player.i.health.currentValue <= 1f) {
+                        overloadCounter += (int)extraCharges;
+                        if(overloadCounter >= overloadThreshold) {
+                            __instance.Clear();
+                            overloadCounter = 0;
+                            return false;
+                        }
+                    }                
+
+                    Player.i.health.ReceiveRecoverableDamage(Player.i.health.maxHealth.Value / 10 * extraCharges);
+                }
+                else {
+                    overloadCounter = 0;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    [HarmonyPatch(typeof(PlayerEnergy), nameof(PlayerEnergy.Consume))]
+    [HarmonyPostfix]
+    public static void OnQiConsume(PlayerEnergy __instance) {
+        overloadCounter = 0;
+    }
+
+    [HarmonyPatch(typeof(PlayerDrinkPotionState), nameof(PlayerDrinkPotionState.AnimationEvent))]
+    [HarmonyPostfix]
+    public static void OnSmoked(ref PlayerAnimationEventTag tag) {
+        if(tag == PlayerAnimationEventTag.Done) {
+            BossChallengeMod.Instance.GlobalModifiersFlags.OnPlayerSmoked?.Invoke();
+        }
+    }
 }
 
 public enum MonsterNotifyType {

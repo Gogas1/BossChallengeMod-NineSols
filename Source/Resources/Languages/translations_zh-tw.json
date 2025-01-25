@@ -36,6 +36,10 @@
   "random_arrow": "隨機箭矢",
   "random_talisman": "隨機護符",
   "endurance": "耐力",
+  "qi_shield": "氣盾",
+  "timer_shield": "冷卻護盾",
+  "qi_overload": "氣過載",
+  "distance_shield": "距離護盾",
   "config_cycling_enabled_description": "啟用首領復活。\n首領將恢復生命值並返回第一階段，而不是死亡。",
   "config_single_recording_enabled_description": "記錄戰鬥結果，而不受配置影響。預設情況下，每種唯一的配置狀態（包括第1、2、3節）都會生成結果，以便每種設定的挑戰難度都有自己的結果。啟用此設定後，將會記錄並使用統一的結果，而不考慮挑戰設定。",
   "config_cycles_number_description": "首領死亡次數。\n首領將在指定死亡次數後死亡（包括本次）。",
@@ -58,5 +62,8 @@
   "config_modifiers_random_arrow_enabled_description": "隨機箭矢修改器。\n選定的箭矢會在射擊後隨機更改。玩家無法自行更改。",
   "config_modifiers_random_talisman_enabled_description": "隨機護符修改器。\n選定的護符會在引爆後隨機更改。玩家無法自行更改。\n（目前護符模式將顯示在選定的箭矢上方，可能需要使用幾次才會顯示）",
   "config_modifiers_endurance_enabled_description": "耐力修改器。\n敵人無法被擊暈。格擋某些攻擊後的擊暈和蚨蝶的擊暈仍然會生效。",
-  "config_modifiers_qi_shield_enabled_description": "氣盾修飾符。\n護符爆炸後敵人會獲得護盾。"
+  "config_modifiers_qi_shield_enabled_description": "氣盾修改器。\n護符爆炸後，敵人將會獲得護盾。",
+  "config_modifiers_cooldown_shield_enabled_description": "冷卻護盾修改器。\n敵人會在短時間延遲後持續獲得護盾。",
+  "config_modifiers_distance_shield_enabled_description": "距離護盾修改器。\n若敵人與羿的距離較遠，敵人將會獲得護盾。",
+  "config_modifiers_qi_overload_enabled_description": "氣過載修改器。\n獲得超過最大值的氣充能將導致內部傷害。如果沒有生命值，當獲得六次額外充能時，累積的充能將會丟失。使用氣充能會重置額外充能計數器。"
 }

@@ -52,12 +52,13 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<bool> isDamageBuildupModifierEnabled = null!;
     private ConfigEntry<bool> isRegenerationModifierEnabled = null!;
     private ConfigEntry<bool> isKnockbackModifierEnabled = null!;
-    //private ConfigEntry<bool> isKnockoutModifierEnabled = null!;
     private ConfigEntry<bool> isRandomArrowModifierEnabled = null!;
     private ConfigEntry<bool> isRandomTalismanModifierEnabled = null!;
     private ConfigEntry<bool> isEnduranceModifierEnabled = null!;
     private ConfigEntry<bool> isQiShieldModifierEnabled = null!;
-    private ConfigEntry<bool> isImpactShieldModifierEnabled = null!;
+    private ConfigEntry<bool> isTimedShieldModifierEnabled = null!;
+    private ConfigEntry<bool> isQiOverloadModifierEnabled = null!;
+    private ConfigEntry<bool> isDistanceShieldModifierEnabled = null!;
 
     private ConfigEntry<bool> isCounterUIEnabled = null!;
     private ConfigEntry<bool> useCustomCounterPosition = null!;
@@ -81,7 +82,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     public MonsterUIController MonsterUIController { get; private set; } = null!;
     public LocalizationResolver LocalizationResolver { get; private set; } = null!;
     public ChallengeConfigurationManager ChallengeConfigurationManager { get; private set; } = null!;
-    public GlobalModifiersFlags GlobalModifiersFlags { get; private set; } = null!;
+    public GlobalModifiersController GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
 
     private Preloader Preloader { get; set; } = null!;
@@ -117,7 +118,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         IRecordsRepository recordsRepo = new JsonRecordsRepository();
         ChallengeConfigurationManager = new ChallengeConfigurationManager(recordsRepo);
-        GlobalModifiersFlags = new GlobalModifiersFlags();
+        GlobalModifiersFlags = new GlobalModifiersController();
         InitializeChallengeConfiguration();
         HandleConfigurationValues();
 
@@ -591,7 +592,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         isQiShieldModifierEnabled = Config.Bind(
             "3. Modifiers",
-            "3.M Qi Shield modiifer",
+            "3.M Shield: Qi Shield modiifer",
             true,
             LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
         isQiShieldModifierEnabled.SettingChanged += (_, _) => {
@@ -600,14 +601,36 @@ public class BossChallengeMod : BaseUnityPlugin {
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
 
-        isImpactShieldModifierEnabled = Config.Bind(
+        isTimedShieldModifierEnabled = Config.Bind(
             "3. Modifiers",
-            "3.M Impact Shield modiifer",
+            "3.M Shield: Cooldown Shield modiifer",
             true,
-            LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
-        isImpactShieldModifierEnabled.SettingChanged += (_, _) => {
+            LocalizationResolver.Localize("config_modifiers_cooldown_shield_enabled_description"));
+        isTimedShieldModifierEnabled.SettingChanged += (_, _) => {
             var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.ImpactShieldModifierEnabled = isImpactShieldModifierEnabled.Value;
+            config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        isQiOverloadModifierEnabled = Config.Bind(
+            "3. Modifiers",
+            "3.M Qi Overload modiifer",
+            true,
+            LocalizationResolver.Localize("config_modifiers_qi_overload_enabled_description"));
+        isQiOverloadModifierEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        isDistanceShieldModifierEnabled = Config.Bind(
+            "3. Modifiers",
+            "3.M Shield: Distance Shield modiifer",
+            true,
+            LocalizationResolver.Localize("config_modifiers_distance_shield_enabled_description"));
+        isDistanceShieldModifierEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
     }
@@ -644,7 +667,9 @@ public class BossChallengeMod : BaseUnityPlugin {
         config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
         config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
         config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
-        config.ImpactShieldModifierEnabled = isImpactShieldModifierEnabled.Value;
+        config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
+        config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
+        config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
 
         ChallengeConfigurationManager.ChallengeConfiguration = config;
     }
