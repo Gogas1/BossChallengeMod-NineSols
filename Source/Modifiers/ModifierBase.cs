@@ -31,7 +31,7 @@ namespace BossChallengeMod.Modifiers {
 
         }
 
-        public virtual void MonsterNotify() {
+        public virtual void MonsterNotify(MonsterNotifyType notifyType) {
 
         }
     }

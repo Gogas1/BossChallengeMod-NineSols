@@ -1,5 +1,4 @@
-﻿
-using BossChallengeMod.Preload;
+﻿using BossChallengeMod.Preloading;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,11 +8,7 @@ namespace BossChallengeMod.ObjectProviders {
     public class ShieldProvider : IPreloadTarget {
         private GameObject? shieldCopy = null;
 
-        public void Set(GameObject? preloaded, string scene, string path) {
-            shieldCopy = preloaded;
-        }
-
-        public void Unset(GameObject preloaded) {
+        public void Set(GameObject? preloaded) {
             shieldCopy = preloaded;
         }
 

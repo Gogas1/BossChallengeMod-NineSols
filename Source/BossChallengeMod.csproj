@@ -9,6 +9,12 @@
         <PublishRelease>true</PublishRelease>
         <NoWarn>MSB3277</NoWarn>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="Resources\Bundles\items.bundle" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Bundles\items.bundle" />
+    </ItemGroup>
 
     <ItemGroup>
 		<Reference Include="Assembly-CSharp">

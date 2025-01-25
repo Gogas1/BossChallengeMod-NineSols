@@ -1,11 +1,11 @@
-﻿using BossChallengeMod.Modifiers;
+﻿using BossChallengeMod.Modifiers.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace BossChallengeMod.BossPatches {
+namespace BossChallengeMod.BossPatches.TargetPatches {
     public class GoumangBossPatch : RevivalChallengeBossPatch {
 
         protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
@@ -22,6 +22,9 @@ namespace BossChallengeMod.BossPatches {
 
                 var spearZombieModifiers = CreateModifiers(spearZombie);
                 var hammerZombieModifiers = CreateModifiers(hammerZombie);
+
+                spearZombie.gameObject.AddComponent<MonsterShieldController>();
+                hammerZombie.gameObject.AddComponent<MonsterShieldController>();
 
                 controller.Modifiers.AddRange(spearZombieModifiers);
                 controller.Modifiers.AddRange(hammerZombieModifiers);

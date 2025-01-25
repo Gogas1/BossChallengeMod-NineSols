@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace BossChallengeMod.Modifiers {
+namespace BossChallengeMod.Modifiers.Managers {
     public class MonsterModifierController : MonoBehaviour {
         public List<ModifierBase> Modifiers = new List<ModifierBase>();
 
@@ -47,7 +47,7 @@ namespace BossChallengeMod.Modifiers {
             Selected.Clear();
 
             if (availablilities.Any()) {
-                for (int i = 0; i < modifiersNumber && availablilities.Any(); i++) {                    
+                for (int i = 0; i < modifiersNumber && availablilities.Any(); i++) {
                     var selected = availablilities[random.Next(0, availablilities.Count)];
                     availablilities.RemoveAll(am => selected.Incompatibles.Select(i => i).Contains(am.Key));
                     Selected.Add(selected);

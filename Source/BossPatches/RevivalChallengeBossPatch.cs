@@ -2,6 +2,7 @@
 using BossChallengeMod.CustomMonsterStates;
 using BossChallengeMod.KillCounting;
 using BossChallengeMod.Modifiers;
+using BossChallengeMod.Modifiers.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +106,7 @@ namespace BossChallengeMod.BossPatches {
 
             var modifiers = CreateModifiers(monsterBase);
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
+            var shieldController = monsterBase.gameObject.AddComponent<MonsterShieldController>();
 
             if (config.ModifiersEnabled && UseModifiers) {
                 PopulateModifierController(modifierController, config);
@@ -203,7 +205,17 @@ namespace BossChallengeMod.BossPatches {
                     Key = "qi_shield"
                 };
                 qiShieldModifier.Incompatibles.Add(qiShieldModifier.Key);
+                qiShieldModifier.Incompatibles.AddRange(["timer_shield"]);
                 modifierController.ModifierConfigs.Add(qiShieldModifier);
+            }
+
+            if (config.ImpactShieldModifierEnabled) {
+                var impactShieldModifier = new ModifierConfig() {
+                    Key = "timer_shield"
+                };
+                impactShieldModifier.Incompatibles.Add(impactShieldModifier.Key);
+                impactShieldModifier.Incompatibles.AddRange(["qi_shield"]);
+                modifierController.ModifierConfigs.Add(impactShieldModifier);
             }
         }
 
@@ -248,6 +260,9 @@ namespace BossChallengeMod.BossPatches {
 
             var qiShieldModifier = modifiersFolder.AddChildrenComponent<QiShieldModifier>("QiShieldModifer");
             result.Add(qiShieldModifier);
+
+            var impactShieldModifier = modifiersFolder.AddChildrenComponent<TimedShieldModifier>("ImpactShieldModifier");
+            result.Add(impactShieldModifier);
 
             return result;
         }

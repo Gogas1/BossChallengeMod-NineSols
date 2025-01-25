@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
-namespace BossChallengeMod.BossPatches {
+namespace BossChallengeMod.BossPatches.TargetPatches {
     public class FuxiBossPatch : RevivalChallengeBossPatch {
 
         public override IEnumerable<RCGEventReceiver> CreateReceivers(MonsterBase monster, IEnumerable<MonsterState> monsterStates) {
@@ -49,8 +49,8 @@ namespace BossChallengeMod.BossPatches {
             var transitionReceiver = CreateEventReceiverAsComponent(transitionComponent.gameObject, eventType, [transitionComponent]);
             var receivers = transitionComponent.GetComponents<RCGEventReceiver>();
             foreach (var receiver in receivers) {
-                if(receiver.eventType == default) {
-                    GameObject.Destroy(receiver);
+                if (receiver.eventType == default) {
+                    UnityEngine.Object.Destroy(receiver);
                 }
             }
 
@@ -69,4 +69,3 @@ namespace BossChallengeMod.BossPatches {
         }
     }
 }
- 

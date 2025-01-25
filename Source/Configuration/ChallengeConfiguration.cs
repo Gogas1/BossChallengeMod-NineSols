@@ -30,5 +30,6 @@ namespace BossChallengeMod.Configuration {
         public bool RandomTalismanModifierEnabled;
         public bool EnduranceModifierEnabled;
         public bool QiShieldModifierEnabled;
+        public bool ImpactShieldModifierEnabled;
     }
 }

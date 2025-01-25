@@ -10,5 +10,11 @@ namespace BossChallengeMod.Modifiers {
 
             Key = "qi_shield";
         }
+
+        public override void MonsterNotify(MonsterNotifyType notifyType) {
+            if(notifyType == MonsterNotifyType.OnExplode) {
+                base.MonsterNotify(notifyType);
+            }
+        }
     }
 }

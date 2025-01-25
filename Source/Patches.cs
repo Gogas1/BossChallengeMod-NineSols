@@ -259,22 +259,14 @@ public class Patches {
         var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
         if (modifiers != null) {
             foreach (ModifierBase modifier in modifiers) {
-                modifier.MonsterNotify();
+                modifier.MonsterNotify(MonsterNotifyType.OnExplode);
             }
         }
     }
+}
 
-    [HarmonyPatch(typeof(NineSolsAPICore), "OnLoadDone")]
-    [HarmonyPrefix]
-    public static bool ChangeToMenuPostfix() {
-        BossChallengeMod.Instance.Preload();
-
-        return false;
-    }
-
-    //[HarmonyPatch(typeof(LogoLogic), nameof(LogoLogic.Start))]
-    //[HarmonyPostfix]
-    //public static void LogoLogicStartPostfix() {
-    //    BossChallengeMod.Instance.Preload();
-    //}
+public enum MonsterNotifyType {
+    Generic,
+    OnExplode,
+    OnChargeAttack
 }

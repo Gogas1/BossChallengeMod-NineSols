@@ -17,8 +17,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BossChallengeMod.ObjectProviders;
-using BossChallengeMod.Preload;
 using System.IO;
+using BossChallengeMod.Preloading;
+using BossChallengeMod.BossPatches.TargetPatches;
 
 namespace BossChallengeMod;
 
@@ -56,6 +57,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<bool> isRandomTalismanModifierEnabled = null!;
     private ConfigEntry<bool> isEnduranceModifierEnabled = null!;
     private ConfigEntry<bool> isQiShieldModifierEnabled = null!;
+    private ConfigEntry<bool> isImpactShieldModifierEnabled = null!;
 
     private ConfigEntry<bool> isCounterUIEnabled = null!;
     private ConfigEntry<bool> useCustomCounterPosition = null!;
@@ -82,9 +84,9 @@ public class BossChallengeMod : BaseUnityPlugin {
     public GlobalModifiersFlags GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
 
-    public ShieldProvider ShieldProvider { get; private set; } = null!;
+    private Preloader Preloader { get; set; } = null!;
 
-    private Preloader Preloader = null!;
+    public ShieldProvider ShieldProvider { get; private set; } = null!;
 
     public static BossChallengeMod Instance { get; private set; } = null!;
 
@@ -102,13 +104,13 @@ public class BossChallengeMod : BaseUnityPlugin {
         Instance = this;
 
         Log.Init(Logger);
-        Preloader = new Preloader(p => { });
 
         RCGLifeCycle.DontDestroyForever(gameObject);
 
+        Preloader = new Preloader();
         ShieldProvider = new ShieldProvider();
 
-        Preloading();
+        AssignPreloadingTargets();
 
         LocalizationResolver = new LocalizationResolver();
         LocalizationResolver.LoadLanguage(GetLanguageCode());
@@ -137,25 +139,15 @@ public class BossChallengeMod : BaseUnityPlugin {
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded1!");
     }
 
-    private void Preloading() {
+    private void Start() {
+        StartCoroutine(Preloader.Preload());
+    }
+
+    private void AssignPreloadingTargets() {
         string shieldScene = "A5_S5_JieChuanHall";
-        string shieldPath = "A5_S5/Room/EventBinder/General Boss Fight FSM Object_結權/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_Boss_JieChuan/MonsterCore/Animator(Proxy)/Animator/BuffPos/Shield(Effect Receiver)_Shield Sphere Version";
+        string shieldName = "Shield(Effect Receiver)_Shield Sphere Version";
 
-        Preloader.AddPreload(shieldScene, shieldPath, ShieldProvider);
-    }
-
-    //private void Start() {
-    //    Preload();
-    //}
-
-    public void Preload() {
-        StartCoroutine(PreloadingRoutine());
-    }
-
-    public IEnumerator PreloadingRoutine() {
-        yield return Preloader.Preload();
-
-        SceneManager.LoadScene("TitleScreenMenu");
+        Preloader.AddPreload(shieldScene, shieldName, ShieldProvider);
     }
 
     private string GetLanguageCode() {
@@ -189,6 +181,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     }
 
     private void InitializePatches() {
+        BossPatches.Add("StealthGameMonster_SpearHorseMan", GetHorseBossPatch());
         BossPatches.Add("StealthGameMonster_伏羲_新", GetFuxiBossPatch());
         BossPatches.Add("StealthGameMonster_新女媧 Variant", GetNuwaBossPatch());
         BossPatches.Add("StealthGameMonster_GouMang Variant", GetGoumangBossPatch());
@@ -261,7 +254,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private GeneralBossPatch GetClawBossPatch() {
         var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
 
-        var clawBossPatch = new RevivalChallengeBossPatch();
+        var clawBossPatch = new ClawBossPatch();
         clawBossPatch.DieStates = [
             MonsterBase.States.BossAngry,
             MonsterBase.States.LastHit,
@@ -313,6 +306,24 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         return eigongBossPatch;
     }
+    private GeneralBossPatch GetHorseBossPatch() {
+        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
+
+        var defaultBossPatch = new HorseBossPatch();
+        defaultBossPatch.DieStates = [
+            MonsterBase.States.BossAngry,
+            MonsterBase.States.LastHit,
+            MonsterBase.States.Dead
+        ];
+
+        var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
+        resetStateConfig.ExitState = MonsterBase.States.Engaging;
+        resetStateConfig.Animations = ["PostureBreak"];
+        resetStateConfig.StateType = bossReviveMonsterState;
+        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
+
+        return defaultBossPatch;
+    }
     private GeneralBossPatch GetDefaultBossPatch() {
         var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
 
@@ -331,6 +342,8 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         return defaultBossPatch;
     }
+
+    
 
     private void InitializeChallengeConfiguration() {
 
@@ -586,6 +599,17 @@ public class BossChallengeMod : BaseUnityPlugin {
             config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
+
+        isImpactShieldModifierEnabled = Config.Bind(
+            "3. Modifiers",
+            "3.M Impact Shield modiifer",
+            true,
+            LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
+        isImpactShieldModifierEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.ImpactShieldModifierEnabled = isImpactShieldModifierEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
     }
 
     private void IsCyclingEnabled_SettingChanged(object sender, EventArgs e) {
@@ -620,6 +644,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
         config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
         config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
+        config.ImpactShieldModifierEnabled = isImpactShieldModifierEnabled.Value;
 
         ChallengeConfigurationManager.ChallengeConfiguration = config;
     }

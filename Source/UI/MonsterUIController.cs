@@ -1,5 +1,5 @@
 ﻿using BossChallengeMod.KillCounting;
-using BossChallengeMod.Modifiers;
+using BossChallengeMod.Modifiers.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

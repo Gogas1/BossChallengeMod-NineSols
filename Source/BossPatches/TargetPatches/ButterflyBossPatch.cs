@@ -11,8 +11,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using BossChallengeMod.Modifiers.Managers;
 
-namespace BossChallengeMod.BossPatches {
+namespace BossChallengeMod.BossPatches.TargetPatches {
     public class ButterflyBossPatch : RevivalChallengeBossPatch {
 
         public ChallengeConfiguration ChallengeConfiguration { get; set; }
@@ -161,7 +162,7 @@ namespace BossChallengeMod.BossPatches {
             var receivers = transitionComponent.GetComponents<RCGEventReceiver>();
             foreach (var receiver in receivers) {
                 if (receiver.eventType == default) {
-                    GameObject.Destroy(receiver);
+                    UnityEngine.Object.Destroy(receiver);
                 }
             }
 
@@ -177,6 +178,11 @@ namespace BossChallengeMod.BossPatches {
 
         protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
             var controller = base.InitializeModifiers(monsterBase);
+
+            var shieldController = monsterBase.gameObject.GetComponent<MonsterShieldController>();
+            if (shieldController != null) {
+                GameObject.Destroy(shieldController);
+            }
 
             if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration &&
                 challengeConfigurationManager.ChallengeConfiguration.ModifiersEnabled) {
@@ -221,6 +227,12 @@ namespace BossChallengeMod.BossPatches {
             result.Add(enduranceModifier);
 
             return result;
+        }
+
+        protected override void PopulateModifierController(MonsterModifierController modifierController, ChallengeConfiguration config) {
+            base.PopulateModifierController(modifierController, config);
+
+            modifierController.ModifierConfigs.RemoveAll(m => m.Key.Contains("shield"));
         }
     }
 }

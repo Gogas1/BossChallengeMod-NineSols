@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BossChallengeMod.Modifiers.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,68 +9,43 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers {
     public class ShieldModifier : ModifierBase {
 
-        protected GameObject? shieldObject;
-        protected MonsterShield? shieldComponent;
-
-        private bool adjustingNeeded = false;
-        private bool initNeeded = true;
+        protected MonsterShieldController MonsterShieldController = null!;
 
         public override void Awake() {
             base.Awake();
             Key = "shield";
 
-            shieldComponent = Monster?.ShieldOnMonster ?? null;
+            MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+        }
 
-            if(shieldComponent == null) {
-                shieldObject = BossChallengeMod.Instance.ShieldProvider.GetShieldCopy();
-                shieldComponent = shieldObject?.GetComponent<MonsterShield>() ?? null;
-                adjustingNeeded = true;
-            }
-            else {
-                shieldObject = shieldComponent.gameObject;
-            }
-
-            if (shieldObject != null && shieldComponent != null && Monster != null) {
-                var buffPosObject = Monster?.monsterCore.buffPos ?? null;
-
-                if (buffPosObject != null) {
-                    shieldObject.transform.SetParent(buffPosObject.transform, false);
-                }
-                else {
-                    shieldObject.transform.SetParent(Monster.transform, false);
-                }
-                AutoAttributeManager.AutoReference(shieldObject);
-
-                var damageReceivers = Monster.damageReceivers;
-                if (damageReceivers != null && adjustingNeeded) {
-                    var biggestColliderSize = damageReceivers.Select(dr => dr.GetComponent<BoxCollider2D>()).Max(bc => Math.Max(bc.size.x, bc.size.y));
-                    float scale = biggestColliderSize / 58;
-
-                    shieldObject.transform.localScale = new Vector3(scale, scale, scale);
-                }
+        public void AssignShieldController(MonsterShieldController monsterShieldController) {
+            if(monsterShieldController != null) {
+                MonsterShieldController = monsterShieldController;
             }
         }
 
         public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             base.NotifyActivation(keys, iteration);
 
+            if (MonsterShieldController == null) {
+                MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+            }
+
             enabled = keys.Contains(Key);
             if(!enabled) {
-                shieldComponent.Break();
+                MonsterShieldController?.Deactivate();
             }
         }
 
-        public override void MonsterNotify() {
-            base.MonsterNotify();
+        public override void MonsterNotify(MonsterNotifyType notifyType) {
+            base.MonsterNotify(notifyType);
 
-            if (enabled && shieldComponent != null) {
-                if(initNeeded) {
-                    shieldComponent.InitAndBindToMonster();
-                    initNeeded = false;
-                }
-                else {
-                    shieldComponent.Reset();
-                }
+            ActivateCheck();
+        }
+
+        protected void ActivateCheck() {
+            if (enabled) {
+                MonsterShieldController?.Activate();
             }
         }
     }
