@@ -1,11 +1,10 @@
-﻿using BossChallengeMod.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace BossChallengeMod.Helpers {
-    public static class RecordsEncoder {
+namespace BossChallengeMod.Configuration.BackwardCompability {
+    public static class BackwardCompabilityEncoder {
         public static string EncodeToBase64(ChallengeConfiguration config) {
             var binaryData = EncodeChallengeConfiguration(config);
             return Convert.ToBase64String(binaryData);
@@ -20,7 +19,7 @@ namespace BossChallengeMod.Helpers {
             using (var ms = new MemoryStream())
             using (var writer = new BinaryWriter(ms)) {
                 writer.Write(config.MaxCycles);
-                
+
                 writer.Write(config.EnableSpeedScaling);
                 writer.Write(config.MinSpeedScalingValue);
                 writer.Write(config.MaxSpeedScalingValue);
@@ -41,7 +40,6 @@ namespace BossChallengeMod.Helpers {
                 writer.Write(config.RandomArrowModifierEnabled);
                 writer.Write(config.RandomTalismanModifierEnabled);
                 writer.Write(config.EnduranceModifierEnabled);
-                writer.Write(config.QiShieldModifierEnabled);
 
                 return ms.ToArray();
             }
@@ -73,7 +71,6 @@ namespace BossChallengeMod.Helpers {
                     RandomArrowModifierEnabled = reader.ReadBoolean(),
                     RandomTalismanModifierEnabled = reader.ReadBoolean(),
                     EnduranceModifierEnabled = reader.ReadBoolean(),
-                    QiShieldModifierEnabled = reader.ReadBoolean(),
                 };
             }
         }

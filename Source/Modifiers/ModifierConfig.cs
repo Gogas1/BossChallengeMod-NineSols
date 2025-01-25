@@ -6,5 +6,6 @@ namespace BossChallengeMod.Modifiers {
     public class ModifierConfig {
         public string Key { get; set; } = string.Empty;
         public List<string> Incompatibles { get; } = new List<string>();
+        public List<string> IgnoredMonsters { get; } = new List<string>();
     }
 }

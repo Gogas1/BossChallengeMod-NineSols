@@ -197,6 +197,14 @@ namespace BossChallengeMod.BossPatches {
                 enduranceModifier.Incompatibles.Add(enduranceModifier.Key);
                 modifierController.ModifierConfigs.Add(enduranceModifier);
             }
+
+            if (config.QiShieldModifierEnabled) {
+                var qiShieldModifier = new ModifierConfig() {
+                    Key = "qi_shield"
+                };
+                qiShieldModifier.Incompatibles.Add(qiShieldModifier.Key);
+                modifierController.ModifierConfigs.Add(qiShieldModifier);
+            }
         }
 
         protected virtual IEnumerable<ModifierBase> CreateModifiers(MonsterBase monsterBase) {
@@ -237,6 +245,9 @@ namespace BossChallengeMod.BossPatches {
 
             var enduranceModifier = modifiersFolder.AddChildrenComponent<EnduranceModifier>("EnduranceModifier");
             result.Add(enduranceModifier);
+
+            var qiShieldModifier = modifiersFolder.AddChildrenComponent<QiShieldModifier>("QiShieldModifer");
+            result.Add(qiShieldModifier);
 
             return result;
         }

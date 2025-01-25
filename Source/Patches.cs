@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Reflection.Emit;
+using NineSolsAPI;
 
 namespace BossChallengeMod;
 
@@ -251,4 +252,29 @@ public class Patches {
     public static void ResolutionChangedPatch(ref Resolution resolution) {
         BossChallengeMod.Instance.UIController?.RecalculatePositions(resolution.width, resolution.height);
     }
+
+    [HarmonyPatch(typeof(MonsterBase), "OnExplode")]
+    [HarmonyPostfix]
+    public static void OnExplodePostfix(MonsterBase __instance) {
+        var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
+        if (modifiers != null) {
+            foreach (ModifierBase modifier in modifiers) {
+                modifier.MonsterNotify();
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(NineSolsAPICore), "OnLoadDone")]
+    [HarmonyPrefix]
+    public static bool ChangeToMenuPostfix() {
+        BossChallengeMod.Instance.Preload();
+
+        return false;
+    }
+
+    //[HarmonyPatch(typeof(LogoLogic), nameof(LogoLogic.Start))]
+    //[HarmonyPostfix]
+    //public static void LogoLogicStartPostfix() {
+    //    BossChallengeMod.Instance.Preload();
+    //}
 }

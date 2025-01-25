@@ -62,5 +62,6 @@
   "config_modifiers_knockout_enabled_description": "Knock out modifier. \n All attacks that hit apply strongest knock out force to Yi",
   "config_modifiers_random_arrow_enabled_description": "Random arrow modifier.\n The selected arrow changes randomly after shooting. It cannot be changed by player.",
   "config_modifiers_random_talisman_enabled_description": "Random talisman modifier.\n The selected talisman changes randomly after exlosion. It cannot be changed by player.\n(Current talisman mode will display above the selected arrow, it may take few uses to display)",
-  "config_modifiers_endurance_enabled_description": "Endurance modifier.\n Enemy cannot be stunned. The stun after parrying some attacks and Lady Ethereal's stun will still apply."
+  "config_modifiers_endurance_enabled_description": "Endurance modifier.\n Enemy cannot be stunned. The stun after parrying some attacks and Lady Ethereal's stun will still apply.",
+  "config_modifiers_qi_shield_enabled_description": "Qi shield modifier.\n Enemy will receive shield after talisman explosion."
 }

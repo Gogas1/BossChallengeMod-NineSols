@@ -59,7 +59,7 @@ namespace BossChallengeMod.Modifiers {
 
         public void ApplyModifiers(int iteration) {
             foreach (var modifier in Modifiers) {
-                modifier.Notify(Selected.Select(m => m.Key), iteration);
+                modifier.NotifyActivation(Selected.Select(m => m.Key), iteration);
             }
             modifiersNumber = CalculateModifiersNumber(iteration + 1);
         }

@@ -16,6 +16,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using BossChallengeMod.ObjectProviders;
+using BossChallengeMod.Preload;
+using System.IO;
 
 namespace BossChallengeMod;
 
@@ -52,6 +55,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<bool> isRandomArrowModifierEnabled = null!;
     private ConfigEntry<bool> isRandomTalismanModifierEnabled = null!;
     private ConfigEntry<bool> isEnduranceModifierEnabled = null!;
+    private ConfigEntry<bool> isQiShieldModifierEnabled = null!;
 
     private ConfigEntry<bool> isCounterUIEnabled = null!;
     private ConfigEntry<bool> useCustomCounterPosition = null!;
@@ -78,6 +82,10 @@ public class BossChallengeMod : BaseUnityPlugin {
     public GlobalModifiersFlags GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
 
+    public ShieldProvider ShieldProvider { get; private set; } = null!;
+
+    private Preloader Preloader = null!;
+
     public static BossChallengeMod Instance { get; private set; } = null!;
 
     private bool isToastsDisplayed;
@@ -94,7 +102,13 @@ public class BossChallengeMod : BaseUnityPlugin {
         Instance = this;
 
         Log.Init(Logger);
+        Preloader = new Preloader(p => { });
+
         RCGLifeCycle.DontDestroyForever(gameObject);
+
+        ShieldProvider = new ShieldProvider();
+
+        Preloading();
 
         LocalizationResolver = new LocalizationResolver();
         LocalizationResolver.LoadLanguage(GetLanguageCode());
@@ -121,6 +135,27 @@ public class BossChallengeMod : BaseUnityPlugin {
         harmony = Harmony.CreateAndPatchAll(typeof(BossChallengeMod).Assembly);
 
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded1!");
+    }
+
+    private void Preloading() {
+        string shieldScene = "A5_S5_JieChuanHall";
+        string shieldPath = "A5_S5/Room/EventBinder/General Boss Fight FSM Object_結權/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_Boss_JieChuan/MonsterCore/Animator(Proxy)/Animator/BuffPos/Shield(Effect Receiver)_Shield Sphere Version";
+
+        Preloader.AddPreload(shieldScene, shieldPath, ShieldProvider);
+    }
+
+    //private void Start() {
+    //    Preload();
+    //}
+
+    public void Preload() {
+        StartCoroutine(PreloadingRoutine());
+    }
+
+    public IEnumerator PreloadingRoutine() {
+        yield return Preloader.Preload();
+
+        SceneManager.LoadScene("TitleScreenMenu");
     }
 
     private string GetLanguageCode() {
@@ -540,6 +575,17 @@ public class BossChallengeMod : BaseUnityPlugin {
             config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
+
+        isQiShieldModifierEnabled = Config.Bind(
+            "3. Modifiers",
+            "3.M Qi Shield modiifer",
+            true,
+            LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
+        isQiShieldModifierEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
     }
 
     private void IsCyclingEnabled_SettingChanged(object sender, EventArgs e) {
@@ -573,6 +619,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         config.RandomArrowModifierEnabled = isRandomArrowModifierEnabled.Value;
         config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
         config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
+        config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
 
         ChallengeConfigurationManager.ChallengeConfiguration = config;
     }

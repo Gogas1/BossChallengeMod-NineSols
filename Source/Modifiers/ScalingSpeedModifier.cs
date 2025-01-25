@@ -14,7 +14,7 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
         }
 
-        public override void Notify(IEnumerable<string> keys, int iteration) {
+        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             modifier = CalculateModifier(iteration);
             if (Monster != null && challengeConfiguration.EnableSpeedScaling) {
                 Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);

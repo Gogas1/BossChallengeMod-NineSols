@@ -32,6 +32,9 @@
 		<Reference Include="I2.Loc">
 			<HintPath>Libs/I2.dll</HintPath>
 		</Reference>
+		<Reference Include="barbaro.autoattributes.Runtime.dll">
+			<HintPath>Libs/barbaro.autoattributes.Runtime.dll</HintPath>
+		</Reference>
 		<!---->
     </ItemGroup>
 

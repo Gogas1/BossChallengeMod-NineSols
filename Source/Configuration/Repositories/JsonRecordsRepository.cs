@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BossChallengeMod.Configuration.BackwardCompability;
 
 namespace BossChallengeMod.Configuration.Repositories {
     public class JsonRecordsRepository : IRecordsRepository {
@@ -24,7 +25,8 @@ namespace BossChallengeMod.Configuration.Repositories {
             List<RecordEntry>? records = JsonUtils.Deserialize<List<RecordEntry>>(json) ?? new List<RecordEntry>();
 
             string configurationKey = RecordsEncoder.EncodeToBase64(configuration);
-            return records.FirstOrDefault(r => r.Key == configurationKey);
+            string oldConfigurationKey = BackwardCompabilityEncoder.EncodeToBase64(configuration);
+            return records.FirstOrDefault(r => r.Key == configurationKey || r.Key == oldConfigurationKey);
         }
 
         public async Task<RecordEntry?> GetRecordForKeyAsync(string key) {
@@ -55,7 +57,9 @@ namespace BossChallengeMod.Configuration.Repositories {
             }
 
             string configurationKey = RecordsEncoder.EncodeToBase64(configuration);
-            var targetRecord = records.FirstOrDefault(r => r.Key == configurationKey) ?? new RecordEntry { Key = configurationKey };
+            string oldConfigurationKey = BackwardCompabilityEncoder.EncodeToBase64(configuration);
+            var targetRecord = records.FirstOrDefault(r => r.Key == configurationKey || r.Key == oldConfigurationKey) ?? new RecordEntry { Key = configurationKey };
+            targetRecord.Key = configurationKey;
 
             if (!records.Contains(targetRecord)) {
                 records.Add(targetRecord);

@@ -11,7 +11,7 @@ namespace BossChallengeMod.Modifiers {
             Key = "speed_temp";
         }
 
-        public override void Notify(IEnumerable<string> keys, int iteration) {
+        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             enabled = keys.Contains(Key);
         }
 

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BossChallengeMod.Configuration {
-    public struct ChallengeConfiguration {
+namespace BossChallengeMod.Configuration.BackwardCompability {
+    public struct OldChallengeConfiguration {
         public bool EnableRestoration;
         public bool UseSingleRecordKey;
         public int MaxCycles;

@@ -11,8 +11,8 @@ namespace BossChallengeMod.Modifiers {
             Key = "endurance";
         }
 
-        public override void Notify(IEnumerable<string> keys, int iteration) {
-            base.Notify(keys, iteration);
+        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
+            base.NotifyActivation(keys, iteration);
 
             enabled = keys.Contains(Key);
         }

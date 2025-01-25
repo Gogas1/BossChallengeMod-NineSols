@@ -57,5 +57,6 @@
   "config_modifiers_knockout_enabled_description": "擊倒修改器。\n所有擊中羿的攻擊都會對羿施加最強的擊倒效果。",
   "config_modifiers_random_arrow_enabled_description": "隨機箭矢修改器。\n選定的箭矢會在射擊後隨機更改。玩家無法自行更改。",
   "config_modifiers_random_talisman_enabled_description": "隨機護符修改器。\n選定的護符會在引爆後隨機更改。玩家無法自行更改。\n（目前護符模式將顯示在選定的箭矢上方，可能需要使用幾次才會顯示）",
-  "config_modifiers_endurance_enabled_description": "耐力修改器。\n敵人無法被擊暈。格擋某些攻擊後的擊暈和蚨蝶的擊暈仍然會生效。"
+  "config_modifiers_endurance_enabled_description": "耐力修改器。\n敵人無法被擊暈。格擋某些攻擊後的擊暈和蚨蝶的擊暈仍然會生效。",
+  "config_modifiers_qi_shield_enabled_description": "氣盾修飾符。\n護符爆炸後敵人會獲得護盾。"
 }

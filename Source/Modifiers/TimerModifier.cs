@@ -33,7 +33,7 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void Notify(IEnumerable<string> keys, int iteration) {
+        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             if (Monster != null) {
                 attempts.Add(stopwatch);
                 stopwatch = 0;

@@ -27,7 +27,11 @@ namespace BossChallengeMod.Modifiers {
             enabled = false;
         }
 
-        public virtual void Notify(IEnumerable<string> keys, int iteration) {
+        public virtual void NotifyActivation(IEnumerable<string> keys, int iteration) {
+
+        }
+
+        public virtual void MonsterNotify() {
 
         }
     }

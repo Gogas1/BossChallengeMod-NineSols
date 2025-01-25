@@ -22,8 +22,8 @@ namespace BossChallengeMod.Modifiers {
             Monster?.postureSystem.OnPostureDecrease.AddListener(PauseRegeneration);
         }
 
-        public override void Notify(IEnumerable<string> keys, int iteration) {
-            base.Notify(keys, iteration);
+        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
+            base.NotifyActivation(keys, iteration);
 
             started = enabled = keys.Contains(Key);
 

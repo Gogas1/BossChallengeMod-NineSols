@@ -17,8 +17,8 @@ namespace BossChallengeMod.Modifiers {
             Key = "damage_buildup";
         }
 
-        public override void Notify(IEnumerable<string> keys, int iteration) {
-            base.Notify(keys, iteration);
+        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
+            base.NotifyActivation(keys, iteration);
             
             started = enabled = keys.Contains(Key);
             if (started) {
