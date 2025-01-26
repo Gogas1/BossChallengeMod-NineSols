@@ -32,7 +32,7 @@ namespace BossChallengeMod.Modifiers {
             }
 
             enabled = keys.Contains(Key);
-            if(!enabled) {
+            if(!enabled && MonsterShieldController.IsShieldEnabled) {
                 MonsterShieldController?.Deactivate();
             }
         }

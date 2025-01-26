@@ -274,7 +274,9 @@ public class Patches {
                 int extraCharges = Math.Max(0, (int)(__instance.Value + amount - __instance.MaxValue));
 
                 if(extraCharges > 0) {
-                    if(Player.i.health.currentValue <= 1f) {
+                    Player.i.health.ReceiveRecoverableDamage(Player.i.health.maxHealth.Value / 10 * extraCharges);
+                    Log.Info($"{Player.i.health.currentValue}, {Player.i.health.maxHealth.Value / 10 * extraCharges}, {extraCharges}, {overloadCounter}, {overloadCounter + extraCharges}");
+                    if(Player.i.health.currentValue <= Player.i.health.maxHealth.Value / 10 * extraCharges) {
                         overloadCounter += (int)extraCharges;
                         if(overloadCounter >= overloadThreshold) {
                             __instance.Clear();
@@ -283,7 +285,6 @@ public class Patches {
                         }
                     }                
 
-                    Player.i.health.ReceiveRecoverableDamage(Player.i.health.maxHealth.Value / 10 * extraCharges);
                 }
                 else {
                     overloadCounter = 0;
@@ -298,14 +299,6 @@ public class Patches {
     [HarmonyPostfix]
     public static void OnQiConsume(PlayerEnergy __instance) {
         overloadCounter = 0;
-    }
-
-    [HarmonyPatch(typeof(PlayerDrinkPotionState), nameof(PlayerDrinkPotionState.AnimationEvent))]
-    [HarmonyPostfix]
-    public static void OnSmoked(ref PlayerAnimationEventTag tag) {
-        if(tag == PlayerAnimationEventTag.Done) {
-            BossChallengeMod.Instance.GlobalModifiersFlags.OnPlayerSmoked?.Invoke();
-        }
     }
 }
 

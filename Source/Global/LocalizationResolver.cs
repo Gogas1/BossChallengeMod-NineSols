@@ -27,7 +27,7 @@ namespace BossChallengeMod.Global {
         }
 
         private Dictionary<string, string> LoadLanguageEmbedded(string language) {
-            var translations = AssemblyUtils.GetEmbeddedJson<Dictionary<string, string>>($"Resources.Languages.translations_{language}.json");
+            var translations = AssemblyUtils.GetEmbeddedJson<Dictionary<string, string>>($"BossChallengeMod.Resources.Languages.translations_{language}.json");
             return translations ?? [];
         }
 

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace BossChallengeMod.Modifiers {
     public class DistanceShieldModifier : ShieldModifier {
 
-        protected float distanceTreshhold = 100;
+        protected float distanceTreshhold = 275;
 
         public override void Awake() {
             base.Awake();
@@ -15,11 +16,15 @@ namespace BossChallengeMod.Modifiers {
 
         private void Update() {
             if (!MonsterShieldController.IsShieldEnabled && Monster != null) {
-                var distanceDifference = Player.i.transform.position.x - Monster.transform.position.x;
+                var distanceDifference = Vector2.Distance(Player.i.transform.position, Monster.transform.position);
                 if (distanceDifference >= distanceTreshhold) {
                     ActivateCheck();
                 }
             }
+        }
+
+        public override void MonsterNotify(MonsterNotifyType notifyType) {
+            
         }
     }
 }
