@@ -40,6 +40,7 @@
   "timer_shield": "冷卻護盾",
   "qi_overload": "氣過載",
   "distance_shield": "距離護盾",
+  "ya_gun": "奄老之枪",
 
   "config_cycling_enabled_description": "启用首领复活。\n首领将恢复生命值并返回第一阶段，而不是死亡。",
   "config_single_recording_enabled_description": "记录战斗结果，而不受配置的影响。默认情况下，每种唯一的配置状态（包括第1、2、3节）都会生成结果，以便每种设置的挑战难度都有自己的结果。启用此设置后，将会记录并使用统一的结果，而不考虑挑战设置。",
@@ -66,5 +67,6 @@
   "config_modifiers_qi_shield_enabled_description": "氣盾修改器。\n護符爆炸後，敵人將獲得護盾。",
   "config_modifiers_cooldown_shield_enabled_description": "冷卻護盾修改器。\n敵人會在短時間延遲後持續獲得護盾。",
   "config_modifiers_distance_shield_enabled_description": "距離護盾修改器。\n如果敵人與羿的距離較遠，敵人將獲得護盾。",
-  "config_modifiers_qi_overload_enabled_description": "氣過載修改器。\n獲得超過最大值的氣充能將導致內部傷害。如果沒有生命值，當獲得六次額外充能時，累積的充能將會丟失。使用氣充能將重置額外充能計數器。"
+  "config_modifiers_qi_overload_enabled_description": "氣過載修改器。\n獲得超過最大值的氣充能將導致內部傷害。如果沒有生命值，當獲得六次額外充能時，累積的充能將會丟失。使用氣充能將重置額外充能計數器。",
+  "config_modifiers_yanlao_gun_enabled_description": "奄老之枪修改器。\n奄老之枪将以羿为目标。"
 }

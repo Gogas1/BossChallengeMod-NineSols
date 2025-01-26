@@ -40,6 +40,7 @@
   "timer_shield": "Cooldown shield",
   "qi_overload": "Qi-Overload",
   "distance_shield": "Distance shield",
+  "ya_gun": "Yanlao's gun",
 
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
@@ -70,5 +71,6 @@
   "config_modifiers_qi_shield_enabled_description": "Qi shield modifier.\n Enemy will receive shield after talisman explosion.",
   "config_modifiers_cooldown_shield_enabled_description": "Cooldown Shield Modifier.\nThe enemy will constantly receive a shield with a slight delay.",
   "config_modifiers_distance_shield_enabled_description": "Distance Shield Modifier.\nThe enemy will receive a shield if they are far away from the Yi.",
-  "config_modifiers_qi_overload_enabled_description": "Qi Overload Modifier.\nGaining Qi charges above the maximum will deal internal damage. If you have no health, the accumulated charges will be lost upon gaining six extra charges. Spending Chi charges resets the extra charges counter."
+  "config_modifiers_qi_overload_enabled_description": "Qi Overload Modifier.\nGaining Qi charges above the maximum will deal internal damage. If you have no health, the accumulated charges will be lost upon gaining six extra charges. Spending Chi charges resets the extra charges counter.",
+  "config_modifiers_yanlao_gun_enabled_description": "Yanlao's Gun Modifier'.\n Yanlao's gun will target Yi."
 }

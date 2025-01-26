@@ -59,6 +59,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<bool> isTimedShieldModifierEnabled = null!;
     private ConfigEntry<bool> isQiOverloadModifierEnabled = null!;
     private ConfigEntry<bool> isDistanceShieldModifierEnabled = null!;
+    private ConfigEntry<bool> isYanlaoGunModifierEnabled = null!;
 
     private ConfigEntry<bool> isCounterUIEnabled = null!;
     private ConfigEntry<bool> useCustomCounterPosition = null!;
@@ -640,6 +641,17 @@ public class BossChallengeMod : BaseUnityPlugin {
             config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
+
+        isYanlaoGunModifierEnabled = Config.Bind(
+            "3. Modifiers",
+            "3.M Yanlago Gun modiifer",
+            true,
+            LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"));
+        isYanlaoGunModifierEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
     }
 
     private void IsCyclingEnabled_SettingChanged(object sender, EventArgs e) {
@@ -677,6 +689,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
         config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
         config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
+        config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
 
         ChallengeConfigurationManager.ChallengeConfiguration = config;
     }

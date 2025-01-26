@@ -107,6 +107,7 @@ namespace BossChallengeMod.BossPatches {
             var modifiers = CreateModifiers(monsterBase);
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
             var shieldController = monsterBase.gameObject.AddComponent<MonsterShieldController>();
+            var yanlaoGunController = monsterBase.gameObject.AddComponent<MonsterYanlaoGunController>();
 
             if (config.ModifiersEnabled && UseModifiers) {
                 PopulateModifierController(modifierController, config);
@@ -205,7 +206,7 @@ namespace BossChallengeMod.BossPatches {
                     Key = "qi_shield"
                 };
                 qiShieldModifier.Incompatibles.Add(qiShieldModifier.Key);
-                qiShieldModifier.Incompatibles.AddRange(["timer_shield"]);
+                qiShieldModifier.Incompatibles.AddRange(["timer_shield", "distance_shield"]);
                 modifierController.ModifierConfigs.Add(qiShieldModifier);
             }
 
@@ -214,7 +215,7 @@ namespace BossChallengeMod.BossPatches {
                     Key = "timer_shield"
                 };
                 impactShieldModifier.Incompatibles.Add(impactShieldModifier.Key);
-                impactShieldModifier.Incompatibles.AddRange(["qi_shield"]);
+                impactShieldModifier.Incompatibles.AddRange(["qi_shield", "distance_shield"]);
                 modifierController.ModifierConfigs.Add(impactShieldModifier);
             }
 
@@ -231,7 +232,16 @@ namespace BossChallengeMod.BossPatches {
                     Key = "distance_shield"
                 };
                 distanceShieldModifier.Incompatibles.Add(distanceShieldModifier.Key);
+                distanceShieldModifier.Incompatibles.AddRange(["qi_shield", "timer_shield"]);
                 modifierController.ModifierConfigs.Add(distanceShieldModifier);
+            }
+
+            if(config.YanlaoGunModifierEnabled) {
+                var yanlaoModifier = new ModifierConfig() {
+                    Key = "ya_gun"
+                };
+                yanlaoModifier.Incompatibles.Add(yanlaoModifier.Key);
+                modifierController.ModifierConfigs.Add(yanlaoModifier);
             }
         }
 
@@ -285,6 +295,9 @@ namespace BossChallengeMod.BossPatches {
 
             var distanceShieldModifier = modifiersFolder.AddChildrenComponent<DistanceShieldModifier>("DistanceShieldModifier");
             result.Add(distanceShieldModifier);
+
+            var yanlaoGunModifier = modifiersFolder.AddChildrenComponent<YanlaoGunModifier>("YanlaoGunModifier");
+            result.Add(yanlaoGunModifier);
 
             return result;
         }

@@ -27,14 +27,26 @@ namespace BossChallengeMod.ObjectProviders {
 
                 var fsmContext = gunObject.GetComponentInChildren<GeneralFSMContext>();
                 var stateMachineOwner = gunObject.GetComponent<StateMachineOwner>();
+                var eventBinder = gunObject.GetComponent<RCGArgEventBinder>();
+                var playerSensor = gunObject.GetComponentInChildren<PlayerSensor>();
+                var playerSensorEventSender = playerSensor?.gameObject.GetComponent<RCGEventSender>() ?? null;
 
-                if (fsmContext == null || stateMachineOwner == null) {
+                if (fsmContext == null || 
+                    stateMachineOwner == null ||
+                    eventBinder == null ||
+                    playerSensor == null ||
+                    playerSensor == null ||
+                    playerSensorEventSender == null) {
+                    Log.Error($"SetupGun something is null: {fsmContext}, {stateMachineOwner}, {eventBinder}, {playerSensor}, {playerSensorEventSender}");
                     return;
                 }
 
                 fsmContext.EnterLevelAwake();
                 stateMachineOwner.ResetFSM();
-
+                playerSensor.Awake();
+                playerSensor.EnterLevelReset();
+                eventBinder.EnterLevelAwakeReverse();
+                playerSensor.PlayerEnterEvent.AddListener(playerSensorEventSender.Send);
                 
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
