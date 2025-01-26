@@ -52,6 +52,7 @@ namespace BossChallengeMod.Preloading {
                         scenePreloadsConsumers[obj.name].ForEach(c => c.Set(obj));
                         RCGLifeCycle.DontDestroyForever(obj);
                         AutoAttributeManager.AutoReference(obj);
+                        AutoAttributeManager.AutoReferenceAllChildren(obj);
                     }
                 };
 

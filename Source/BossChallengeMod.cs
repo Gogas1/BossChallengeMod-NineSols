@@ -88,6 +88,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private Preloader Preloader { get; set; } = null!;
 
     public ShieldProvider ShieldProvider { get; private set; } = null!;
+    public YanlaoGunProvider YanlaoGunProvider { get; private set; } = null!;
 
     public static BossChallengeMod Instance { get; private set; } = null!;
 
@@ -110,6 +111,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         Preloader = new Preloader();
         ShieldProvider = new ShieldProvider();
+        YanlaoGunProvider = new YanlaoGunProvider();
 
         AssignPreloadingTargets();
 
@@ -149,6 +151,11 @@ public class BossChallengeMod : BaseUnityPlugin {
         string shieldName = "Shield(Effect Receiver)_Shield Sphere Version";
 
         Preloader.AddPreload(shieldScene, shieldName, ShieldProvider);
+
+        string gunScene = "A4_S4_Container_Final";
+        string gunName = "ZGun FSM Object Variant";
+
+        Preloader.AddPreload(gunScene, gunName, YanlaoGunProvider);
     }
 
     private string GetLanguageCode() {
