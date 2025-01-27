@@ -124,24 +124,10 @@ public class Patches {
         var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
         if (modifiers != null) {
             if (modifiers.FirstOrDefault(m => m.Key == "knockback")?.enabled ?? false) {
-                param.knockBackValue = param.knockBackValue * 2;
+                param.knockBackValue = param.knockBackValue * 1.5f;
             }
         }
     }
-
-    //[HarmonyPatch(typeof(Player), "OnTakeDamage")]
-    //[HarmonyPrefix]
-    //public static void PlayerTakeDamagePatch(ref DamageDealer damageDealer) {
-    //    var modifiers = damageDealer.Owner.GetComponentsInChildren<ModifierBase>();
-    //    if (modifiers != null) {
-    //        if (modifiers.FirstOrDefault(m => m.Key == "stun")?.enabled ?? false) {
-    //            var param = damageDealer.bindParriable.param;
-    //            if(param.knockBackType != KnockBackType.Custom) {
-    //                damageDealer.bindParriable.param.knockBackType = KnockBackType.Large;
-    //            }
-    //        }
-    //    }
-    //}
 
     [HarmonyPatch(typeof(Player), nameof(Player.NextItemCheck))]
     [HarmonyPrefix]
@@ -274,9 +260,8 @@ public class Patches {
                 int extraCharges = Math.Max(0, (int)(__instance.Value + amount - __instance.MaxValue));
 
                 if(extraCharges > 0) {
-                    Player.i.health.ReceiveRecoverableDamage(Player.i.health.maxHealth.Value / 10 * extraCharges);
-                    Log.Info($"{Player.i.health.currentValue}, {Player.i.health.maxHealth.Value / 10 * extraCharges}, {extraCharges}, {overloadCounter}, {overloadCounter + extraCharges}");
-                    if(Player.i.health.currentValue <= Player.i.health.maxHealth.Value / 10 * extraCharges) {
+                    Player.i.health.ReceiveRecoverableDamage(Player.i.health.maxHealth.Value / 10);
+                    if(Player.i.health.currentValue <= Player.i.health.maxHealth.Value / 10) {
                         overloadCounter += (int)extraCharges;
                         if(overloadCounter >= overloadThreshold) {
                             __instance.Clear();

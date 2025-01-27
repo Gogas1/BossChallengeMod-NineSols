@@ -50,8 +50,8 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             if (gunComponent == null) return;
 
-            gunMaxSpeedFieldRef.SetValue(gunComponent, 400f);
-            gunComponent.NormalLerpingSpeed = 3f;
+            gunMaxSpeedFieldRef.SetValue(gunComponent, 300f);
+            gunComponent.NormalLerpingSpeed = 2f;
         }
     }
 }
