@@ -43,6 +43,8 @@ namespace BossChallengeMod.Helpers {
                 writer.Write(config.EnduranceModifierEnabled);
                 writer.Write(config.QiShieldModifierEnabled);
 
+                writer.Write(config.ModifiersStartFromDeath);
+
                 return ms.ToArray();
             }
         }
@@ -74,6 +76,8 @@ namespace BossChallengeMod.Helpers {
                     RandomTalismanModifierEnabled = reader.ReadBoolean(),
                     EnduranceModifierEnabled = reader.ReadBoolean(),
                     QiShieldModifierEnabled = reader.ReadBoolean(),
+
+                    ModifiersStartFromDeath = reader.ReadInt32()
                 };
             }
         }

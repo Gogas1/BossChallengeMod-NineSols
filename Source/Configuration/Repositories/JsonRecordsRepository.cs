@@ -26,7 +26,7 @@ namespace BossChallengeMod.Configuration.Repositories {
 
             string configurationKey = RecordsEncoder.EncodeToBase64(configuration);
             string oldConfigurationKey = BackwardCompabilityEncoder.EncodeToBase64(configuration);
-            return records.FirstOrDefault(r => r.Key == configurationKey || r.Key == oldConfigurationKey);
+            return records.FirstOrDefault(r => r.Key == configurationKey);
         }
 
         public async Task<RecordEntry?> GetRecordForKeyAsync(string key) {
@@ -58,8 +58,8 @@ namespace BossChallengeMod.Configuration.Repositories {
 
             string configurationKey = RecordsEncoder.EncodeToBase64(configuration);
             string oldConfigurationKey = BackwardCompabilityEncoder.EncodeToBase64(configuration);
-            var targetRecord = records.FirstOrDefault(r => r.Key == configurationKey || r.Key == oldConfigurationKey) ?? new RecordEntry { Key = configurationKey };
-            targetRecord.Key = configurationKey;
+            var targetRecord = records.FirstOrDefault(r => r.Key == configurationKey) ?? new RecordEntry { Key = configurationKey };
+            //targetRecord.Key = configurationKey;
 
             if (!records.Contains(targetRecord)) {
                 records.Add(targetRecord);

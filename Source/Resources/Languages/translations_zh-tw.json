@@ -40,7 +40,8 @@
   "timer_shield": "冷卻護盾",
   "qi_overload": "氣過載",
   "distance_shield": "距離護盾",
-  "ya_gun": "奄老之槍",
+  "ya_gun": "奄老的協助",
+
   "config_cycling_enabled_description": "啟用首領復活。\n首領將恢復生命值並返回第一階段，而不是死亡。",
   "config_single_recording_enabled_description": "記錄戰鬥結果，而不受配置影響。預設情況下，每種唯一的配置狀態（包括第1、2、3節）都會生成結果，以便每種設定的挑戰難度都有自己的結果。啟用此設定後，將會記錄並使用統一的結果，而不考慮挑戰設定。",
   "config_cycles_number_description": "首領死亡次數。\n首領將在指定死亡次數後死亡（包括本次）。",
@@ -51,7 +52,9 @@
   "config_scaling_modifiers_enabled_description": "啟用修改器數量縮放。\n首領將獲得更多修改器。",
   "config_scaling_maxmodifiers_description": "縮放：修改器數量。\n修改器數量增加的最大值",
   "config_scaling_modifiers_scaling_cycle_description": "達到最大修改器數量縮放的死亡次數。\n修改器數量增加將在這些死亡次數後達到最大值",
+
   "config_modifiers_enabled_description": "啟用修改器。\n啟用或停用影響首領戰的修改器。",
+  "config_modifiers_start_death_description": "觸發修飾符的死亡次數。\n 修飾符將在達到此數量的首領死亡後開始生效。如果設定為 0，修飾符將在戰鬥開始時生效。",
   "config_repeating_enabled_description": "重複修改器。\n修改器可以連續重複多次。",
   "config_modifiers_speed_enabled_description": "速度修改器。\n+20% 首領速度提升。與速度縮放以乘法疊加。",
   "config_modifiers_timer_enabled_description": "計時器修改器。\n啟動擊殺首領的計時器。時間耗盡時，羿死亡。",

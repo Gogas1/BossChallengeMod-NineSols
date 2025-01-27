@@ -45,6 +45,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<int> maxModifiersNumberScalingValue = null!;
 
     private ConfigEntry<bool> isModifiersEnabled = null!;
+    private ConfigEntry<int> modifiersStartDeathValue = null!;
     private ConfigEntry<bool> isModifiersRepeatingEnabled = null!;
     private ConfigEntry<bool> isSpeedModifierEnabled = null!;
     private ConfigEntry<bool> isTimerModifierEnabled = null!;
@@ -477,9 +478,20 @@ public class BossChallengeMod : BaseUnityPlugin {
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
 
+        modifiersStartDeathValue = Config.Bind(
+            "3. Modifiers",
+            "3.2 Modifiers Start Death",
+            1,
+            LocalizationResolver.Localize("config_modifiers_start_death_description"));
+        modifiersStartDeathValue.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
         isModifiersRepeatingEnabled = Config.Bind(
             "3. Modifiers",
-            "3.2 Enable Modifiers Repeating",
+            "3.3 Enable Modifiers Repeating",
             false,
             LocalizationResolver.Localize("config_repeating_enabled_description"));
         isModifiersRepeatingEnabled.SettingChanged += (_, _) => {

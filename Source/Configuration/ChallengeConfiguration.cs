@@ -34,5 +34,7 @@ namespace BossChallengeMod.Configuration {
         public bool QiOverloadModifierEnabled;
         public bool DistanceShieldModifierEnabled;
         public bool YanlaoGunModifierEnabled;
+
+        public int ModifiersStartFromDeath;
     }
 }

@@ -33,12 +33,21 @@ namespace BossChallengeMod.Modifiers.Managers {
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
 
+        private void Start() {
+            if (challengeConfiguration.ModifiersStartFromDeath == 0) {
+                RollModifiers(0);
+                ApplyModifiers(0);
+            }
+        }
+
         public void GenerateAvailableMods() {
             Available.Clear();
             Available.AddRange(ModifierConfigs);
         }
 
-        public void RollModifiers() {
+        public void RollModifiers(int iteration) {
+            if (iteration < challengeConfiguration.ModifiersStartFromDeath) return;
+
             var availablilities = new List<ModifierConfig>(Available);
 
             if (!AllowRepeating) {

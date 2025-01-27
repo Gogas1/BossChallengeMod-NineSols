@@ -17,6 +17,10 @@ namespace BossChallengeMod.Modifiers {
 
             Key = "ya_gun";
 
+        }
+
+        private void Start() {
+
             YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
         }
 

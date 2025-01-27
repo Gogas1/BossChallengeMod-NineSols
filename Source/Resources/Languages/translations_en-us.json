@@ -40,7 +40,7 @@
   "timer_shield": "Cooldown shield",
   "qi_overload": "Qi-Overload",
   "distance_shield": "Distance shield",
-  "ya_gun": "Yanlao's gun",
+  "ya_gun": "Yanlao's Assistance",
 
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
@@ -57,6 +57,7 @@
   "config_scaling_modifiers_scaling_cycle_description": "Max Modifiers Number Scaling After Deaths.\n Modifiers number increase will max after this amount of deaths",
 
   "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the boss fight.",
+  "config_modifiers_start_death_description": "The death number for modifiers to appear.\n Modifiers will start to apply after this amount of boss deaths. If set to 0, modifiers will be applied at the start of the fight.",
   "config_repeating_enabled_description": "Repeating modifiers.\n Modifiers can be repeated multiple times in a row.",
   "config_modifiers_speed_enabled_description": "Speed Modifier.\n +20% boss speed increase. Stacks multiplicatively with speed scaling.",
   "config_modifiers_timer_enabled_description": "Timer Modifier.\n Starts a timer to kill the boss. When the time runs out, Yi dies.",
