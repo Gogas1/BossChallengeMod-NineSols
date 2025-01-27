@@ -24,7 +24,6 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             if (GunObject == null) return;
             
-            TuneTheGun(GunObject);
             gunFsmContext = GunObject.GetComponentInChildren<GeneralFSMContext>();            
 
             StatePaused = gunFsmContext.transform.Find(pausedStateName)?.GetComponent<GeneralState>() ?? null;
