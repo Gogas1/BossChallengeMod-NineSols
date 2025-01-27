@@ -702,6 +702,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
         config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
         config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
+        config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
 
         ChallengeConfigurationManager.ChallengeConfiguration = config;
     }

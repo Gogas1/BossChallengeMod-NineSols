@@ -50,6 +50,10 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             var availablilities = new List<ModifierConfig>(Available);
 
+            if(iteration == 0) {
+                availablilities.RemoveAll(m => m.Key == "timer");
+            }
+
             if (!AllowRepeating) {
                 availablilities = availablilities.Except(Selected).ToList();
             }
