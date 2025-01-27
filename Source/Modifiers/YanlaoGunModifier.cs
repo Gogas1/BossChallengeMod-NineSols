@@ -1,8 +1,11 @@
 ﻿using BossChallengeMod.Modifiers.Managers;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace BossChallengeMod.Modifiers {
     public class YanlaoGunModifier : ModifierBase {
@@ -19,16 +22,18 @@ namespace BossChallengeMod.Modifiers {
 
         public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             base.NotifyActivation(keys, iteration);
+            if (YanlaoGunController == null) {
+                YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
+            }
 
             enabled = keys.Contains(Key);
 
-            if(enabled) {
+            if (enabled) {
                 YanlaoGunController?.StartGun();
-            }
-            else {
+            } else {
                 YanlaoGunController?.StopGun();
             }
-        }
 
+        }
     }
 }

@@ -31,6 +31,8 @@ namespace BossChallengeMod.Modifiers {
                 MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
             }
 
+            if(MonsterShieldController == null) return;
+
             enabled = keys.Contains(Key);
             if(!enabled && MonsterShieldController.IsShieldEnabled) {
                 MonsterShieldController?.Deactivate();

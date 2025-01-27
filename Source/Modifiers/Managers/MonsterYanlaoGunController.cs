@@ -1,26 +1,31 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
 namespace BossChallengeMod.Modifiers.Managers {
     public class MonsterYanlaoGunController : MonoBehaviour {
-        protected GameObject? gunObject;
+        protected GameObject? GunObject { get; private set; }
 
         protected GeneralState? StatePaused;
         protected GeneralState? StateStart;
 
         protected GeneralFSMContext? gunFsmContext;
 
-        protected string pausedStateName = "";
-        protected string startStateName = "";
+        protected string pausedStateName = "[State] PlayerInSafeZone";
+        protected string startStateName = "[State] Follow";
+
+        protected readonly FieldInfo gunMaxSpeedFieldRef = AccessTools.Field(typeof(A4_S4_ZGunLogic), "maxSpeed");
 
         private void Awake() {
-            gunObject = BossChallengeMod.Instance.YanlaoGunProvider.GetGunCopy();
+            GunObject = BossChallengeMod.Instance.YanlaoGunProvider.GetGunCopy();
 
-            if (gunObject == null) return;
+            if (GunObject == null) return;
             
-            gunFsmContext = gunObject.GetComponentInChildren<GeneralFSMContext>();            
+            TuneTheGun(GunObject);
+            gunFsmContext = GunObject.GetComponentInChildren<GeneralFSMContext>();            
 
             StatePaused = gunFsmContext.transform.Find(pausedStateName)?.GetComponent<GeneralState>() ?? null;
             StateStart = gunFsmContext.transform.Find(startStateName)?.GetComponent<GeneralState>() ?? null;
@@ -36,6 +41,17 @@ namespace BossChallengeMod.Modifiers.Managers {
             if (gunFsmContext == null || StatePaused == null) return;
 
             gunFsmContext.ChangeState(StatePaused);
+        }
+
+        protected void TuneTheGun(GameObject? gunObject) {
+            if (gunObject == null) return;
+
+            var gunComponent = gunObject?.GetComponentInChildren<A4_S4_ZGunLogic>() ?? null;
+
+            if (gunComponent == null) return;
+
+            gunMaxSpeedFieldRef.SetValue(gunComponent, 400f);
+            gunComponent.NormalLerpingSpeed = 3f;
         }
     }
 }

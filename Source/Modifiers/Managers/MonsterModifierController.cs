@@ -58,10 +58,15 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void ApplyModifiers(int iteration) {
-            foreach (var modifier in Modifiers) {
-                modifier.NotifyActivation(Selected.Select(m => m.Key), iteration);
+            try {
+                foreach (var modifier in Modifiers) {
+                    modifier.NotifyActivation(Selected.Select(m => m.Key), iteration);
+                }
+                modifiersNumber = CalculateModifiersNumber(iteration + 1);
+
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
-            modifiersNumber = CalculateModifiersNumber(iteration + 1);
         }
 
         public void FindModifiers() {

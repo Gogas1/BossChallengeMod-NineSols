@@ -47,6 +47,15 @@ namespace BossChallengeMod.ObjectProviders {
                 playerSensor.EnterLevelReset();
                 eventBinder.EnterLevelAwakeReverse();
                 playerSensor.PlayerEnterEvent.AddListener(playerSensorEventSender.Send);
+
+                var enemyExplosion = gunObject.transform.Find("FSM Animator/LogicRoot/A4_S4_ZGunLogic/Aimer/Explosion/ExplosionForEnemy");
+
+                if (enemyExplosion == null) {
+                    Log.Error("Enemy explosion is null");
+                    return;
+                }
+
+                enemyExplosion.gameObject.SetActive(false);
                 
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
