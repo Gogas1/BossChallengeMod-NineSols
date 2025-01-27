@@ -43,6 +43,11 @@ Modifiers list:
 - Regeneration
 - Boss speed up
 - Timer
+- Qi-Overload
+- Qi-Shield
+- Cooldown Shield
+- Distance Shield
+- Yanlao's Assistance
 
 # Scaling
 
