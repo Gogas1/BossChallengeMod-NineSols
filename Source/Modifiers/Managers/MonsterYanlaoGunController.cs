@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
@@ -12,12 +13,22 @@ namespace BossChallengeMod.Modifiers.Managers {
         protected GeneralState? StatePaused;
         protected GeneralState? StateStart;
 
+        protected List<GeneralState> StatesRunning = new List<GeneralState>();
+
         protected GeneralFSMContext? gunFsmContext;
 
         protected string pausedStateName = "[State] PlayerInSafeZone";
         protected string startStateName = "[State] Follow";
 
         protected readonly FieldInfo gunMaxSpeedFieldRef = AccessTools.Field(typeof(A4_S4_ZGunLogic), "maxSpeed");
+
+        public bool IsRunning {
+            get {
+                if (gunFsmContext == null) return false;
+
+                return StatesRunning.Contains(gunFsmContext.currentStateType);
+            }
+        }
 
         private void Awake() {
             GunObject = BossChallengeMod.Instance.YanlaoGunProvider.GetGunCopy();
@@ -28,17 +39,20 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             StatePaused = gunFsmContext.transform.Find(pausedStateName)?.GetComponent<GeneralState>() ?? null;
             StateStart = gunFsmContext.transform.Find(startStateName)?.GetComponent<GeneralState>() ?? null;
+
+            if(gunFsmContext.States.Count() >= 8) {
+                StatesRunning.AddRange(new ArraySegment<GeneralState>(gunFsmContext.States, 2, 6));
+            }
         }
 
         public void StartGun() {
-            if(gunFsmContext == null || StateStart == null) return;
+            if(gunFsmContext == null || StateStart == null || IsRunning) return;
 
             gunFsmContext.ChangeState(StateStart);
         }
 
         public void StopGun() {
-            if (gunFsmContext == null || StatePaused == null) return;
-
+            if (gunFsmContext == null || StatePaused == null || !IsRunning) return;
             gunFsmContext.ChangeState(StatePaused);
         }
 

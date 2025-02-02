@@ -24,6 +24,17 @@ namespace BossChallengeMod.Modifiers {
             YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
         }
 
+        private void Update() {
+            if(enabled) {
+                if(Monster?.postureSystem.IsMonsterEmptyPosture ?? true) {
+                    YanlaoGunController?.StopGun();
+                }
+                else {
+                    YanlaoGunController?.StartGun();
+                }
+            }
+        }
+
         public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             base.NotifyActivation(keys, iteration);
             if (YanlaoGunController == null) {

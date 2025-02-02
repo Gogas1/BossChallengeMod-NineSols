@@ -97,7 +97,7 @@ namespace BossChallengeMod.UI {
             rectTransform.anchorMax = new Vector2(0, 0);
             rectTransform.pivot = new Vector2(0, 0f);
             rectTransform.anchoredPosition = new Vector2(coordsX, coordsY);
-            rectTransform.sizeDelta = new Vector2(200, 200);
+            rectTransform.sizeDelta = new Vector2(300, 200);
 
             return rectTransform;
         }
@@ -206,13 +206,16 @@ namespace BossChallengeMod.UI {
             textComponent.alignment = alignment;
             textComponent.text = text;
 
+            RectTransform rectTransform = textComponent.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(200, 50);
+
             textComponent.transform.localPosition = localPosition;
             textComponent.transform.SetParent(parent.transform, false);
 
             textComponent.SetActive(active);
 
             return textComponent;
-        }        
+        }
         
         public void UpdateTalisman(Sprite sprite) {
             talismanUIController.UpdateCurrentTalisman(sprite);

@@ -111,7 +111,7 @@ namespace BossChallengeMod.UI {
                 case ModifiersUIState.ModifiersCollapsed:
                     break;
                 case ModifiersUIState.CollapsingLine:
-                    CurrentState = ModifiersUIState.UnfoldingLine;
+                    StartCoroutine(UnfoldLineAnimation());
                     break;
                 default:
                     break;

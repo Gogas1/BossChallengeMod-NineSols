@@ -13,7 +13,9 @@ namespace BossChallengeMod.ObjectProviders {
         }
 
         public GameObject? GetShieldCopy() {
-            return GameObject.Instantiate(shieldCopy);
+            var result = GameObject.Instantiate(shieldCopy);
+            AutoAttributeManager.AutoReferenceAllChildren(result);
+            return result;
         }
     }
 }

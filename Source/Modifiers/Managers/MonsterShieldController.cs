@@ -39,7 +39,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 } else {
                     shieldObject.transform.SetParent(Monster.transform, false);
                 }
-                AutoAttributeManager.AutoReference(shieldObject);
+                AutoAttributeManager.AutoReferenceAllChildren(shieldObject);
 
                 var damageReceivers = Monster.damageReceivers;
                 if (damageReceivers != null && adjustingNeeded) {

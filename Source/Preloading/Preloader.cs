@@ -48,11 +48,20 @@ namespace BossChallengeMod.Preloading {
                     }
 
                     foreach (var obj in rootObjects) {
-                        scenePreloads[obj.name] = obj;
-                        scenePreloadsConsumers[obj.name].ForEach(c => c.Set(obj));
-                        RCGLifeCycle.DontDestroyForever(obj);
-                        AutoAttributeManager.AutoReference(obj);
-                        AutoAttributeManager.AutoReferenceAllChildren(obj);
+                        try {
+                            Log.Info($"Preloading {obj.name}");
+                            if(scenePreloads.ContainsKey(obj.name) || scenePreloadsConsumers.ContainsKey(obj.name)) {
+                                scenePreloads[obj.name] = obj;
+                                scenePreloadsConsumers[obj.name].ForEach(c => c.Set(obj));
+                                Log.Info($"No consumers for {obj.name} preload");
+                            }
+
+                            RCGLifeCycle.DontDestroyForever(obj);
+                            AutoAttributeManager.AutoReference(obj);
+                            AutoAttributeManager.AutoReferenceAllChildren(obj);
+                        } catch (Exception ex) {
+                            Log.Error($"{ex.Message}, {ex.StackTrace}");
+                        }
                     }
                 };
 

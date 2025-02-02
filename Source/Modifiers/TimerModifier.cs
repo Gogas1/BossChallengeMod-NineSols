@@ -28,7 +28,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void Update() {
-            if (startStopwatch && !Monster!.postureSystem.IsMonsterEmptyPosture) {
+            if (startStopwatch && (!Monster?.postureSystem.IsMonsterEmptyPosture ?? false)) {
                 stopwatch += (int)(Time.deltaTime * 1000);
             }
         }
