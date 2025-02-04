@@ -36,7 +36,7 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateEnter() {
-            if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter + 1) {
+            if (monsterKillCounter != null && challengeConfig.MaxBossCycles == monsterKillCounter.KillCounter + 1) {
                 EffectHitData effectHitData = new EffectHitData();
                 effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
                 monster.HittedByPlayerDecreasePosture(effectHitData);
@@ -73,7 +73,7 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateExit() {
-            if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter)
+            if (monsterKillCounter != null && challengeConfig.MaxBossCycles == monsterKillCounter.KillCounter)
                 return;
 
             monster.PhaseIndex = 0;

@@ -20,6 +20,7 @@ using BossChallengeMod.ObjectProviders;
 using System.IO;
 using BossChallengeMod.Preloading;
 using BossChallengeMod.BossPatches.TargetPatches;
+using BossChallengeMod.PatchResolver;
 
 namespace BossChallengeMod;
 
@@ -34,8 +35,11 @@ public class BossChallengeMod : BaseUnityPlugin {
     public UIController UIController { get; private set; } = null!;
     public MonsterUIController MonsterUIController { get; private set; } = null!;
     public ChallengeConfigurationManager ChallengeConfigurationManager { get; private set; } = null!;
+    public StoryChallengeConfigurationManager StoryChallengeConfigurationManager { get; private set; } = null!;
     public GlobalModifiersController GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
+
+    public MonsterPatchResolver RegularMonstersPatchResolver = null!;
 
     private Preloader Preloader { get; set; } = null!;
     private BepInExModConfigurationHandler BepInExModConfigurationHandler { get; set; } = null!;
@@ -72,21 +76,28 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         IRecordsRepository recordsRepo = new JsonRecordsRepository();
         ChallengeConfigurationManager = new ChallengeConfigurationManager(recordsRepo);
+        StoryChallengeConfigurationManager = new StoryChallengeConfigurationManager();
         UIConfiguration = new UIConfiguration();
         GlobalModifiersFlags = new GlobalModifiersController();
 
         LocalizationManager.OnLocalizeEvent += OnLocalizationChange;
         
-        BepInExModConfigurationHandler = new BepInExModConfigurationHandler(Config, ChallengeConfigurationManager, UIConfiguration);
+        BepInExModConfigurationHandler = new BepInExModConfigurationHandler(Config, ChallengeConfigurationManager, UIConfiguration, StoryChallengeConfigurationManager);
 
         BepInExModConfigurationHandler.InitChallengeConfiguration();
         BepInExModConfigurationHandler.HandleConfigurationValues();
+
+        BepInExModConfigurationHandler.InitStoryChallengeConfiguration();
+        BepInExModConfigurationHandler.HandleStoryChallengeConfigurationValues();
 
         BepInExModConfigurationHandler.InitializeUIConfiguration();
         UIController = new UIController(UIConfiguration);
         BepInExModConfigurationHandler.HandleUIConfigurationValues();
         
         MonsterUIController = new MonsterUIController();
+
+        RegularMonstersPatchResolver = new MonsterPatchResolver();
+        RegularMonstersPatchResolver.AddDefaultPatch(GetRegularMonsterPatch());
 
         InitializePatches();
 
@@ -141,6 +152,24 @@ public class BossChallengeMod : BaseUnityPlugin {
         LocalizationManager.OnLocalizeEvent -= OnLocalizationChange;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         harmony.UnpatchSelf();
+    }
+
+    private GeneralBossPatch GetRegularMonsterPatch() {
+        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
+
+        var defaultBossPatch = new RevivalChallengeBossPatch();
+        defaultBossPatch.DieStates = [
+            MonsterBase.States.Dead
+        ];
+        defaultBossPatch.InsertPlaceState = MonsterBase.States.Dead;
+
+        var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
+        resetStateConfig.ExitState = MonsterBase.States.Engaging;
+        resetStateConfig.Animations = ["PostureBreak"];
+        resetStateConfig.StateType = bossReviveMonsterState;
+        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
+
+        return defaultBossPatch;
     }
 
     private void InitializePatches() {

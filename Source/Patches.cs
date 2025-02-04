@@ -32,6 +32,18 @@ public class Patches {
                 bossPatch.ProcessEventHandlers(receivers, senders);
             }
         }
+
+        if(__instance.CompareTag("Enemy")) {
+            GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(__instance.name);
+
+            if (bossPatch != null) {
+                bossPatch.PatchMonsterPostureSystem(__instance);
+                __state = bossPatch.PatchMonsterStates(__instance);
+                var senders = bossPatch.CreateSenders(__instance, __state);
+                var receivers = bossPatch.CreateReceivers(__instance, __state);
+                bossPatch.ProcessEventHandlers(receivers, senders);
+            }
+        }
     }
 
     [HarmonyPatch(typeof(MonsterBase), "CheckInit")]
@@ -43,6 +55,13 @@ public class Patches {
             if (!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
                 bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
             }
+
+            bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
+            bossPatch?.PostfixPatch(__instance);
+        }
+
+        if (__instance.CompareTag("Enemy")) {
+            GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(__instance.name);
 
             bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
             bossPatch?.PostfixPatch(__instance);

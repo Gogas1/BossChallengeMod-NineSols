@@ -18,7 +18,7 @@ namespace BossChallengeMod.Configuration.BackwardCompability {
         public static byte[] EncodeChallengeConfiguration(ChallengeConfiguration config) {
             using (var ms = new MemoryStream())
             using (var writer = new BinaryWriter(ms)) {
-                writer.Write(config.MaxCycles);
+                writer.Write(config.MaxBossCycles);
 
                 writer.Write(config.EnableSpeedScaling);
                 writer.Write(config.MinSpeedScalingValue);
@@ -49,7 +49,7 @@ namespace BossChallengeMod.Configuration.BackwardCompability {
             using (var ms = new MemoryStream(data))
             using (var reader = new BinaryReader(ms)) {
                 return new ChallengeConfiguration {
-                    MaxCycles = reader.ReadInt32(),
+                    MaxBossCycles = reader.ReadInt32(),
 
                     EnableSpeedScaling = reader.ReadBoolean(),
                     MinSpeedScalingValue = reader.ReadSingle(),

@@ -47,14 +47,28 @@
 
   "config_single_recording_enabled_description": "Record fight results regardless of the configuration. By default, results are created for each unique configuration state (sections 1, 2, 3 are considered), so each configured challenge difficulty has its own results. Enabling this setting will record and use a single result regardless of the challenge settings.",
 
-  "config_scaling_enabled_description": "Enable Speed Scaling.\n Bosses will gain linear speed scaling with each death.",
-  "config_scaling_minspeed_description": "Scaling: Initial Speed.\n The starting value for speed scaling.",
-  "config_scaling_maxspeed_description": "Scaling: Maximum Speed.\n The maximum value for speed scaling.",
-  "config_scaling_scaling_cycle_description": "Maximum Speed Scaling After Deaths.\n Speed scaling will reach its maximum after this amount of deaths.",
+  "config_boss_deaths_randomized_enabled_description": "Enable randomized boss death number. The maximum number of boss deaths will be randomly determined at the start of the battle.",
+  "config_boss_deaths_randomized_min_description": "Minimum Deaths: The lowest possible value for the randomized boss death count.",
+  "config_boss_deaths_randomized_max_description": "Maximum Deaths: The highest possible value for the randomized boss death count.",
 
-  "config_scaling_modifiers_enabled_description": "Enable Modifiers Number Scaling.\n Bosses will receive more modifiers.",
-  "config_scaling_maxmodifiers_description": "Scaling: modifiers number. \n Max value of increase in number of modifiers",
-  "config_scaling_modifiers_scaling_cycle_description": "Max Modifiers Number Scaling After Deaths.\n Modifiers number increase will max after this amount of deaths",
+  "config_scaling_enabled_description": "Enable Speed Scaling.\nBosses will gain linear speed scaling with each death. Stacks combined multiplicatively with the random speed scaling.",
+  "config_scaling_minspeed_description": "Scaling: Initial Speed.\nThe starting value for speed scaling.",
+  "config_scaling_maxspeed_description": "Scaling: Maximum Speed.\nThe maximum value for speed scaling.",
+  "config_scaling_scaling_cycle_description": "Maximum Speed Scaling After Deaths.\nSpeed scaling will reach its maximum after this amount of deaths.",
+
+  "config_scaling_modifiers_enabled_description": "Enable Modifiers Number Scaling.\nBosses will receive additional modifiers, with the total number being the sum of the scaling and a random scaling value.",
+  "config_scaling_maxmodifiers_description": "Scaling: Modifiers Count.\nThe maximum increase in the number of modifiers.",
+  "config_scaling_modifiers_scaling_cycle_description": "Maximum Modifiers Scaling After Deaths.\nThe increase in modifiers will reach its maximum after this amount of deaths.",
+
+  "config_rand_speed_scaling_enabled_description": "Enable Random Speed Scaling.\nBosses will receive a random speed boost with each death. Stacks multiplicatively with the linear speed scaling.",
+  "config_rand_speed_scaling_start_death_description": "Starting Death for Random Speed Scaling.\nThe boss will begin receiving a random speed boost after this death.",
+  "config_rand_speed_scaling_minspeed_description": "Random Boost: Minimum speed.\nThe minimum value for the random speed boost.",
+  "config_rand_speed_scaling_maxspeed_description": "Random Boost: Maximum speed.\nThe maximum value for the random speed boost.",
+
+  "config_rand_modifiers_scaling_enabled_description": "Enable Random Modifiers Scaling.\nBosses will receive a random number of modifiers with each death, added to the linear modifier increase.",
+  "config_rand_modifiers_scaling_start_death_description": "Starting Death for Random Modifiers Scaling.\nThe boss will begin receiving a random number of modifiers after this death.",
+  "config_rand_modifiers_scaling_min_description": "Random Boost: Minimum modifiers.\nThe minimum value for the random modifiers count.",
+  "config_rand_modifiers_scaling_max_description": "Random Boost: Maximum modifiers.\nThe maximum value for the random modifiers count.",
 
   "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the boss fight.",
   "config_modifiers_start_death_description": "The death number for modifiers to appear.\n Modifiers will start to apply after this amount of boss deaths. If set to 0, modifiers will be applied at the start of the fight.",
@@ -73,5 +87,23 @@
   "config_modifiers_cooldown_shield_enabled_description": "Cooldown Shield Modifier.\nThe enemy will constantly receive a shield with a slight delay.",
   "config_modifiers_distance_shield_enabled_description": "Distance Shield Modifier.\nThe enemy will receive a shield if they are far away from the Yi.",
   "config_modifiers_qi_overload_enabled_description": "Qi Overload Modifier.\nGaining Qi charges above the maximum will deal internal damage. If you have no health, the accumulated charges will be lost upon gaining six extra charges. Spending Chi charges resets the extra charges counter.",
-  "config_modifiers_yanlao_gun_enabled_description": "Yanlao's Gun Modifier'.\n Yanlao's gun will target Yi."
+  "config_modifiers_yanlao_gun_enabled_description": "Yanlao's Gun Modifier'.\n Yanlao's gun will target Yi.",
+
+  "config_story_enabled_description": "Enables the mod in normal game mode.",
+
+  "config_story_miniboss_cycles_number_description": "Number of miniboss deaths.\n The miniboss will die after the specified number of deaths (including this one).",
+  "config_story_enemy_cycles_number_description": "Number of regular enemy deaths.\n The regular enemy will die after the specified number of deaths (including this one).",
+
+  "config_story_affect_bosses_description": "Boss enhancement. Bosses will reviwe, gain modifiers and boosts.",
+  "config_story_affect_minibosses_description": "Miniboss enhancement. Minibosses will reviwe, gain modifiers and boosts.",
+  "config_story_affect_enemies_description": "Regular enemy enhancement. Regular enemies will reviwe, gain modifiers and boosts.",
+
+  "config_story_miniboss_deaths_randomized_description": "Enable random miniboss death count.\n The maximum number of miniboss deaths will be randomly determined upon entering a location.",
+  "config_story_miniboss_deaths_randomized_min_description": "Minimum deaths.\n The minimum value for the miniboss death count.",
+  "config_story_miniboss_deaths_randomized_max_description": "Maximum deaths.\n The maximum value for the miniboss death count.",
+
+  "config_story_enemy_deaths_randomized_description": "Enable random regular enemy death count.\n The maximum number of regular enemy deaths will be randomly determined upon entering a location.",
+  "config_story_enemy_deaths_randomized_min_description": "Minimum deaths.\n The minimum value for the regular enemy death count.",
+  "config_story_enemy_deaths_randomized_max_description": "Maximum deaths.\n The maximum value for the regular enemy death count."
+
 }

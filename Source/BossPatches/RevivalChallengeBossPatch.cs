@@ -22,24 +22,28 @@ namespace BossChallengeMod.BossPatches {
         public bool UseModifiers { get; set; } = true;
         public bool UseRecording { get; set; } = true;
 
+        public MonsterBase.States InsertPlaceState { get; set; } = MonsterBase.States.LastHit;
+
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
-                int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(MonsterBase.States.LastHit);
-                monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
+            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
+                int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
+                if (insertIndex >= 0) {
+                    monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
+                }
             }
         }
 
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = base.PatchMonsterStates(monsterBase).ToList();
             
-            if(challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+            if(challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
                 var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                 var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
                 resetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
 
-                if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration && UseKillCounter) {
+                if (challengeConfigurationManager.ChallengeConfiguration.EnableMod && UseKillCounter) {
                     var killCounter = InitializeKillCounter(monsterBase);
                     killCounter.UseRecording = UseRecording;
 
@@ -76,7 +80,7 @@ namespace BossChallengeMod.BossPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if(challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+                        if(challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateEnterEvent);
                             result.Add(resStateEnterSender);

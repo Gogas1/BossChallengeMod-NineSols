@@ -23,7 +23,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = new List<MonsterState>();
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
                 var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                 var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
                 resetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
@@ -43,7 +43,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                     result.Add(cloneResetBossState);
                 }
 
-                if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration && UseKillCounter) {
+                if (challengeConfigurationManager.ChallengeConfiguration.EnableMod && UseKillCounter) {
                     var killCounter = InitializeKillCounter(monsterBase);
                     killCounter.UseRecording = UseRecording;
 
@@ -84,7 +84,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+                        if (challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
                             result.Add(resStateEnterSender);
@@ -184,7 +184,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 GameObject.Destroy(shieldController);
             }
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration &&
+            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod &&
                 challengeConfigurationManager.ChallengeConfiguration.ModifiersEnabled) {
 
                 var clones = GetClones(monsterBase);
