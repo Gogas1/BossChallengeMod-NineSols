@@ -12,7 +12,6 @@ using UnityEngine.UI;
 namespace BossChallengeMod.UI {
     public class KillCounterController : MonoBehaviour {
         private TMP_FontAsset font = null!;
-        private LocalizationResolver localizer = BossChallengeMod.Instance.LocalizationResolver;
 
         private bool needToShow;
         private bool needToShowExpanded;
@@ -36,16 +35,16 @@ namespace BossChallengeMod.UI {
         public void Awake() {
             font = LoadFont()!;
 
-            MainCounterText = UIController.InitializeText(Vector2.zero, gameObject, $"{localizer.Localize("kill_counter")} {0}" , false, font: font);
-            HightScoreText = UIController.InitializeText(new Vector2(0f, -36), gameObject, $"{localizer.Localize("kill_counter_hs")} {0}", false, 20, font);
-            LastAttemptText = UIController.InitializeText(new Vector2(0f, -56), gameObject, $"{localizer.Localize("kill_counter_last")} {0}", false, 20, font);
+            MainCounterText = UIController.InitializeText(Vector2.zero, gameObject, $"{LocalizationResolver.Localize("kill_counter")} {0}" , false, font: font);
+            HightScoreText = UIController.InitializeText(new Vector2(0f, -36), gameObject, $"{LocalizationResolver.Localize("kill_counter_hs")} {0}", false, 20, font);
+            LastAttemptText = UIController.InitializeText(new Vector2(0f, -56), gameObject, $"{LocalizationResolver.Localize("kill_counter_last")} {0}", false, 20, font);
             labelTextDefaultAlpha = MainCounterText.alpha;
             expandedTextDefaultAlpha = HightScoreText.alpha;
             MainCounterText.alpha = 0;
         }
 
         public void ChangeNumber(int number) {
-            MainCounterText.text = $"{localizer.Localize("kill_counter")} {number.ToString()}";
+            MainCounterText.text = $"{LocalizationResolver.Localize("kill_counter")} {number.ToString()}";
         }        
 
         public void Show() {
@@ -70,10 +69,10 @@ namespace BossChallengeMod.UI {
         }
 
         public void UpdateHighScore(int number) {
-            HightScoreText.text = $"{localizer.Localize("kill_counter_hs")} {number.ToString()}";
+            HightScoreText.text = $"{LocalizationResolver.Localize("kill_counter_hs")} {number.ToString()}";
         }
         public void UpdatePrevResult(int number) {
-            LastAttemptText.text = $"{localizer.Localize("kill_counter_last")} {number.ToString()}";
+            LastAttemptText.text = $"{LocalizationResolver.Localize("kill_counter_last")} {number.ToString()}";
         }
 
         public void ShowExtraText(Action? callback = null) {
