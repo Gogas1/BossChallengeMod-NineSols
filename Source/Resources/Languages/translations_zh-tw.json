@@ -53,6 +53,16 @@
   "config_scaling_maxmodifiers_description": "縮放：修改器數量。\n修改器數量增加的最大值",
   "config_scaling_modifiers_scaling_cycle_description": "達到最大修改器數量縮放的死亡次數。\n修改器數量增加將在這些死亡次數後達到最大值",
 
+  "config_rand_speed_scaling_enabled_description": "啟用隨機速度調整。\n每次死亡時，首領將獲得隨機的速度提升。此提升與線性速度調整呈乘法疊加。",
+  "config_rand_speed_scaling_start_death_description": "隨機速度調整啟始死亡次數。\n在此死亡次數之後，首領將開始獲得隨機速度提升。",
+  "config_rand_speed_scaling_minspeed_description": "隨機加成：最小速度。\n隨機速度提升的最小值。",
+  "config_rand_speed_scaling_maxspeed_description": "隨機加成：最大速度。\n隨機速度提升的最大值。",
+
+  "config_rand_modifiers_scaling_enabled_description": "啟用隨機修正調整。\n每次死亡時，首領將獲得隨機數量的修正，並與線性修正增益疊加。",
+  "config_rand_modifiers_scaling_start_death_description": "隨機修正調整啟始死亡次數。\n在此死亡次數之後，首領將開始獲得隨機數量的修正。",
+  "config_rand_modifiers_scaling_min_description": "隨機加成：最小修正數量。\n隨機修正數量的最小值。",
+  "config_rand_modifiers_scaling_max_description": "隨機加成：最大修正數量。\n隨機修正數量的最大值。",
+
   "config_modifiers_enabled_description": "啟用修改器。\n啟用或停用影響首領戰的修改器。",
   "config_modifiers_start_death_description": "觸發修飾符的死亡次數。\n 修飾符將在達到此數量的首領死亡後開始生效。如果設定為 0，修飾符將在戰鬥開始時生效。",
   "config_repeating_enabled_description": "重複修改器。\n修改器可以連續重複多次。",

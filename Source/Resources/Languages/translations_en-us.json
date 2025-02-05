@@ -70,6 +70,16 @@
   "config_rand_modifiers_scaling_min_description": "Random Boost: Minimum modifiers.\nThe minimum value for the random modifiers count.",
   "config_rand_modifiers_scaling_max_description": "Random Boost: Maximum modifiers.\nThe maximum value for the random modifiers count.",
 
+  "config_rand_speed_scaling_enabled_description": "Enable Random Speed Scaling.\nBosses will receive a random speed boost with each death. Stacks multiplicatively with the linear speed scaling.",
+  "config_rand_speed_scaling_start_death_description": "Starting Death for Random Speed Scaling.\nThe boss will begin receiving a random speed boost after this death.",
+  "config_rand_speed_scaling_minspeed_description": "Random Boost: Minimum speed.\nThe minimum value for the random speed boost.",
+  "config_rand_speed_scaling_maxspeed_description": "Random Boost: Maximum speed.\nThe maximum value for the random speed boost.",
+
+  "config_rand_modifiers_scaling_enabled_description": "Enable Random Modifiers Scaling.\nBosses will receive a random number of modifiers with each death, added to the linear modifier increase.",
+  "config_rand_modifiers_scaling_start_death_description": "Starting Death for Random Modifiers Scaling.\nThe boss will begin receiving a random number of modifiers after this death.",
+  "config_rand_modifiers_scaling_min_description": "Random Boost: Minimum modifiers.\nThe minimum value for the random modifiers count.",
+  "config_rand_modifiers_scaling_max_description": "Random Boost: Maximum modifiers.\nThe maximum value for the random modifiers count.",
+
   "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the boss fight.",
   "config_modifiers_start_death_description": "The death number for modifiers to appear.\n Modifiers will start to apply after this amount of boss deaths. If set to 0, modifiers will be applied at the start of the fight.",
   "config_repeating_enabled_description": "Repeating modifiers.\n Modifiers can be repeated multiple times in a row.",

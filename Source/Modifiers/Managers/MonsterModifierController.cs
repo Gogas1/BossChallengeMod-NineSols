@@ -41,7 +41,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void Awake() {
             FindModifiers();
-            modifiersNumber = CalculateModifiersNumber(1);
+            modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
 
@@ -106,13 +106,24 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         private int CalculateModifiersNumber(int iteration) {
-            if (!challengeConfiguration.EnableModifiersScaling) return 1;
+            var result = 0;
 
-            int baseScalingValue = 1;
-            float progress = iteration / MathF.Max(challengeConfiguration.MaxModifiersScalingCycle, 1);
-            float progressMultiplier = MathF.Min(1, progress);
-            int scalingDiff = Math.Abs(challengeConfiguration.MaxModifiersNumber - 1);
-            var result = baseScalingValue + (int)(scalingDiff * progressMultiplier);
+            if (challengeConfiguration.EnableModifiersScaling) {
+                int baseScalingValue = 1;
+                float progress = Math.Max(iteration, 1) / MathF.Max(challengeConfiguration.MaxModifiersScalingCycle, 1);
+                float progressMultiplier = MathF.Min(1, progress);
+                int scalingDiff = Math.Abs(challengeConfiguration.MaxModifiersNumber - 1);
+                result += baseScalingValue + (int)(scalingDiff * progressMultiplier);
+            }
+
+            if (challengeConfiguration.EnableRandomModifiersScaling && iteration >= challengeConfiguration.RandomModifiersScalingStartDeath) {
+                int value = random.Next(challengeConfiguration.MinRandomModifiersNumber, challengeConfiguration.MaxRandomModifiersNumber + 1);
+
+                result += value;
+            } else {
+                result = Math.Max(1, result);
+            }
+
             return result;
         }
 

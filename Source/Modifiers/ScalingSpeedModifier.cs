@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BossChallengeMod.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,13 +17,15 @@ namespace BossChallengeMod.Modifiers {
 
         public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
             modifier = CalculateModifier(iteration);
-            if (Monster != null && challengeConfiguration.EnableSpeedScaling) {
+            if (Monster != null && (challengeConfiguration.EnableSpeedScaling || challengeConfiguration.EnableRandomSpeedScaling)) {
                 Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
             }
         }
 
         public void Update() {
-            if(Monster != null && challengeConfiguration.EnableSpeedScaling && Monster.animator.speed < Monster.animator.speed * modifier) {
+            if(Monster != null && 
+                (challengeConfiguration.EnableSpeedScaling || challengeConfiguration.EnableRandomSpeedScaling) && 
+                Monster.animator.speed < Monster.animator.speed * modifier) {
                 Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
             }
         }
@@ -32,11 +35,25 @@ namespace BossChallengeMod.Modifiers {
         }
 
         private float CalculateModifier(int iteration) {
-            float baseScalingValue = challengeConfiguration.MinSpeedScalingValue;
-            float progress = (float)iteration / Mathf.Max(challengeConfiguration.MaxSpeedScalingCycle, 1);
-            float progressMultiplier = Mathf.Min(1, progress);
-            float scalingDiff = Mathf.Abs(challengeConfiguration.MaxSpeedScalingValue - challengeConfiguration.MinSpeedScalingValue);
-            return baseScalingValue + scalingDiff * progressMultiplier;
+            var result = 1f;
+
+            if (challengeConfiguration.EnableSpeedScaling) {
+                float baseScalingValue = challengeConfiguration.MinSpeedScalingValue;
+                float progress = (float)iteration / Mathf.Max(challengeConfiguration.MaxSpeedScalingCycle, 1);
+                float progressMultiplier = Mathf.Min(1, progress);
+                float scalingDiff = Mathf.Abs(challengeConfiguration.MaxSpeedScalingValue - challengeConfiguration.MinSpeedScalingValue);
+                result *= baseScalingValue + scalingDiff * progressMultiplier;
+            }
+
+            if (challengeConfiguration.EnableRandomSpeedScaling && iteration >= challengeConfiguration.RandomSpeedScalingStartDeath) {
+                float value = UnityEngine.Random.Range(
+                    MathF.Min(challengeConfiguration.MinRandomSpeedScalingValue, challengeConfiguration.MaxRandomSpeedScalingValue),
+                    MathF.Max(challengeConfiguration.MinRandomSpeedScalingValue, challengeConfiguration.MaxRandomSpeedScalingValue));
+
+                result *= value;
+            }
+
+            return result;
         }
     }
 }
