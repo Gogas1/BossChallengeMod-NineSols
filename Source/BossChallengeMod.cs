@@ -44,6 +44,16 @@ public class BossChallengeMod : BaseUnityPlugin {
     private ConfigEntry<int> maxModifiersNumber = null!;
     private ConfigEntry<int> maxModifiersNumberScalingValue = null!;
 
+    private ConfigEntry<bool> IsRandomSpeedScalingEnabled { get; set; } = null!;
+    private ConfigEntry<int> StartRandomSpeedScalingDeath { get; set; } = null!;
+    private ConfigEntry<float> MinRandomSpeedScalingValue { get; set; } = null!;
+    private ConfigEntry<float> MaxRandomSpeedScalingValue { get; set; } = null!;
+
+    private ConfigEntry<bool> IsRandomModifiersScalingEnabled { get; set; } = null!;
+    private ConfigEntry<int> StartRandomModifiersScalingDeath { get; set; } = null!;
+    private ConfigEntry<int> MinRandomModifiersScalingValue { get; set; } = null!;
+    private ConfigEntry<int> MaxRandomModifiersScalingValue { get; set; } = null!;
+
     private ConfigEntry<bool> isModifiersEnabled = null!;
     private ConfigEntry<int> modifiersStartDeathValue = null!;
     private ConfigEntry<bool> isModifiersRepeatingEnabled = null!;
@@ -467,6 +477,95 @@ public class BossChallengeMod : BaseUnityPlugin {
             ChallengeConfigurationManager.ChallengeConfiguration = config;
         };
 
+        IsRandomSpeedScalingEnabled = Config.Bind(
+                "2. Scaling",
+                "2.3 Enable Random Speed Scaling",
+                false,
+                LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
+        IsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        StartRandomSpeedScalingDeath = Config.Bind(
+            "2. Scaling",
+            "2.3.1 Random Speed Scaling After Deaths",
+            1,
+            LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
+        StartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        MinRandomSpeedScalingValue = Config.Bind(
+            "2. Scaling",
+            "2.3.2 Random Scaling: Minimal Speed",
+            1.0f,
+            LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
+        MinRandomSpeedScalingValue.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        MaxRandomSpeedScalingValue = Config.Bind(
+            "2. Scaling",
+            "2.3.3 Random Scaling: Maximum Speed",
+            1.5f,
+            LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
+        MaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        //Random modifiers scaling
+        IsRandomModifiersScalingEnabled = Config.Bind(
+            "2. Scaling",
+            "2.4 Enable Random Modifiers Scaling",
+            false,
+            LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
+        IsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        StartRandomModifiersScalingDeath = Config.Bind(
+            "2. Scaling",
+            "2.4.1 Random Modifiers Scaling After Deaths",
+            1,
+            LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
+        StartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        MinRandomModifiersScalingValue = Config.Bind(
+            "2. Scaling",
+            "2.4.2 Random Scaling: Min Modifiers Number",
+            1,
+            LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
+        MinRandomModifiersScalingValue.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
+        MaxRandomModifiersScalingValue = Config.Bind(
+            "2. Scaling",
+            "2.4.3 Random Scaling: Max Modifiers Number",
+            4,
+            LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
+        MaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+            config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
+            ChallengeConfigurationManager.ChallengeConfiguration = config;
+        };
+
         isModifiersEnabled = Config.Bind(
             "3. Modifiers",
             "3.1 Enable Modifiers",
@@ -684,6 +783,16 @@ public class BossChallengeMod : BaseUnityPlugin {
         config.EnableModifiersScaling = isModifiersScalingEnabled.Value;
         config.MaxModifiersNumber = maxModifiersNumber.Value;
         config.MaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
+
+        config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
+        config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
+        config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
+        config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
+
+        config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
+        config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
+        config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
+        config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
 
         config.ModifiersEnabled = isModifiersEnabled.Value;
         config.AllowRepeatModifiers = isModifiersRepeatingEnabled.Value;

@@ -23,8 +23,8 @@ namespace BossChallengeMod.UI {
         public float lineUnfoldAnimationDuration = 0.75f;
         public float lineFoldAnimationDuration = 0.75f;
 
-        public float modifierTextAnimationShowDuration = 1.0f;
-        public float modifierTextAnimationHideDuration = 1.0f;
+        public float modifierTextAnimationShowDuration = 0.7f;
+        public float modifierTextAnimationHideDuration = 0.7f;
         public float modifierTextDefaultAlpha = 0.79f;
 
         private float modifiersDefaultHeight = -21f;
@@ -185,7 +185,7 @@ namespace BossChallengeMod.UI {
                     newText.alpha = 0f;
                     items.Add(newText);
                     StartCoroutine(AnimateModifierShow(newText, !modifiersQueue.Any()));
-                    yield return new WaitForSecondsRealtime(0.33f);
+                    yield return new WaitForSecondsRealtime(0.25f);
                 }
             }
         }
