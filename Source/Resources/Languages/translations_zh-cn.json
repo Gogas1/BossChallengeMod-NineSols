@@ -52,6 +52,17 @@
   "config_scaling_modifiers_enabled_description": "启用修改器数量缩放。\n首领将获得更多修改器。",
   "config_scaling_maxmodifiers_description": "缩放：修改器数量。\n修改器数量增加的最大值",
   "config_scaling_modifiers_scaling_cycle_description": "达到最大修改器数量缩放的死亡次数。\n修改器数量增加将在这些死亡次数后达到最大值",
+
+  "config_rand_speed_scaling_enabled_description": "启用随机速度调节。\n每次死亡时，Boss将获得随机速度提升，并与线性速度调节呈乘法叠加。",
+  "config_rand_speed_scaling_start_death_description": "随机速度调节起始死亡次数。\nBoss将在此死亡之后开始获得随机速度提升。",
+  "config_rand_speed_scaling_minspeed_description": "随机加成：最小速度。\n随机速度提升的最小值。",
+  "config_rand_speed_scaling_maxspeed_description": "随机加成：最大速度。\n随机速度提升的最大值。",
+
+  "config_rand_modifiers_scaling_enabled_description": "启用随机修正调节。\n每次死亡时，Boss将获得随机数量的修正，并与线性修正增加叠加。",
+  "config_rand_modifiers_scaling_start_death_description": "随机修正调节起始死亡次数。\nBoss将在此死亡之后开始获得随机数量的修正。",
+  "config_rand_modifiers_scaling_min_description": "随机加成：最小修正数量。\n随机修正数量的最小值。",
+  "config_rand_modifiers_scaling_max_description": "随机加成：最大修正数量。\n随机修正数量的最大值。",
+
   "config_modifiers_enabled_description": "启用修改器。\n启用或禁用影响首领战的修改器。",
   "config_modifiers_start_death_description": "触发修饰符的死亡次数。\n 修饰符将在达到此数量的首领死亡后开始生效。如果设置为 0，修饰符将在战斗开始时生效。",
   "config_repeating_enabled_description": "重复修改器。\n修改器可以连续重复多次。",
