@@ -1,4 +1,5 @@
 ﻿using BossChallengeMod.Configuration;
+using BossChallengeMod.Interfaces;
 using BossChallengeMod.KillCounting;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,10 @@ using System.Text;
 using UnityEngine;
 
 namespace BossChallengeMod.Modifiers.Managers {
-    public class MonsterModifierController : MonoBehaviour {
+    public class MonsterModifierController : MonoBehaviour, IResettableComponent {
+        private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
+        private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+
         public List<ModifierBase> Modifiers = new List<ModifierBase>();
 
         public List<ModifierConfig> ModifierConfigs = new List<ModifierConfig>();
@@ -15,7 +19,14 @@ namespace BossChallengeMod.Modifiers.Managers {
         public List<ModifierConfig> Selected = new List<ModifierConfig>();
 
         private readonly System.Random random;
-        private readonly ChallengeConfiguration challengeConfiguration = BossChallengeMod.Instance.ChallengeConfigurationManager.ChallengeConfiguration;
+        private ChallengeConfiguration challengeConfiguration;
+
+        protected ChallengeConfiguration ConfigurationToUse {
+            get {
+                if (ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
+                else return storyChallengeConfigurationManager.ChallengeConfiguration;
+            }
+        }
 
         public Action? OnModifiersRoll;
         public Action? OnDestroyActions;
@@ -25,6 +36,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public MonsterModifierController() {
             random = new System.Random();
+            challengeConfiguration = ConfigurationToUse;
         }
 
         public void Awake() {
@@ -46,7 +58,10 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void RollModifiers(int iteration) {
-            if (iteration < challengeConfiguration.ModifiersStartFromDeath) return;
+            if (iteration < challengeConfiguration.ModifiersStartFromDeath) {
+                Selected.Clear();
+                return;
+            }
 
             var availablilities = new List<ModifierConfig>(Available);
 
@@ -99,6 +114,20 @@ namespace BossChallengeMod.Modifiers.Managers {
             int scalingDiff = Math.Abs(challengeConfiguration.MaxModifiersNumber - 1);
             var result = baseScalingValue + (int)(scalingDiff * progressMultiplier);
             return result;
+        }
+
+        public void ResetComponent() {
+            challengeConfiguration = ConfigurationToUse;
+            FindModifiers();
+            modifiersNumber = CalculateModifiersNumber(1);
+            AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
+
+            RollModifiers(0);
+            ApplyModifiers(0);
+        }
+
+        public int GetPriority() {
+            return 0;
         }
     }
 }

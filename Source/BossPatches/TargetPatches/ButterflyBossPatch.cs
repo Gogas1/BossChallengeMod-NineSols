@@ -23,10 +23,10 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = new List<MonsterState>();
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
+            if (ConfigurationToUse.EnableMod) {
                 var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                 var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                resetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
+                resetBossState.AssignChallengeConfig(ConfigurationToUse);
                 resetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
                 monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
                 result.Add(resetBossState);
@@ -36,14 +36,14 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 foreach (var clone in clones) {
                     var cloneMonsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(clone);
                     var cloneResetBossState = (ResetBossState)InstantiateStateObject(clone.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                    cloneResetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
+                    cloneResetBossState.AssignChallengeConfig(ConfigurationToUse);
                     cloneResetBossStates.Add(cloneResetBossState);
                     monsterStatesFieldRef.SetValue(clone, cloneMonsterStatesRefs.Append(cloneResetBossState).ToArray());
                     cloneResetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
                     result.Add(cloneResetBossState);
                 }
 
-                if (challengeConfigurationManager.ChallengeConfiguration.EnableMod && UseKillCounter) {
+                if (ConfigurationToUse.EnableMod && UseKillCounter) {
                     var killCounter = InitializeKillCounter(monsterBase);
                     killCounter.UseRecording = UseRecording;
 
@@ -68,7 +68,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                         cloneState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
                     }
 
-                    killCounter.CheckLoad();
+                    killCounter.CheckInit();
                 }
 
             }
@@ -84,7 +84,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if (challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
+                        if (ConfigurationToUse.EnableMod) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
                             result.Add(resStateEnterSender);
@@ -184,8 +184,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 GameObject.Destroy(shieldController);
             }
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod &&
-                challengeConfigurationManager.ChallengeConfiguration.ModifiersEnabled) {
+            if (ConfigurationToUse.EnableMod && ConfigurationToUse.ModifiersEnabled) {
 
                 var clones = GetClones(monsterBase);
 
@@ -207,7 +206,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             result.Add(speedModifier);
 
             var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
-            scalingSpeedModifier.challengeConfiguration = challengeConfigurationManager.ChallengeConfiguration;
+            scalingSpeedModifier.challengeConfiguration = ConfigurationToUse;
             result.Add(scalingSpeedModifier);
 
             var parryDamageModifier = modifiersFolder.AddChildrenComponent<ParryDirectDamageModifier>("ParryDamageModifier");

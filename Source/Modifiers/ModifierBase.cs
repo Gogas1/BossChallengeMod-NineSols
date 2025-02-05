@@ -1,4 +1,5 @@
 ﻿using BossChallengeMod.Configuration;
+using BossChallengeMod.Patches;
 using System;
 using System.Collections.Generic;
 using System.Text;

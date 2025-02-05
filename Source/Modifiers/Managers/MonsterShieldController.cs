@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BossChallengeMod.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
 namespace BossChallengeMod.Modifiers.Managers {
-    public class MonsterShieldController : MonoBehaviour {
+    public class MonsterShieldController : MonoBehaviour, IResettableComponent {
         protected GameObject? shieldObject;
         protected MonsterShield? shieldComponent;
 
@@ -65,6 +66,14 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void Deactivate() {
             shieldComponent?.RemoveShield();
+        }
+
+        public void ResetComponent() {
+            Deactivate();
+        }
+
+        public int GetPriority() {
+            return 1;
         }
     }
 }

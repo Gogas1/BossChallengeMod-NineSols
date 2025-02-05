@@ -36,7 +36,7 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateEnter() {
-            if (monsterKillCounter != null && challengeConfig.MaxBossCycles == monsterKillCounter.KillCounter + 1) {
+            if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles <= monsterKillCounter.KillCounter + 1) {
                 EffectHitData effectHitData = new EffectHitData();
                 effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
                 monster.HittedByPlayerDecreasePosture(effectHitData);
@@ -73,7 +73,7 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateExit() {
-            if (monsterKillCounter != null && challengeConfig.MaxBossCycles == monsterKillCounter.KillCounter)
+            if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles <= monsterKillCounter.KillCounter)
                 return;
 
             monster.PhaseIndex = 0;
@@ -165,6 +165,8 @@ namespace BossChallengeMod.CustomMonsterStates {
             }
         }
 
-        private static readonly int PhaseIndexHash = Animator.StringToHash("PhaseIndex");
+        private static readonly int PhaseIndexHash = Animator.StringToHash("PhaseIndex");        
     }
+
+    
 }

@@ -43,6 +43,10 @@ namespace BossChallengeMod.UI {
         }
 
         public void ChangeKillCounter(MonsterKillCounter? monsterKillCounter) {
+            if(trackedKillCounter == null || !trackedKillCounter.CanBeTracked) {
+                return;
+            }
+
             if(trackedKillCounter != null) {
                 trackedKillCounter.OnUpdate -= UpdateKillCounterUI;
                 trackedKillCounter.OnDestroyActions -= ResetKillCounter;

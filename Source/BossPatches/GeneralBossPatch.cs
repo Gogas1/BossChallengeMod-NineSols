@@ -84,10 +84,13 @@ namespace BossChallengeMod.BossPatches {
             }
         }
 
-
         public virtual void PostfixPatch(MonsterBase monster) {
 
-        }       
+        }
+        
+        public virtual bool CanBeApplied() {
+            return true;
+        }
 
         protected MonsterState InstantiateStateObject(GameObject monsteGameObject, Type type, string name, StateConfiguration stateConfiguration) {
             GameObject parent = monsteGameObject.transform.Find("States").gameObject;

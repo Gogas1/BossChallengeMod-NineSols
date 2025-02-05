@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BossChallengeMod.Patches;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;

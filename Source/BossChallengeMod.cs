@@ -39,7 +39,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     public GlobalModifiersController GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
 
-    public MonsterPatchResolver RegularMonstersPatchResolver = null!;
+    public MonsterPatchResolver RegularMonstersPatchResolver { get; private set; } = null!;
 
     private Preloader Preloader { get; set; } = null!;
     private BepInExModConfigurationHandler BepInExModConfigurationHandler { get; set; } = null!;
@@ -157,19 +157,21 @@ public class BossChallengeMod : BaseUnityPlugin {
     private GeneralBossPatch GetRegularMonsterPatch() {
         var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
 
-        var defaultBossPatch = new RevivalChallengeBossPatch();
-        defaultBossPatch.DieStates = [
+        var defaultEnemyPatch = new RevivalChallengeBossPatch();
+        defaultEnemyPatch.DieStates = [
             MonsterBase.States.Dead
         ];
-        defaultBossPatch.InsertPlaceState = MonsterBase.States.Dead;
+        defaultEnemyPatch.InsertPlaceState = MonsterBase.States.Dead;
+        defaultEnemyPatch.EnemyType = KillCounting.ChallengeEnemyType.Regular;
+        defaultEnemyPatch.UseKillCounterTracking = false;
 
-        var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
+        var resetStateConfig = defaultEnemyPatch.ResetStateConfiguration;
         resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.Animations = ["PostureBreak"];
+        resetStateConfig.Animations = ["Hurt_Big"];
         resetStateConfig.StateType = bossReviveMonsterState;
         resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
 
-        return defaultBossPatch;
+        return defaultEnemyPatch;
     }
 
     private void InitializePatches() {

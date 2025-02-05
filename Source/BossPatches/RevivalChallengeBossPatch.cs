@@ -13,7 +13,16 @@ using UnityEngine.Rendering.VirtualTexturing;
 namespace BossChallengeMod.BossPatches {
     public class RevivalChallengeBossPatch : GeneralBossPatch {
         public ResetBossStateConfiguration ResetStateConfiguration = new ResetBossStateConfiguration();
+
         protected ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
+        protected StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+
+        protected ChallengeConfiguration ConfigurationToUse {
+            get {
+                if(ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
+                else return storyChallengeConfigurationManager.ChallengeConfiguration;
+            }
+        }
 
         private MonsterBase.States bossReviveMonsterState = BossChallengeMod.Instance.MonsterStateValuesResolver.GetState("BossRevive");
         protected string resetBossStateEventType = "RestoreBoss_enter";
@@ -21,13 +30,15 @@ namespace BossChallengeMod.BossPatches {
         public bool UseKillCounter { get; set; } = true;
         public bool UseModifiers { get; set; } = true;
         public bool UseRecording { get; set; } = true;
+        public bool UseKillCounterTracking { get; set; } = true;
 
         public MonsterBase.States InsertPlaceState { get; set; } = MonsterBase.States.LastHit;
+        public ChallengeEnemyType EnemyType { get; set; } = ChallengeEnemyType.Boss;
 
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
+            if (ConfigurationToUse.EnableMod) {
                 int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
                 if (insertIndex >= 0) {
                     monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
@@ -38,12 +49,12 @@ namespace BossChallengeMod.BossPatches {
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = base.PatchMonsterStates(monsterBase).ToList();
             
-            if(challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
+            if(ConfigurationToUse.EnableMod) {
                 var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                 var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                resetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
+                resetBossState.AssignChallengeConfig(ConfigurationToUse);
 
-                if (challengeConfigurationManager.ChallengeConfiguration.EnableMod && UseKillCounter) {
+                if (ConfigurationToUse.EnableMod && UseKillCounter) {
                     var killCounter = InitializeKillCounter(monsterBase);
                     killCounter.UseRecording = UseRecording;
 
@@ -63,7 +74,7 @@ namespace BossChallengeMod.BossPatches {
                     resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
                     BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
 
-                    killCounter.CheckLoad();
+                    killCounter.CheckInit();
                 }
 
 
@@ -80,7 +91,7 @@ namespace BossChallengeMod.BossPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if(challengeConfigurationManager.ChallengeConfiguration.EnableMod) {
+                        if(ConfigurationToUse.EnableMod) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateEnterEvent);
                             result.Add(resStateEnterSender);
@@ -99,14 +110,29 @@ namespace BossChallengeMod.BossPatches {
             base.PostfixPatch(monster);
         }
 
+        public override bool CanBeApplied() {
+            switch (EnemyType) {
+                case ChallengeEnemyType.Boss:
+                    return ConfigurationToUse.AffectBosses;
+                case ChallengeEnemyType.Miniboss:
+                    return ConfigurationToUse.AffectMiniBosses;
+                case ChallengeEnemyType.Regular:
+                    return ConfigurationToUse.AffectRegularEnemies;
+                default:
+                    return true;
+            }
+        }
+
         protected virtual MonsterKillCounter InitializeKillCounter(MonsterBase monsterBase) {
             var killCounter = monsterBase.gameObject.AddComponent<MonsterKillCounter>();
+            killCounter.EnemyType = EnemyType;          
+            killCounter.CanBeTracked = UseKillCounterTracking;
 
             return killCounter;
         }
 
         protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
-            var config = challengeConfigurationManager.ChallengeConfiguration;
+            var config = ConfigurationToUse;
 
             var modifiers = CreateModifiers(monsterBase);
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
@@ -258,7 +284,7 @@ namespace BossChallengeMod.BossPatches {
             result.Add(speedModifier);
 
             var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
-            scalingSpeedModifier.challengeConfiguration = challengeConfigurationManager.ChallengeConfiguration;
+            scalingSpeedModifier.challengeConfiguration = ConfigurationToUse;
             result.Add(scalingSpeedModifier);
 
             var timerModifier = modifiersFolder.AddChildrenComponent<TimerModifier>("TimerModifier");

@@ -11,8 +11,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
         protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
             var controller = base.InitializeModifiers(monsterBase);
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableMod &&
-                challengeConfigurationManager.ChallengeConfiguration.ModifiersEnabled) {
+            if (ConfigurationToUse.EnableMod && ConfigurationToUse.ModifiersEnabled) {
 
                 var spearZombiePath = "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieSpear";
                 var hammerZombiePath = "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieHammer";

@@ -568,7 +568,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MaxBossCycles = Config.Bind(
                 "5. Story Challenge General",
                 "5.2.1 Boss deaths number",
-                1,
+                2,
                 LocalizationResolver.Localize("config_cycles_number_description"));
             _storyConfigs.MaxBossCycles.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -579,7 +579,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MaxMinibossCycles = Config.Bind(
                 "5. Story Challenge General",
                 "5.2.2 Miniboss deaths number",
-                1,
+                2,
                 LocalizationResolver.Localize("config_story_miniboss_cycles_number_description"));
             _storyConfigs.MaxMinibossCycles.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -590,7 +590,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MaxEnemyCycles = Config.Bind(
                 "5. Story Challenge General",
                 "5.2.3 Regular enemy deaths number",
-                1,
+                2,
                 LocalizationResolver.Localize("config_story_enemy_cycles_number_description"));
             _storyConfigs.MaxEnemyCycles.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -635,7 +635,7 @@ namespace BossChallengeMod.Configuration {
             //Randomize boss cycles
             _storyConfigs.IsBossCyclesNumberRandomized = Config.Bind(
                 "5. Story Challenge General",
-                "5.4.1 Randomize boss death number",
+                "5.4 Randomize boss death number",
                 false,
                 LocalizationResolver.Localize("config_boss_deaths_randomized_enabled_description"));
             _storyConfigs.IsBossCyclesNumberRandomized.SettingChanged += (_, _) => {
@@ -646,7 +646,7 @@ namespace BossChallengeMod.Configuration {
 
             _storyConfigs.MinRandomBossCycles = Config.Bind(
                 "5. Story Challenge General",
-                "5.4.2 Min boss deaths random number",
+                "5.4.1 Min boss deaths random number",
                 1,
                 LocalizationResolver.Localize("config_boss_deaths_randomized_min_description"));
             _storyConfigs.MinRandomBossCycles.SettingChanged += (_, _) => {
@@ -657,7 +657,7 @@ namespace BossChallengeMod.Configuration {
 
             _storyConfigs.MaxRandomBossCycles = Config.Bind(
                 "5. Story Challenge General",
-                "5.4.3 Max boss deaths random number",
+                "5.4.2 Max boss deaths random number",
                 3,
                 LocalizationResolver.Localize("config_boss_deaths_randomized_max_description"));
             _storyConfigs.MaxRandomBossCycles.SettingChanged += (_, _) => {
@@ -669,7 +669,7 @@ namespace BossChallengeMod.Configuration {
             //Randomize miniboss cycles
             _storyConfigs.IsMiniBossCyclesNumberRandomized = Config.Bind(
                 "5. Story Challenge General",
-                "5.5.1 Randomize miniboss death number",
+                "5.5 Randomize miniboss death number",
                 false,
                 LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_description"));
             _storyConfigs.IsMiniBossCyclesNumberRandomized.SettingChanged += (_, _) => {
@@ -680,7 +680,7 @@ namespace BossChallengeMod.Configuration {
 
             _storyConfigs.MinRandomMiniBossCycles = Config.Bind(
                 "5. Story Challenge General",
-                "5.5.2 Min miniboss deaths random number",
+                "5.5.1 Min miniboss deaths random number",
                 1,
                 LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_min_description"));
             _storyConfigs.MinRandomMiniBossCycles.SettingChanged += (_, _) => {
@@ -691,7 +691,7 @@ namespace BossChallengeMod.Configuration {
 
             _storyConfigs.MaxRandomMiniBossCycles = Config.Bind(
                 "5. Story Challenge General",
-                "5.5.3 Max miniboss deaths random number",
+                "5.5.2 Max miniboss deaths random number",
                 3,
                 LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_max_description"));
             _storyConfigs.MaxRandomMiniBossCycles.SettingChanged += (_, _) => {
@@ -703,7 +703,7 @@ namespace BossChallengeMod.Configuration {
             //Randomize enemy cycles
             _storyConfigs.IsEnemyCyclesNumberRandomized = Config.Bind(
                 "5. Story Challenge General",
-                "5.6.1 Randomize regular enemy death number",
+                "5.6 Randomize regular enemy death number",
                 false,
                 LocalizationResolver.Localize("config_story_enemy_deaths_randomized_description"));
             _storyConfigs.IsEnemyCyclesNumberRandomized.SettingChanged += (_, _) => {
@@ -714,7 +714,7 @@ namespace BossChallengeMod.Configuration {
 
             _storyConfigs.MinRandomEnemyCycles = Config.Bind(
                 "5. Story Challenge General",
-                "5.6.2 Min regular enemy deaths random number",
+                "5.6.1 Min regular enemy deaths random number",
                 1,
                 LocalizationResolver.Localize("config_story_enemy_deaths_randomized_min_description"));
             _storyConfigs.MinRandomEnemyCycles.SettingChanged += (_, _) => {
@@ -725,7 +725,7 @@ namespace BossChallengeMod.Configuration {
 
             _storyConfigs.MaxRandomEnemyCycles = Config.Bind(
                 "5. Story Challenge General",
-                "5.6.3 Max regular enemy deaths random number",
+                "5.6.2 Max regular enemy deaths random number",
                 3,
                 LocalizationResolver.Localize("config_story_enemy_deaths_randomized_max_description"));
             _storyConfigs.MaxRandomEnemyCycles.SettingChanged += (_, _) => {
@@ -1144,24 +1144,23 @@ namespace BossChallengeMod.Configuration {
             config.MinRandomModifiersNumber = _storyConfigs.MinRandomModifiersScalingValue.Value;
             config.MaxRandomModifiersNumber = _storyConfigs.MaxRandomModifiersScalingValue.Value;
 
-            config.ModifiersEnabled = isModifiersEnabled.Value;
-            config.AllowRepeatModifiers = isModifiersRepeatingEnabled.Value;
-            config.SpeedModifierEnabled = isSpeedModifierEnabled.Value;
-            config.TimerModifierEnabled = isTimerModifierEnabled.Value;
-            config.ParryDirectDamageModifierEnabled = isParryDamageModifierEnabled.Value;
-            config.DamageBuildupModifierEnabled = isDamageBuildupModifierEnabled.Value;
-            config.RegenerationModifierEnabled = isRegenerationModifierEnabled.Value;
-            config.KnockbackModifierEnabled = isKnockbackModifierEnabled.Value;
-            //config.KnockoutModifierEnabled = isKnockoutModifierEnabled.Value;
-            config.RandomArrowModifierEnabled = isRandomArrowModifierEnabled.Value;
-            config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
-            config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
-            config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
-            config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
-            config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
-            config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
-            config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
-            config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
+            config.ModifiersEnabled = _storyConfigs.IsModifiersEnabled.Value;
+            config.AllowRepeatModifiers = _storyConfigs.IsModifiersRepeatingEnabled.Value;
+            config.SpeedModifierEnabled = _storyConfigs.IsSpeedModifierEnabled.Value;
+            config.TimerModifierEnabled = _storyConfigs.IsTimerModifierEnabled.Value;
+            config.ParryDirectDamageModifierEnabled = _storyConfigs.IsParryDamageModifierEnabled.Value;
+            config.DamageBuildupModifierEnabled = _storyConfigs.IsDamageBuildupModifierEnabled.Value;
+            config.RegenerationModifierEnabled = _storyConfigs.IsRegenerationModifierEnabled.Value;
+            config.KnockbackModifierEnabled = _storyConfigs.IsKnockbackModifierEnabled.Value;            
+            config.RandomArrowModifierEnabled = _storyConfigs.IsRandomArrowModifierEnabled.Value;
+            config.RandomTalismanModifierEnabled = _storyConfigs.IsRandomTalismanModifierEnabled.Value;
+            config.EnduranceModifierEnabled = _storyConfigs.IsEnduranceModifierEnabled.Value;
+            config.QiShieldModifierEnabled = _storyConfigs.IsQiShieldModifierEnabled.Value;
+            config.TimedShieldModifierEnabled = _storyConfigs.IsTimedShieldModifierEnabled.Value;
+            config.QiOverloadModifierEnabled = _storyConfigs.IsQiOverloadModifierEnabled.Value;
+            config.DistanceShieldModifierEnabled = _storyConfigs.IsDistanceShieldModifierEnabled.Value;
+            config.YanlaoGunModifierEnabled = _storyConfigs.IsYanlaoGunModifierEnabled.Value;
+            config.ModifiersStartFromDeath = _storyConfigs.ModifiersStartDeathValue.Value;
 
             StoryChallengeConfigurationManager.ChallengeConfiguration = config;
         }

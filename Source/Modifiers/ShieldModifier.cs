@@ -1,4 +1,5 @@
 ﻿using BossChallengeMod.Modifiers.Managers;
+using BossChallengeMod.Patches;
 using System;
 using System.Collections.Generic;
 using System.Linq;
