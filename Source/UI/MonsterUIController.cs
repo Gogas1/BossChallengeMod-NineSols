@@ -43,7 +43,7 @@ namespace BossChallengeMod.UI {
         }
 
         public void ChangeKillCounter(MonsterKillCounter? monsterKillCounter) {
-            if(trackedKillCounter == null || !trackedKillCounter.CanBeTracked) {
+            if(monsterKillCounter != null && !monsterKillCounter.CanBeTracked) {
                 return;
             }
 
@@ -63,6 +63,10 @@ namespace BossChallengeMod.UI {
         }
 
         public void ChangeModifiersController(MonsterModifierController? monsterModifierController) {
+            if(monsterModifierController != null && !monsterModifierController.CanBeTracked) {
+                return;
+            }
+
             if (trackedModifiersController != null) {
                 trackedModifiersController.OnModifiersRoll -= UpdateModifierUI;
                 trackedModifiersController.OnDestroyActions -= ResetModifierController;

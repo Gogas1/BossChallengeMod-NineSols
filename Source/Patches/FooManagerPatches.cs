@@ -13,7 +13,6 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch("ExplodeWithDealer")]
         [HarmonyPostfix]
         private static void ExplodeWithDealer_Postfix() {
-            System.Random random = new System.Random();
             if (BossChallengeMod.Instance.GlobalModifiersFlags.BlockTalismanVotes.Any()) {
                 string path = "GameCore(Clone)/RCG LifeCycle/UIManager/GameplayUICamera/UI-Canvas/[Tab] MenuTab/CursorProvider/Menu Vertical Layout/Panels/PlayerStatus Panel/Description Provider/LeftPart/PlayerStatusSelectableButton_ControlStyle";
                 GameObject talismanSelectorGO = GameObject.Find(path);
@@ -22,7 +21,7 @@ namespace BossChallengeMod.Patches {
                 if (selectorComp != null) {
                     var collection = selectorComp.collection;
                     int talismansNum = collection.AcquiredCount;
-                    int variantsNum = random.Next(1, talismansNum);
+                    int variantsNum = UnityEngine.Random.Range(1, talismansNum);
                     for (int i = 0; i < variantsNum; i++) {
                         collection.Next();
                     }

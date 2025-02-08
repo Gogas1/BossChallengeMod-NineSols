@@ -9,21 +9,21 @@ using HarmonyLib;
 using NineSolsAPI.Utils;
 
 namespace BossChallengeMod.Patches {
+
     [HarmonyPatch(typeof(MonsterBase))]
     public class MonsterBasePatches {
 
         [HarmonyPatch("CheckInit")]
         [HarmonyPrefix]
         private static void CheckInit_Prefix(MonsterBase __instance, out IEnumerable<MonsterState> __state) {
+            Log.Info($"Prefix Patching {ObjectUtils.ObjectPath(__instance.gameObject)}");
             __state = new List<MonsterState>();
 
             try {
-                if (__instance.tag == "Boss") {
-                    GeneralBossPatch? bossPatch = null;
+                bool skipped = true;
 
-                    if (!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
-                        bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
-                    }
+                if (__instance.tag == "Boss") {
+                    GeneralBossPatch? bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
 
                     if (bossPatch != null && bossPatch.CanBeApplied()) {
                         bossPatch.PatchMonsterPostureSystem(__instance);
@@ -32,9 +32,11 @@ namespace BossChallengeMod.Patches {
                         var receivers = bossPatch.CreateReceivers(__instance, __state);
                         bossPatch.ProcessEventHandlers(receivers, senders);
                     }
+
+                    skipped = false;
                 }
 
-                if (__instance.CompareTag("Enemy")) {
+                if (__instance.CompareTag("Enemy") || __instance.CompareTag("Untagged")) {
                     GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
                     if (bossPatch != null && bossPatch.CanBeApplied()) {
                         bossPatch.PatchMonsterPostureSystem(__instance);
@@ -42,36 +44,62 @@ namespace BossChallengeMod.Patches {
                         var senders = bossPatch.CreateSenders(__instance, __state);
                         var receivers = bossPatch.CreateReceivers(__instance, __state);
                         bossPatch.ProcessEventHandlers(receivers, senders);
+                    } else {
+                        Log.Info($"Prefix Patching. Null patched");
                     }
+
+                    skipped = false;
+                }
+
+                if (skipped) {
+                    Log.Warning($"Prefix Patching. The monster was skipped?");
                 }
             } catch (Exception e) {
-                Log.Error($"{e.Message}, {e.StackTrace}");
+                Log.Error($"Prefix Patching. {e.Message}, {e.StackTrace}");
             }
         }
 
         [HarmonyPatch("CheckInit")]
         [HarmonyPostfix]
         private static void CheckInit_Postfix(MonsterBase __instance, IEnumerable<MonsterState> __state) {
-            if (__instance.tag == "Boss") {
-                GeneralBossPatch? bossPatch = null;
+            Log.Info($"Postfix Patching {ObjectUtils.ObjectPath(__instance.gameObject)}");
 
-                if (!BossChallengeMod.Instance.BossPatches.TryGetValue(__instance.name, out bossPatch)) {
-                    bossPatch = BossChallengeMod.Instance.BossPatches["Default"];
+            try {
+                bool skipped = true;
+
+                if (__instance.tag == "Boss") {
+                    GeneralBossPatch? bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
+
+                    if (bossPatch != null && bossPatch.CanBeApplied()) {
+                        bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
+                        bossPatch?.PostfixPatch(__instance);
+                    } else {
+                        Log.Info($"Postfix Patching. Null patched");
+                    }
+
+                    skipped = false;
                 }
 
-                if(bossPatch != null && bossPatch.CanBeApplied()) {
-                    bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
-                    bossPatch?.PostfixPatch(__instance);
-                }
-            }
+                if (__instance.CompareTag("Enemy") || __instance.CompareTag("Untagged")) {
+                    GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(__instance.name);
 
-            if (__instance.CompareTag("Enemy")) {
-                GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(__instance.name);
+                    if (bossPatch != null && bossPatch.CanBeApplied()) {
+                        bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
+                        bossPatch?.PostfixPatch(__instance);
+                    } else {
+                        Log.Info($"Postfix Patching. Null patched");
+                    }
 
-                if (bossPatch != null && bossPatch.CanBeApplied()) {
-                    bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
-                    bossPatch?.PostfixPatch(__instance);
+                    skipped = false;
+                } else {
+                    Log.Info($"Postfix Patching. Null patched");
                 }
+
+                if (skipped) {
+                    Log.Warning($"Postfix Patching. The monster was skipped?");
+                }
+            } catch (Exception e) {
+                Log.Error($"Postfix Patching. {e.Message}, {e.StackTrace}");
             }
         }
 

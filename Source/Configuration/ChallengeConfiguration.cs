@@ -38,15 +38,15 @@ namespace BossChallengeMod.Configuration {
         public int MaxModifiersNumber;
         public int MaxModifiersScalingCycle;
 
-        public bool EnableRandomSpeedScaling;//
-        public int RandomSpeedScalingStartDeath;//
-        public float MinRandomSpeedScalingValue;//
-        public float MaxRandomSpeedScalingValue;//
+        public bool EnableRandomSpeedScaling;
+        public int RandomSpeedScalingStartDeath;
+        public float MinRandomSpeedScalingValue;
+        public float MaxRandomSpeedScalingValue;
 
-        public bool EnableRandomModifiersScaling;//
-        public int RandomModifiersScalingStartDeath;//
-        public int MinRandomModifiersNumber;//
-        public int MaxRandomModifiersNumber;//
+        public bool EnableRandomModifiersScaling;
+        public int RandomModifiersScalingStartDeath;
+        public int MinRandomModifiersNumber;
+        public int MaxRandomModifiersNumber;
         #endregion Scaling
 
         public bool ModifiersEnabled;

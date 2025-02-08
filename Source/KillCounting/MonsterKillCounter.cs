@@ -1,9 +1,11 @@
 ﻿using BossChallengeMod.Configuration;
 using BossChallengeMod.Interfaces;
 using BossChallengeMod.Modifiers;
+using NineSolsAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -12,6 +14,7 @@ namespace BossChallengeMod.KillCounting {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
         private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
         private MonsterBase monster = null!;
+        private ChallengeConfiguration challengeConfiguration;
 
         protected ChallengeConfiguration ConfigurationToUse {
             get {
@@ -26,8 +29,6 @@ namespace BossChallengeMod.KillCounting {
             }
         }        
 
-        private ChallengeConfiguration challengeConfiguration;
-        public ChallengeEnemyType EnemyType { get; set; }
 
         private int killCounter;
         public int KillCounter { 
@@ -48,6 +49,7 @@ namespace BossChallengeMod.KillCounting {
         }
 
         private int lastCount;
+
         public int LastCount {
             get => lastCount;
             private set { 
@@ -55,17 +57,66 @@ namespace BossChallengeMod.KillCounting {
                 OnUpdate?.Invoke();
             }
         }
+
+        private float showDistance = 500f;
+        public float ShowDistance 
+        { 
+            get => showDistance; 
+            set {
+                showDistance = value;
+                showTrigger.radius = value;
+            }
+        }
+
+        public ChallengeEnemyType EnemyType { get; set; }
         public bool UseRecording { get; set; }
         public bool CanBeTracked { get; set; }
-
         public int MaxBossCycles { get; set; } = -1;
-
+        public bool UseProximityShow { get; set; } = true;
         public Action? OnUpdate { get; set; }
         public Action? OnDestroyActions { get; set; }
 
+        PlayerSensor playerSensor = null!;
+        CircleCollider2D showTrigger = null!;
         public MonsterKillCounter() {            
             monster = GetComponent<MonsterBase>();
             challengeConfiguration = ConfigurationToUse;
+
+            var sensorFolder = new GameObject("ChallengePlayerSensor");
+            sensorFolder.transform.SetParent(transform, false);
+
+            if(UseProximityShow) {
+                showTrigger = sensorFolder.AddComponent<CircleCollider2D>();
+                showTrigger.isTrigger = true;
+                showTrigger.radius = ShowDistance;
+
+                playerSensor = sensorFolder.AddComponent<PlayerSensor>();
+                playerSensor.PlayerEnterEvent = new UnityEngine.Events.UnityEvent();
+                playerSensor.PlayerExitEvent = new UnityEngine.Events.UnityEvent();
+                playerSensor.PlayerStayEvent = new UnityEngine.Events.UnityEvent();
+
+                AutoAttributeManager.AutoReference(sensorFolder);
+                playerSensor.Awake();
+                playerSensor.EnterLevelReset();
+
+                playerSensor.PlayerEnterEvent.AddListener(() => {
+                    Log.Info($"Enter {ObjectUtils.ObjectPath(gameObject)}");
+                });
+                playerSensor.PlayerExitEvent.AddListener(() => {
+                    Log.Info($"Exit {ObjectUtils.ObjectPath(gameObject)}");
+                });
+            }
+        }
+
+        private bool PlayerEnterCheck(Collider2D other) {
+            if (!other.CompareTag("Player")) {
+                return false;
+            }
+            if (!(other.GetComponent<Actor>() is Player)) {
+                return false;
+            }
+
+            return true;
         }
 
         public void CheckInit() {
@@ -93,12 +144,10 @@ namespace BossChallengeMod.KillCounting {
         }
 
         private void CalculateMaxCycles() {
-            var random = new System.Random();
-
             switch (EnemyType) {
                 case ChallengeEnemyType.Regular:
                     if (challengeConfiguration.RandomizeEnemyCyclesNumber) {
-                        MaxBossCycles = random.Next(challengeConfiguration.MinRandomEnemyCycles, challengeConfiguration.MaxRandomEnemyCycles + 1);
+                        MaxBossCycles = UnityEngine.Random.Range(challengeConfiguration.MinRandomEnemyCycles, challengeConfiguration.MaxRandomEnemyCycles + 1);
                     } else {
                         MaxBossCycles = challengeConfiguration.MaxEnemyCycles;
                     }
@@ -106,7 +155,7 @@ namespace BossChallengeMod.KillCounting {
                     break;
                 case ChallengeEnemyType.Miniboss:
                     if (challengeConfiguration.RandomizeMiniBossCyclesNumber) {
-                        MaxBossCycles = random.Next(challengeConfiguration.MinRandomMiniBossCycles, challengeConfiguration.MaxRandomMiniBossCycles + 1);
+                        MaxBossCycles = UnityEngine.Random.Range(challengeConfiguration.MinRandomMiniBossCycles, challengeConfiguration.MaxRandomMiniBossCycles + 1);
                     } else {
                         MaxBossCycles = challengeConfiguration.MaxMinibossCycles;
                     }
@@ -114,7 +163,7 @@ namespace BossChallengeMod.KillCounting {
                     break;
                 case ChallengeEnemyType.Boss:
                     if (challengeConfiguration.RandomizeBossCyclesNumber) {
-                        MaxBossCycles = random.Next(challengeConfiguration.MinRandomBossCycles, challengeConfiguration.MaxRandomBossCycles + 1);
+                        MaxBossCycles = UnityEngine.Random.Range(challengeConfiguration.MinRandomBossCycles, challengeConfiguration.MaxRandomBossCycles + 1);
                     } else {
                         MaxBossCycles = challengeConfiguration.MaxBossCycles;
                     }

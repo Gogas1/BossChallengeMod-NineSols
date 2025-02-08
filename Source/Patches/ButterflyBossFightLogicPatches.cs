@@ -15,7 +15,7 @@ namespace BossChallengeMod.Patches {
         [HarmonyPostfix]
         private static void SetPhase_Postfix(ButterflyBossFightLogic __instance, int targetPhase) {
             if (targetPhase == 2) {
-                GeneralBossPatch bossPatch = BossChallengeMod.Instance.BossPatches["StealthGameMonster_Boss_ButterFly Variant"];
+                GeneralBossPatch bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch("StealthGameMonster_Boss_ButterFly Variant")!;
 
                 //if(bossPatch is ButterflyBossPatch butterflyBossPatch) {
                 //    if(butterflyBossPatch.ChallengeConfiguration.EnableRestoration) {

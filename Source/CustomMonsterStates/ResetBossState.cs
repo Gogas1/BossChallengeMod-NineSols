@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
+using System.Threading;
 
 namespace BossChallengeMod.CustomMonsterStates {
     public class ResetBossState : MonsterState {
@@ -21,6 +23,10 @@ namespace BossChallengeMod.CustomMonsterStates {
         public string[] Animations { get; set; }
         public string[] TargetDamageReceivers { get; set; }
         public MonsterBase.States StateType { get; set; }
+        public float PauseTime { get; set; } = 0f;
+        public float FlashingDelay { get; set; } = 0.33f;
+
+        protected CancellationTokenSource stateLifetimeCancellationTokenSource = null!;
 
         public ResetBossState() {
 
@@ -43,11 +49,16 @@ namespace BossChallengeMod.CustomMonsterStates {
 
                 return;
             }
+            
+            stateLifetimeCancellationTokenSource = new CancellationTokenSource();
 
             ResetAnimationQueue();
             monster.UnFreeze();
             monster.HurtClearHintFxs();
             monster.monsterCore.DisablePushAway();
+
+            StartCoroutine(FlashingTask());
+
             SwitchDamageReceivers(false);
             for (int i = 0; i < base.monster.attackSensors.Length; i++) {
                 if (base.monster.attackSensors[i] != null) {
@@ -57,8 +68,11 @@ namespace BossChallengeMod.CustomMonsterStates {
             base.monster.VelX = 0f;
             if (AnimationsQueue.Any()) {
                 PlayAnimation(AnimationsQueue.Dequeue(), false);
-            } else {
+            } else if(PauseTime <= 0) {
                 End();
+            } else {
+                monster.FreezeFor(PauseTime);
+                StartCoroutine(DelayAction(() => End(), PauseTime));
             }
 
             ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
@@ -66,9 +80,21 @@ namespace BossChallengeMod.CustomMonsterStates {
             ResetSequenceManagersAttacks(monster);
         }
 
-        private void End() {
+        protected void End() {
             if (monster.fsm.HasState(exitState)) {
                 monster.ChangeStateIfValid(exitState);
+            }
+        }
+
+        protected IEnumerator DelayAction(Action action, float delay) {
+            yield return new WaitForSeconds(delay);
+            action.Invoke();
+        }
+
+        protected IEnumerator FlashingTask() {
+            while(!stateLifetimeCancellationTokenSource.Token.IsCancellationRequested) {
+                monster.monsterCore.FlashSprite();
+                yield return new WaitForSeconds(FlashingDelay);
             }
         }
 
@@ -82,6 +108,8 @@ namespace BossChallengeMod.CustomMonsterStates {
             SwitchDamageReceivers(true);
             monster.monsterCore.EnablePushAway();
             monster.postureSystem.GenerateCurrentDieHandleStacks();
+
+            stateLifetimeCancellationTokenSource.Cancel();
         }
 
         public override void AnimationEvent(AnimationEvents.AnimationEvent e) {

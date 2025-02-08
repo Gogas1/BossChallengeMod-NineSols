@@ -65,7 +65,9 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void Deactivate() {
-            shieldComponent?.RemoveShield();
+            if (IsShieldEnabled) {
+                shieldComponent?.RemoveShield();
+            }
         }
 
         public void ResetComponent() {

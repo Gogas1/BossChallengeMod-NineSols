@@ -11,6 +11,7 @@ namespace BossChallengeMod.Modifiers {
     public class YanlaoGunModifier : ModifierBase {
 
         protected MonsterYanlaoGunController? YanlaoGunController;
+        public float MaxDistance { get; set; } = 800f;
 
         public override void Awake() {
             base.Awake();
@@ -25,8 +26,9 @@ namespace BossChallengeMod.Modifiers {
         }
 
         private void Update() {
-            if(enabled) {
-                if(Monster?.postureSystem.IsMonsterEmptyPosture ?? true) {
+            if(enabled && Monster != null) {
+                var distanceDifference = Vector2.Distance(Player.i.transform.position, Monster.transform.position);
+                if ((Monster?.postureSystem.IsMonsterEmptyPosture ?? true) || distanceDifference >= MaxDistance) {
                     YanlaoGunController?.StopGun();
                 }
                 else {

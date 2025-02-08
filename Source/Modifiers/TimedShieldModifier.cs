@@ -8,7 +8,6 @@ namespace BossChallengeMod.Modifiers {
     public class TimedShieldModifier : ShieldModifier {
 
         private float timer = 7f;
-        private System.Random random = new System.Random();
 
         public override void Awake() {
             base.Awake();
@@ -22,7 +21,7 @@ namespace BossChallengeMod.Modifiers {
 
                 if (timer <= 0) {
                     ActivateCheck();
-                    timer = random.Next(5, 13);
+                    timer = UnityEngine.Random.Range(5, 13);
                 }
             }
         }

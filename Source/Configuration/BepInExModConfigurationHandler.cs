@@ -374,7 +374,7 @@ namespace BossChallengeMod.Configuration {
 
             isYanlaoGunModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Yanlago Gun modiifer",
+                "3.M Yanlaos Assistance modiifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"));
             isYanlaoGunModifierEnabled.SettingChanged += (_, _) => {

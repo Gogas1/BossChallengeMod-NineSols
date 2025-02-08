@@ -31,6 +31,8 @@ namespace BossChallengeMod.BossPatches {
         public bool UseModifiers { get; set; } = true;
         public bool UseRecording { get; set; } = true;
         public bool UseKillCounterTracking { get; set; } = true;
+        public bool UseModifierControllerTracking { get; set; } = true;
+
 
         public MonsterBase.States InsertPlaceState { get; set; } = MonsterBase.States.LastHit;
         public ChallengeEnemyType EnemyType { get; set; } = ChallengeEnemyType.Boss;
@@ -143,6 +145,7 @@ namespace BossChallengeMod.BossPatches {
                 PopulateModifierController(modifierController, config);
             }
 
+            modifierController.CanBeTracked = UseModifierControllerTracking;
             modifierController.GenerateAvailableMods();
 
             return modifierController;

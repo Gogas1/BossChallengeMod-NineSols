@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 
 namespace BossChallengeMod.Modifiers.Managers {
     public class MonsterModifierController : MonoBehaviour, IResettableComponent {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
         private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+        private MonsterBase monster = null!;
 
         public List<ModifierBase> Modifiers = new List<ModifierBase>();
 
@@ -18,7 +20,6 @@ namespace BossChallengeMod.Modifiers.Managers {
         public List<ModifierConfig> Available = new List<ModifierConfig>();
         public List<ModifierConfig> Selected = new List<ModifierConfig>();
 
-        private readonly System.Random random;
         private ChallengeConfiguration challengeConfiguration;
 
         protected ChallengeConfiguration ConfigurationToUse {
@@ -32,11 +33,13 @@ namespace BossChallengeMod.Modifiers.Managers {
         public Action? OnDestroyActions;
         public bool AllowRepeating { get; set; }
 
+        public bool CanBeTracked { get; set; }
+
         private int modifiersNumber = 1;
 
         public MonsterModifierController() {
-            random = new System.Random();
             challengeConfiguration = ConfigurationToUse;
+            monster = GetComponent<MonsterBase>();
         }
 
         public void Awake() {
@@ -69,6 +72,14 @@ namespace BossChallengeMod.Modifiers.Managers {
                 availablilities.RemoveAll(m => m.Key == "timer");
             }
 
+            if(!Player.i.mainAbilities.ChargedAttackAbility.IsActivated) {
+                availablilities.RemoveAll(m => m.Key.Contains("shield"));
+            }
+
+            if(!ApplicationCore.IsInBossMemoryMode) {
+                availablilities.RemoveAll(m => m.Key == "timer");
+            }
+
             if (!AllowRepeating) {
                 availablilities = availablilities.Except(Selected).ToList();
             }
@@ -76,7 +87,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             if (availablilities.Any()) {
                 for (int i = 0; i < modifiersNumber && availablilities.Any(); i++) {
-                    var selected = availablilities[random.Next(0, availablilities.Count)];
+                    var selected = availablilities[UnityEngine.Random.Range(0, availablilities.Count)];
                     availablilities.RemoveAll(am => selected.Incompatibles.Select(i => i).Contains(am.Key));
                     Selected.Add(selected);
                 }
@@ -98,7 +109,8 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void FindModifiers() {
-            Modifiers.AddRange(GetComponentsInChildren<ModifierBase>());
+            Modifiers.Clear();
+            Modifiers.AddRange(gameObject.GetComponentsInChildren<ModifierBase>());
         }
 
         public void OnDestroy() {
@@ -117,7 +129,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
 
             if (challengeConfiguration.EnableRandomModifiersScaling && iteration >= challengeConfiguration.RandomModifiersScalingStartDeath) {
-                int value = random.Next(challengeConfiguration.MinRandomModifiersNumber, challengeConfiguration.MaxRandomModifiersNumber + 1);
+                int value = UnityEngine.Random.Range(challengeConfiguration.MinRandomModifiersNumber, challengeConfiguration.MaxRandomModifiersNumber + 1);
 
                 result += value;
             } else {
