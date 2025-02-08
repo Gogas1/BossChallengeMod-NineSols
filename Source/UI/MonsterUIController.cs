@@ -9,7 +9,9 @@ using UnityEngine.SceneManagement;
 namespace BossChallengeMod.UI {
     public class MonsterUIController {
         private MonsterKillCounter? trackedKillCounter = null;
+
         private MonsterModifierController? trackedModifiersController = null;
+        private readonly List<MonsterModifierController> compositeUIControllers = new();
 
         private UIController UIController = BossChallengeMod.Instance.UIController;
 
@@ -82,6 +84,16 @@ namespace BossChallengeMod.UI {
             UpdateModifierUI();
         }
 
+        public void AddCompositeModifierController(MonsterModifierController monsterModifierController) {
+            
+        }
+
+        public void RemoveCompositeModifierController(MonsterModifierController monsterModifierController) {
+
+        }
+
+
+
         private void UpdateKillCounterUI() {
             if (trackedKillCounter == null) {
                 IsHidingKillCounter = true;
@@ -112,7 +124,7 @@ namespace BossChallengeMod.UI {
             }
 
             if (trackedModifiersController.Selected.Any()) {
-                UIController.UpdateModifiers(trackedModifiersController.Selected.Select(m => m.Key));
+                UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => config.GetHashCode(), config => config.Key));
             }
             else {
                 UIController.HideModifiers();

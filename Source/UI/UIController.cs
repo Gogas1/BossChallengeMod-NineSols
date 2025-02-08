@@ -1,25 +1,15 @@
-﻿using HarmonyLib;
-using NineSolsAPI;
+﻿using NineSolsAPI;
 using RCGMaker.Core;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRule;
-using UnityEngine.Experimental.GlobalIllumination;
-using UnityEngine.UI;
-using ClipperLibClone;
-using System.Collections;
-using BossChallengeMod.Helpers;
-using UnityEngine.SceneManagement;
 using BossChallengeMod.Configuration;
 
 namespace BossChallengeMod.UI {
     public class UIController {
         private KillCounterController bossCounterTextController;
-        private ModifiersUIController modifiersController;
+        private QueueUI.ModifiersUIController modifiersController;
         private TimerController timerController;
         private CurrentTalismanUIContoller talismanUIController;
 
@@ -179,8 +169,8 @@ namespace BossChallengeMod.UI {
             coordsY = height / 4.15f;
         }
 
-        private ModifiersUIController CreateModifiersControllerGUI() {
-            var modifiers = rightPanel.gameObject.AddChildrenComponent<ModifiersUIController>("ModifiersUI");
+        private QueueUI.ModifiersUIController CreateModifiersControllerGUI() {
+            var modifiers = rightPanel.gameObject.AddChildrenComponent<QueueUI.ModifiersUIController>("ModifiersUI");
             modifiers.transform.localPosition = new Vector3(0, -21f);
             return modifiers;
         }
@@ -232,9 +222,12 @@ namespace BossChallengeMod.UI {
             ShowText();
         }
 
-        public void UpdateModifiers(IEnumerable<string> modifiers) {
+        //public void UpdateModifiers(IEnumerable<string> modifiers) {
+        //    modifiersController.SetModifiers(modifiers);
+        //}
+
+        public void UpdateModifiers(Dictionary<int, string> modifiers) {
             modifiersController.SetModifiers(modifiers);
-            modifiersController.Show();
         }
 
         public void ShowText() {

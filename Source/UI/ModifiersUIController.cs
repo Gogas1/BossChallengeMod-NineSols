@@ -30,7 +30,7 @@ namespace BossChallengeMod.UI {
         private float modifiersRaisingAnimationDuration = 1f;
         private float modifiersLoweringAnimationDuration = 1f;
 
-        private bool forceHide;
+        private bool forceHide;    
 
         public UIControllerAnimationState UIControllerAnimationState;
 

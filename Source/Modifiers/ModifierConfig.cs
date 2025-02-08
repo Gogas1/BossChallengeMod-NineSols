@@ -7,5 +7,9 @@ namespace BossChallengeMod.Modifiers {
         public string Key { get; set; } = string.Empty;
         public List<string> Incompatibles { get; } = new List<string>();
         public List<string> IgnoredMonsters { get; } = new List<string>();
+
+        public override int GetHashCode() {
+            return HashCode.Combine(Key.GetHashCode(), Incompatibles.GetHashCode(), IgnoredMonsters.GetHashCode());
+        }
     }
 }

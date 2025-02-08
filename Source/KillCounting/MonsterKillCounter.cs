@@ -61,11 +61,7 @@ namespace BossChallengeMod.KillCounting {
         private float showDistance = 500f;
         public float ShowDistance 
         { 
-            get => showDistance; 
-            set {
-                showDistance = value;
-                showTrigger.radius = value;
-            }
+            get => showDistance;
         }
 
         public ChallengeEnemyType EnemyType { get; set; }
@@ -77,34 +73,12 @@ namespace BossChallengeMod.KillCounting {
         public Action? OnDestroyActions { get; set; }
 
         PlayerSensor playerSensor = null!;
-        CircleCollider2D showTrigger = null!;
         public MonsterKillCounter() {            
             monster = GetComponent<MonsterBase>();
-            challengeConfiguration = ConfigurationToUse;
-
-            var sensorFolder = new GameObject("ChallengePlayerSensor");
-            sensorFolder.transform.SetParent(transform, false);
+            challengeConfiguration = ConfigurationToUse;            
 
             if(UseProximityShow) {
-                showTrigger = sensorFolder.AddComponent<CircleCollider2D>();
-                showTrigger.isTrigger = true;
-                showTrigger.radius = ShowDistance;
-
-                playerSensor = sensorFolder.AddComponent<PlayerSensor>();
-                playerSensor.PlayerEnterEvent = new UnityEngine.Events.UnityEvent();
-                playerSensor.PlayerExitEvent = new UnityEngine.Events.UnityEvent();
-                playerSensor.PlayerStayEvent = new UnityEngine.Events.UnityEvent();
-
-                AutoAttributeManager.AutoReference(sensorFolder);
-                playerSensor.Awake();
-                playerSensor.EnterLevelReset();
-
-                playerSensor.PlayerEnterEvent.AddListener(() => {
-                    Log.Info($"Enter {ObjectUtils.ObjectPath(gameObject)}");
-                });
-                playerSensor.PlayerExitEvent.AddListener(() => {
-                    Log.Info($"Exit {ObjectUtils.ObjectPath(gameObject)}");
-                });
+                playerSensor = InitPlayerSensor();
             }
         }
 
@@ -172,6 +146,7 @@ namespace BossChallengeMod.KillCounting {
             }
         }
 
+
         public void ResetComponent() {
             challengeConfiguration = ConfigurationToUse;
             KillCounter = 0;
@@ -181,6 +156,36 @@ namespace BossChallengeMod.KillCounting {
 
         public int GetPriority() {
             return 0;
+        }
+
+        private PlayerSensor InitPlayerSensor() {
+            CircleCollider2D showTrigger;
+            PlayerSensor sensor;
+
+            var sensorFolder = new GameObject("ChallengePlayerSensorKillCounter");
+            sensorFolder.transform.SetParent(transform, false);
+
+            showTrigger = sensorFolder.AddComponent<CircleCollider2D>();
+            showTrigger.isTrigger = true;
+            showTrigger.radius = ShowDistance;
+
+            sensor = sensorFolder.AddComponent<PlayerSensor>();
+            sensor.PlayerEnterEvent = new UnityEngine.Events.UnityEvent();
+            sensor.PlayerExitEvent = new UnityEngine.Events.UnityEvent();
+            sensor.PlayerStayEvent = new UnityEngine.Events.UnityEvent();
+
+            AutoAttributeManager.AutoReference(sensorFolder);
+            sensor.Awake();
+            sensor.EnterLevelReset();
+
+            sensor.PlayerEnterEvent.AddListener(() => {
+                BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(this);
+            });
+            sensor.PlayerExitEvent.AddListener(() => {
+                BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(null);
+            });
+
+            return sensor;
         }
     }
     public enum ChallengeEnemyType {

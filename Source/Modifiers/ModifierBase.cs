@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace BossChallengeMod.Modifiers {
     public class ModifierBase : MonoBehaviour {
+        public bool IsPaused { get; protected set; }
         public string Key { get; protected set; } = string.Empty;
         public MonsterBase? Monster;
         public ChallengeConfiguration challengeConfiguration;
@@ -28,8 +29,20 @@ namespace BossChallengeMod.Modifiers {
             enabled = false;
         }
 
-        public virtual void NotifyActivation(IEnumerable<string> keys, int iteration) {
+        public virtual void NotifyActivation(int iteration) {
 
+        }
+
+        public virtual void NotifyDeactivation() {
+
+        }
+
+        public virtual void NotifyPause() {
+            IsPaused = true;
+        }
+
+        public virtual void NotifyResume() {
+            IsPaused = false;
         }
 
         public virtual void MonsterNotify(MonsterNotifyType notifyType) {

@@ -109,7 +109,9 @@ namespace BossChallengeMod.BossPatches {
         }
 
         public override void PostfixPatch(MonsterBase monster) {
-            base.PostfixPatch(monster);
+            if(ConfigurationToUse.EnableMod) {
+                base.PostfixPatch(monster);
+            }
         }
 
         public override bool CanBeApplied() {

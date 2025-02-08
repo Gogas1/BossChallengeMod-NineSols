@@ -13,6 +13,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
         private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
         private MonsterBase monster = null!;
+        private int modifiersNumber = 1;
 
         public List<ModifierBase> Modifiers = new List<ModifierBase>();
 
@@ -34,8 +35,12 @@ namespace BossChallengeMod.Modifiers.Managers {
         public bool AllowRepeating { get; set; }
 
         public bool CanBeTracked { get; set; }
+        public bool UseCompositeTracking { get; set; }
+        private float showDistance = 500f;
+        public float ShowDistance {
+            get => showDistance;
+        }
 
-        private int modifiersNumber = 1;
 
         public MonsterModifierController() {
             challengeConfiguration = ConfigurationToUse;
@@ -98,8 +103,14 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void ApplyModifiers(int iteration) {
             try {
+
+                var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
                 foreach (var modifier in Modifiers) {
-                    modifier.NotifyActivation(Selected.Select(m => m.Key), iteration);
+                    if (selectedKeys.Contains(modifier.Key)) {
+                        modifier.NotifyActivation(iteration);
+                    } else {
+                        modifier.NotifyDeactivation();
+                    }
                 }
                 modifiersNumber = CalculateModifiersNumber(iteration + 1);
 
@@ -115,6 +126,18 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void OnDestroy() {
             OnDestroyActions?.Invoke();
+        }
+
+        private void PauseModifiers() {
+            foreach (var modifier in Modifiers) {
+                modifier.NotifyPause();
+            }
+        }
+
+        private void ResumeModifiers() {
+            foreach (var modifier in Modifiers) {
+                modifier.NotifyResume();
+            }
         }
 
         private int CalculateModifiersNumber(int iteration) {
@@ -147,6 +170,46 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             RollModifiers(0);
             ApplyModifiers(0);
+        }
+
+        private PlayerSensor InitPlayerSensor() {
+            CircleCollider2D showTrigger;
+            PlayerSensor sensor;
+
+            var sensorFolder = new GameObject("ChallengePlayerSensorModifiersController");
+            sensorFolder.transform.SetParent(transform, false);
+
+            showTrigger = sensorFolder.AddComponent<CircleCollider2D>();
+            showTrigger.isTrigger = true;
+            showTrigger.radius = ShowDistance;
+
+            sensor = sensorFolder.AddComponent<PlayerSensor>();
+            sensor.PlayerEnterEvent = new UnityEngine.Events.UnityEvent();
+            sensor.PlayerExitEvent = new UnityEngine.Events.UnityEvent();
+            sensor.PlayerStayEvent = new UnityEngine.Events.UnityEvent();
+
+            AutoAttributeManager.AutoReference(sensorFolder);
+            sensor.Awake();
+            sensor.EnterLevelReset();
+
+            sensor.PlayerEnterEvent.AddListener(() => {
+                if(UseCompositeTracking) {
+
+                }
+                else {
+                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(this);
+                }
+            });
+            sensor.PlayerExitEvent.AddListener(() => {
+                if (UseCompositeTracking) {
+
+                }
+                else {
+                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(null);
+                }
+            });
+
+            return sensor;
         }
 
         public int GetPriority() {
