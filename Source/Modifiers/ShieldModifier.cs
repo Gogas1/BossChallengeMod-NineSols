@@ -25,8 +25,8 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation(int iteration) {
+            base.NotifyActivation(iteration);
 
             if (MonsterShieldController == null) {
                 MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
@@ -34,8 +34,32 @@ namespace BossChallengeMod.Modifiers {
 
             if(MonsterShieldController == null) return;
 
-            enabled = keys.Contains(Key);
-            if(!enabled && MonsterShieldController.IsShieldEnabled) {
+            enabled = true;
+            
+        }
+
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
+
+            enabled = false;
+
+            if (MonsterShieldController == null) {
+                MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+            }
+
+            if (MonsterShieldController?.IsShieldEnabled ?? false) {
+                MonsterShieldController?.Deactivate();
+            }
+        }
+
+        public override void NotifyPause() {
+            base.NotifyPause();
+
+            if (MonsterShieldController == null) {
+                MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+            }
+
+            if (MonsterShieldController?.IsShieldEnabled ?? false) {
                 MonsterShieldController?.Deactivate();
             }
         }
@@ -43,11 +67,15 @@ namespace BossChallengeMod.Modifiers {
         public override void MonsterNotify(MonsterNotifyType notifyType) {
             base.MonsterNotify(notifyType);
 
+            if (MonsterShieldController == null) {
+                MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+            }
+
             ActivateCheck();
         }
 
         protected void ActivateCheck() {
-            if (enabled) {
+            if (enabled && !IsPaused) {
                 MonsterShieldController?.Activate();
             }
         }

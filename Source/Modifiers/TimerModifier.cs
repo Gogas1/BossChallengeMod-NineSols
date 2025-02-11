@@ -18,6 +18,8 @@ namespace BossChallengeMod.Modifiers {
         private int stopwatch;
         private bool startStopwatch;
 
+        protected Coroutine? timerCoroutine;
+
         public bool ForcePause { get; set; } = false;
 
         public override void Awake() {
@@ -33,16 +35,26 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
+        public override void NotifyActivation(int iteration) {
             if (Monster != null && iteration != 0) {
+                if (timerCoroutine != null) {
+                    StopCoroutine(timerCoroutine);
+                }
+
                 attempts.Add(stopwatch);
                 stopwatch = 0;
-                start = keys.Contains(Key);
+                start = true;
                 if (start) {
                     time = (int)CalculateTime(attempts.ToArray(), iteration);
                     StartCoroutine(StartTimer());
                 }
             }            
+        }
+
+        public override void NotifyDeactivation() {
+            attempts.Add(stopwatch);
+            stopwatch = 0;
+            start = false;
         }
 
         public IEnumerator StartTimer() {
@@ -51,7 +63,7 @@ namespace BossChallengeMod.Modifiers {
             UIController.UpdateTimer(remainingTime);
 
             while (remainingTime > 0 && start) {
-                if(!Monster!.postureSystem.IsMonsterEmptyPosture && !ForcePause) {
+                if(!Monster!.postureSystem.IsMonsterEmptyPosture && !ForcePause && !IsPaused) {
                     remainingTime -= (int)(Time.deltaTime * 1000);
                 }
                 UIController.UpdateTimer(remainingTime >= 0 ? remainingTime : 0);
@@ -64,7 +76,9 @@ namespace BossChallengeMod.Modifiers {
 
             yield return new WaitForSeconds(2);
 
-            UIController.HideTimer();
+            if(!enabled) {
+                UIController.HideTimer();
+            }
         }
 
         public void OnDestroy() {

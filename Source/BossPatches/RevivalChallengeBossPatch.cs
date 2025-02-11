@@ -32,7 +32,8 @@ namespace BossChallengeMod.BossPatches {
         public bool UseRecording { get; set; } = true;
         public bool UseKillCounterTracking { get; set; } = true;
         public bool UseModifierControllerTracking { get; set; } = true;
-
+        public bool UseProximityActivation { get; set; } = false;
+        public bool UseCompositeTracking { get; set; } = false;
 
         public MonsterBase.States InsertPlaceState { get; set; } = MonsterBase.States.LastHit;
         public ChallengeEnemyType EnemyType { get; set; } = ChallengeEnemyType.Boss;
@@ -69,12 +70,15 @@ namespace BossChallengeMod.BossPatches {
                         modifiersController.ApplyModifiers(killCounter.KillCounter);
                     };
 
-                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
 
                     resetBossState.monsterKillCounter = killCounter;
 
                     resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
-                    BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+
+                    if(!UseProximityActivation) {
+                        BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+                        BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+                    }
 
                     killCounter.CheckInit();
                 }
@@ -131,6 +135,7 @@ namespace BossChallengeMod.BossPatches {
             var killCounter = monsterBase.gameObject.AddComponent<MonsterKillCounter>();
             killCounter.EnemyType = EnemyType;          
             killCounter.CanBeTracked = UseKillCounterTracking;
+            killCounter.UseProximityShow = UseProximityActivation;
 
             return killCounter;
         }
@@ -139,15 +144,17 @@ namespace BossChallengeMod.BossPatches {
             var config = ConfigurationToUse;
 
             var modifiers = CreateModifiers(monsterBase);
-            var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
             var shieldController = monsterBase.gameObject.AddComponent<MonsterShieldController>();
             var yanlaoGunController = monsterBase.gameObject.AddComponent<MonsterYanlaoGunController>();
+            var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
 
             if (config.ModifiersEnabled && UseModifiers) {
                 PopulateModifierController(modifierController, config);
             }
 
             modifierController.CanBeTracked = UseModifierControllerTracking;
+            modifierController.UseProximityShow = UseProximityActivation;
+            modifierController.UseCompositeTracking = UseCompositeTracking;
             modifierController.GenerateAvailableMods();
 
             return modifierController;

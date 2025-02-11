@@ -74,14 +74,14 @@ namespace BossChallengeMod.Patches {
                         bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
                         bossPatch?.PostfixPatch(__instance);
                     } else {
-                        Log.Info($"Postfix Patching. Null patched");
+                        Log.Info($"Postfix Patching {ObjectUtils.ObjectPath(__instance.gameObject)}. Null patched");
                     }
 
                     skipped = false;
                 }
 
                 if (__instance.CompareTag("Enemy") || __instance.CompareTag("Untagged")) {
-                    GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(__instance.name);
+                    GeneralBossPatch? bossPatch = BossChallengeMod.Instance.RegularMonstersPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
 
                     if (bossPatch != null && bossPatch.CanBeApplied()) {
                         bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
@@ -123,7 +123,8 @@ namespace BossChallengeMod.Patches {
 
             var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
             if (modifiers != null) {
-                if (modifiers.FirstOrDefault(m => m.Key == "endurance")?.enabled ?? false) {
+                var enduranceMod = modifiers.FirstOrDefault(m => m.Key == "endurance");
+                if ((enduranceMod?.enabled ?? false) && (!enduranceMod?.IsPaused ?? false)) {
                     return false;
                 }
             }

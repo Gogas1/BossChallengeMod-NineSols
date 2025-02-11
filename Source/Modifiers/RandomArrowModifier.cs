@@ -6,26 +6,45 @@ using System.Text;
 
 namespace BossChallengeMod.Modifiers {
     public class RandomArrowModifier : ModifierBase {
+        private HashSet<object> _blockArrowVotes = BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes;
+
         public override void Awake() {
             base.Awake();
             Key = "random_arrow";
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation(int iteration) {
+            base.NotifyActivation(iteration);
 
-            enabled = keys.Contains(Key);
-            
-            if(enabled) {
-                BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes.Add(this);
+            enabled = true;
+            _blockArrowVotes.Add(this);
+        }
+
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
+
+            enabled = false;
+            _blockArrowVotes.Remove(this);
+        }
+
+        public override void NotifyPause() {
+            base.NotifyPause();
+
+            if (enabled) {
+                _blockArrowVotes.Remove(this);
             }
-            else {
-                BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes.Remove(this);
+        }
+
+        public override void NotifyResume() {
+            base.NotifyResume();
+
+            if (enabled) {
+                _blockArrowVotes.Add(this);
             }
         }
 
         public void OnDestroy() {
-            BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes.Remove(this);
+            _blockArrowVotes.Remove(this);
         }
     }
 }

@@ -11,11 +11,15 @@ namespace BossChallengeMod.Modifiers {
             Key = "knockback";
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation(int iteration) {
+            base.NotifyActivation(iteration);
 
-            enabled = keys.Contains(Key);
+            enabled = true;
         }
 
+
+        public override void NotifyDeactivation() {
+            enabled = false;
+        }
     }
 }

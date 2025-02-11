@@ -70,7 +70,7 @@ namespace BossChallengeMod.UI {
         }
 
         private IEnumerator AnimateTimerShow() {
-            if(state == UIAnimationStates.Show) {
+            if(state == UIAnimationStates.Show && timerText.transform.localPosition.y != visibleYPosition) {
                 timerText.gameObject.SetActive(true);
                 float elapsedTime = 0f;
                 while (elapsedTime < animationShowDuration && state == UIAnimationStates.Show) {
@@ -81,6 +81,8 @@ namespace BossChallengeMod.UI {
 
                     yield return null;
                 }
+
+                timerText.transform.localPosition = new Vector3(timerText.transform.localPosition.x, visibleYPosition);
             }
         }
 

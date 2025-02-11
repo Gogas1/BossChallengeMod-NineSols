@@ -26,31 +26,58 @@ namespace BossChallengeMod.Modifiers {
         }
 
         private void Update() {
-            if(enabled && Monster != null) {
-                var distanceDifference = Vector2.Distance(Player.i.transform.position, Monster.transform.position);
-                if ((Monster?.postureSystem.IsMonsterEmptyPosture ?? true) || distanceDifference >= MaxDistance) {
-                    YanlaoGunController?.StopGun();
-                }
-                else {
-                    YanlaoGunController?.StartGun();
-                }
-            }
+
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation(int iteration) {
+            base.NotifyActivation(iteration);
             if (YanlaoGunController == null) {
                 YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
             }
 
-            enabled = keys.Contains(Key);
+            enabled = true;
 
-            if (enabled) {
+            if(!YanlaoGunController.IsRunning && !IsPaused) {
                 YanlaoGunController?.StartGun();
-            } else {
-                YanlaoGunController?.StopGun();
+            }
+        }
+
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
+
+            if (YanlaoGunController == null) {
+                YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
             }
 
+            enabled = false;
+
+            if (YanlaoGunController?.IsRunning ?? false) {                
+                YanlaoGunController?.StopGun();
+            }
+        }
+
+        public override void NotifyPause() {
+            base.NotifyPause();
+
+            if (YanlaoGunController == null) {
+                YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
+            }
+
+            if (YanlaoGunController?.isActiveAndEnabled ?? false) {
+                YanlaoGunController?.StopGun();
+            }
+        }
+
+        public override void NotifyResume() {
+            base.NotifyResume();
+
+            if (YanlaoGunController == null) {
+                YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
+            }
+
+            if (!YanlaoGunController.IsRunning && enabled) {
+                YanlaoGunController?.StartGun();
+            }
         }
     }
 }

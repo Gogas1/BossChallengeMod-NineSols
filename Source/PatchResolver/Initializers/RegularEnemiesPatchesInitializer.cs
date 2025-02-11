@@ -12,7 +12,12 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             "A1_S1_GameLevel/Room/A1_S1_Tutorial_Logic/StealthGameMonster_Minion_Tutorial2",
             "A1_S1_GameLevel/Room/GamePlayS2_1/TrapMonster_Mutant Mini",
             "A1_S1_GameLevel/Room/GamePlayS2_1/TrapMonster_Mutant Mini (3)",
-            "A1_S1_GameLevel/Room/GamePlayS3_2/TrapMonster_Mutant (6)"
+            "A1_S1_GameLevel/Room/GamePlayS3_2/TrapMonster_Mutant (6)",
+            "TrapMonster_BlackHole(Clone)",
+            "TrapMonster_LaserAltar_Circle(Clone)",
+            "TrapMonster_Altar_Health_Drop(Clone)",
+            "TrapMonster_Altar_Energy_Drop(Clone)",
+            "A1_S2_GameLevel/Room/Prefab/寶箱 Treasure Chests/EventBinder 小錢袋/StealthGameMonster_Statue_DangerJumpKickStatue_M"
             ];
 
         public MonsterPatchResolver MonsterPatchResolver { get; protected set; }
@@ -42,6 +47,8 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             defaultEnemyPatch.EnemyType = KillCounting.ChallengeEnemyType.Regular;
             defaultEnemyPatch.UseKillCounterTracking = false;
             defaultEnemyPatch.UseModifierControllerTracking = false;
+            defaultEnemyPatch.UseCompositeTracking = true;
+            defaultEnemyPatch.UseProximityActivation = true;
 
             var resetStateConfig = defaultEnemyPatch.ResetStateConfiguration;
             resetStateConfig.ExitState = MonsterBase.States.Engaging;

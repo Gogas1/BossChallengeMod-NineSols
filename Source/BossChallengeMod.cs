@@ -41,7 +41,6 @@ public class BossChallengeMod : BaseUnityPlugin {
     public GlobalModifiersController GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
 
-
     private Preloader Preloader { get; set; } = null!;
     private BepInExModConfigurationHandler BepInExModConfigurationHandler { get; set; } = null!;
 
@@ -49,6 +48,7 @@ public class BossChallengeMod : BaseUnityPlugin {
     public YanlaoGunProvider YanlaoGunProvider { get; private set; } = null!;
 
     public static BossChallengeMod Instance { get; private set; } = null!;
+    public static System.Random Random { get; private set; } = null!;
 
     private bool isToastsDisplayed;
     private bool UnloadRequested;
@@ -67,6 +67,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         RCGLifeCycle.DontDestroyForever(gameObject);
 
+        Random = new System.Random();
         Preloader = new Preloader();
         ShieldProvider = new ShieldProvider();
         YanlaoGunProvider = new YanlaoGunProvider();

@@ -15,7 +15,14 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
+        public override void NotifyActivation(int iteration) {
+            modifier = CalculateModifier(iteration);
+            if (Monster != null && (challengeConfiguration.EnableSpeedScaling || challengeConfiguration.EnableRandomSpeedScaling)) {
+                Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
+            }
+        }
+
+        public override void NotifyDeactivation(int iteration = 0) {
             modifier = CalculateModifier(iteration);
             if (Monster != null && (challengeConfiguration.EnableSpeedScaling || challengeConfiguration.EnableRandomSpeedScaling)) {
                 Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
@@ -46,9 +53,10 @@ namespace BossChallengeMod.Modifiers {
             }
 
             if (challengeConfiguration.EnableRandomSpeedScaling && iteration >= challengeConfiguration.RandomSpeedScalingStartDeath) {
-                float value = UnityEngine.Random.Range(
-                    MathF.Min(challengeConfiguration.MinRandomSpeedScalingValue, challengeConfiguration.MaxRandomSpeedScalingValue),
-                    MathF.Max(challengeConfiguration.MinRandomSpeedScalingValue, challengeConfiguration.MaxRandomSpeedScalingValue));
+                float min = MathF.Min(challengeConfiguration.MinRandomSpeedScalingValue, challengeConfiguration.MaxRandomSpeedScalingValue);
+                float max = MathF.Max(challengeConfiguration.MinRandomSpeedScalingValue, challengeConfiguration.MaxRandomSpeedScalingValue);
+
+                float value = (float)(BossChallengeMod.Random.NextDouble() * (max - min) + min);
 
                 result *= value;
             }

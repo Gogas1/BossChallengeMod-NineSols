@@ -11,35 +11,40 @@ namespace BossChallengeMod.Modifiers {
         private bool started;
         public float damage = 0.025f;
         public float delay = 0.006f;
+        public float damagePerSecond = 3.8f;
+
 
         public override void Awake() {
             base.Awake();
             Key = "damage_buildup";
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
-            
-            started = enabled = keys.Contains(Key);
-            if (started) {
-                StartCoroutine(StartBuildup());
-            }
+        public override void NotifyActivation(int iteration) {
+            base.NotifyActivation(iteration);
+
+            enabled = true;
         }
 
-        public IEnumerator StartBuildup() {
-            while (started) {
-                if (!Monster!.postureSystem.IsMonsterEmptyPosture) {
-                    var playerHealth = Player.i.health;
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
 
-                    if(playerHealth.currentValue - damage > 1f) {
-                        playerHealth.currentValue = playerHealth.currentValue - damage;
+            enabled = false;
+        }
 
-                        playerHealth.CurrentInternalInjury += Mathf.Min(damage, playerHealth.maxHealth.Value - (playerHealth.currentValue - playerHealth.CurrentInternalInjury));
-                        playerHealth.ResetRecoverableTime();
-                    }
+        private void Update() {
+            if (!Monster!.postureSystem.IsMonsterEmptyPosture && !IsPaused) {
+                var playerHealth = Player.i.health;
+                float damagePerFrame = damagePerSecond * Time.deltaTime;
+
+                if (playerHealth.currentValue - damagePerFrame > 1f) {
+                    playerHealth.currentValue -= damagePerFrame;
+
+                    playerHealth.CurrentInternalInjury += Mathf.Min(
+                        damagePerFrame,
+                        playerHealth.maxHealth.Value - (playerHealth.currentValue - playerHealth.CurrentInternalInjury)
+                    );
+                    playerHealth.ResetRecoverableTime();
                 }
-
-                yield return new WaitForSeconds(delay);
             }
         }
     }

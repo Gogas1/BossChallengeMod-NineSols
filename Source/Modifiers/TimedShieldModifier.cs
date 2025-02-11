@@ -21,7 +21,7 @@ namespace BossChallengeMod.Modifiers {
 
                 if (timer <= 0) {
                     ActivateCheck();
-                    timer = UnityEngine.Random.Range(5, 13);
+                    timer = BossChallengeMod.Random.Next(5, 13);
                 }
             }
         }

@@ -33,6 +33,15 @@ namespace BossChallengeMod.UI.QueueUI {
             }
         }
 
+        private class ModifierTextItemComparer : IEqualityComparer<ModifierTextItem> {
+            public bool Equals(ModifierTextItem x, ModifierTextItem y) {
+                return x.Id == y.Id;
+            }
+
+            public int GetHashCode(ModifierTextItem obj) {
+                return obj.Id;
+            }
+        }
         private enum ModifiersUIState {
             Hidden,
             UnfoldingLine,
@@ -53,8 +62,8 @@ namespace BossChallengeMod.UI.QueueUI {
         public float lineUnfoldAnimationDuration = 0.75f;
         public float lineFoldAnimationDuration = 0.75f;
 
-        public float modifierTextAnimationShowDuration = 0.7f;
-        public float modifierTextAnimationHideDuration = 0.7f;
+        public float modifierTextAnimationShowDuration = 0.5f;
+        public float modifierTextAnimationHideDuration = 0.5f;
         public float modifierTextDefaultAlpha = 0.79f;
 
         private float modifiersDefaultHeight = -21f;
@@ -78,27 +87,27 @@ namespace BossChallengeMod.UI.QueueUI {
         }
 
         public void Show(bool forse = false) {
-            operationsQueue.Enqueue(UnfoldLineAnimation());
-            operationsQueue.Enqueue(RefreshModifiersItems());
+            EnqueueOperation(UnfoldLineAnimation());
+            EnqueueOperation(RefreshModifiersItems());
         }
 
         public void Hide(bool force = false) {
-            operationsQueue.Enqueue(CollapseModifiers());
-            operationsQueue.Enqueue(CollapseLineAnimation());
+            EnqueueOperation(CollapseModifiers());
+            EnqueueOperation(CollapseLineAnimation());
         }
 
         public void AddModifiers(Dictionary<int, string> modifiers) {
-            operationsQueue.Enqueue(UnfoldLineAnimation());
-            operationsQueue.Enqueue(AddModifiersJob(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList()));
+            EnqueueOperation(UnfoldLineAnimation());
+            EnqueueOperation(AddModifiersJob(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList()));
         }
 
         public void SetModifiers(Dictionary<int, string> modifiers) {
-            operationsQueue.Enqueue(UnfoldLineAnimation());
-            operationsQueue.Enqueue(SetModifiersJob(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList()));
+            EnqueueOperation(UnfoldLineAnimation());
+            EnqueueOperation(SetModifiersJob(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList()));
         }
 
         public void Reset() {
-            operationsQueue.Enqueue(ResetModifiersJob());
+            EnqueueOperation(ResetModifiersJob());
         }
         private IEnumerator ResetModifiersJob() {
             modifiers.Clear();
@@ -106,7 +115,7 @@ namespace BossChallengeMod.UI.QueueUI {
         }
 
         public void RemoveModifiers(List<int> ids) {
-            operationsQueue.Enqueue(RemoveModifiersJob(ids));
+            EnqueueOperation    (RemoveModifiersJob(ids));
         }
         public void RaiseModifiers(Action? callback = null) {
             StartCoroutine(AnimateModifiersRaising(callback));
@@ -116,8 +125,9 @@ namespace BossChallengeMod.UI.QueueUI {
             StartCoroutine(AnimateModifiersLowering(callback));
         }
         private IEnumerator SetModifiersJob(List<ModifierTextItem> newModifiers) {
-            modifiers.Clear();
-            modifiers.AddRange(newModifiers);
+            var resultModifiers = newModifiers.Union(modifiers.Intersect(newModifiers, new ModifierTextItemComparer()), new ModifierTextItemComparer()).ToList();
+            modifiers.Clear();            
+            modifiers.AddRange(resultModifiers);
             yield return RefreshModifiersItems();
         }
 
@@ -157,7 +167,7 @@ namespace BossChallengeMod.UI.QueueUI {
         }
 
         private IEnumerator UnfoldLineAnimation() {
-            if (CurrentState == ModifiersUIState.Hidden) {
+            if (CurrentState == ModifiersUIState.Hidden && !items.Any()) {
                 CurrentState = ModifiersUIState.UnfoldingLine;
 
                 line.gameObject.SetActive(true);
@@ -244,7 +254,6 @@ namespace BossChallengeMod.UI.QueueUI {
             }
 
             yield return new WaitUntil(() => modifiersRemovedFlag);
-
             FixModifiersPositionsJob(() => { modifiersFixedFlag = true; });
 
             yield return new WaitUntil(() => modifiersFixedFlag);
@@ -260,17 +269,26 @@ namespace BossChallengeMod.UI.QueueUI {
         private IEnumerator RemoveModifiersJob(List<int> idsToRemove, Action? onDone = null) {
             var itemsToRemove = items.Join(idsToRemove, i => i.Id, ir => ir, (i, ir) => i).ToList();
 
-            foreach (var item in itemsToRemove) {
+            if (!itemsToRemove.Any()) {
+                onDone?.Invoke();
+            }
+
+            while (itemsToRemove.Any()) {
+                var item = itemsToRemove.Pop();
                 items.Remove(item);
-                StartCoroutine(AnimateModifierHide(item.TextObj, !items.Any()));
-                yield return new WaitForSecondsRealtime(0.25f);
+                StartCoroutine(AnimateModifierHide(item.TextObj, !itemsToRemove.Any(), onDone));
+                yield return new WaitForSecondsRealtime(0.2f);
             }
         }
 
         private void FixModifiersPositionsJob(Action onDone) {
+            if (!items.Any()) {
+                onDone?.Invoke();
+            }
+
             foreach (var item in items) {
                 var calculatedPosition = CalculatePosition(item);
-                var coroutine = StartCoroutine(MoveItem(item.TextObj.transform, calculatedPosition, item == items.Last(), onDone));
+                StartCoroutine(MoveItem(item.TextObj.transform, calculatedPosition, item == items.Last(), onDone));
             }
         }
 
@@ -279,11 +297,10 @@ namespace BossChallengeMod.UI.QueueUI {
         private IEnumerator MoveItem(Transform transform, Vector2 targetPosition, bool isLast = false, Action? onLastDone = null) {
             Vector2 startPos = transform.localPosition;
             float progress = 0f;
-            float progressPerSecond = 0.5f;
+            float progressPerSecond = 1.5f;
 
             while (progress < 1f) {
-                progress += progressPerSecond * Time.deltaTime;
-
+                progress += progressPerSecond * Time.unscaledDeltaTime;
                 transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
                 yield return null;
             }
@@ -298,8 +315,11 @@ namespace BossChallengeMod.UI.QueueUI {
             var modifiersEnumerator = newItems.GetEnumerator();
             int counter = 1;
 
-            while (modifiersEnumerator.MoveNext()) {
-                var modifier = modifiersEnumerator.Current;
+            if(!newItems.Any()) {
+                onDone?.Invoke();
+            }
+
+            foreach (var modifier in newItems) {
                 var newText = UIController.InitializeText(Vector2.zero, gameObject, LocalizationResolver.Localize(modifier.Text), true, 21);
                 counter++;
                 newText.alpha = 0f;
@@ -307,7 +327,7 @@ namespace BossChallengeMod.UI.QueueUI {
                 items.Add(newItem);
                 newText.transform.localPosition = CalculatePosition(newItem);
                 StartCoroutine(AnimateModifierShow(newText, items.Count == modifiers.Count));
-                yield return new WaitForSecondsRealtime(0.25f);
+                yield return new WaitForSecondsRealtime(0.2f);
             }
         }
 
@@ -322,7 +342,7 @@ namespace BossChallengeMod.UI.QueueUI {
             float startingAlpha = textItem.alpha;
             float startingProgress = startingAlpha / modifierTextDefaultAlpha;
             float elapsedTime = modifierTextAnimationShowDuration * startingProgress;
-            while (CurrentState == ModifiersUIState.UnfoldingModifiers && elapsedTime < modifierTextAnimationShowDuration) {
+            while (elapsedTime < modifierTextAnimationShowDuration) {
                 elapsedTime += Time.unscaledDeltaTime;
                 float progress = elapsedTime / modifierTextAnimationShowDuration;
                 textItem.alpha = Mathf.Lerp(startingAlpha, modifierTextDefaultAlpha, progress);
@@ -343,7 +363,7 @@ namespace BossChallengeMod.UI.QueueUI {
                 while (items.Any()) {
                     var item = items.Pop();
                     StartCoroutine(AnimateModifierHide(item.TextObj, !items.Any()));
-                    yield return new WaitForSecondsRealtime(0.33f);
+                    yield return new WaitForSecondsRealtime(0.2f);
                 }
             }
         }
@@ -411,7 +431,7 @@ namespace BossChallengeMod.UI.QueueUI {
         }
 
         private void ValidateModifiersShow() {
-            if(!operationsQueue.Any() && !modifiers.Any()) {
+            if(!operationsQueue.Any() && !modifiers.Any() && CurrentState != ModifiersUIState.Hidden) {
                 EnqueueOperation(CollapseModifiers());
                 EnqueueOperation(CollapseLineAnimation());
             }

@@ -8,12 +8,13 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers {
     public class RegenerationModifier : ModifierBase {
         private int regenerationPool;
-        private bool started;
         private float pausedFor = 0f;
 
         public float pauseTime = 1f;
         public int heal = 1;
         public float delay = 0.04f;
+
+        protected Coroutine? regenerationCoroutine;
 
 
         public override void Awake() {
@@ -22,15 +23,25 @@ namespace BossChallengeMod.Modifiers {
             Monster?.postureSystem.OnPostureDecrease.AddListener(PauseRegeneration);
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation(int iteration) {
+            base.NotifyActivation(iteration);
 
-            started = enabled = keys.Contains(Key);
+            if (regenerationCoroutine != null) {
+                StopCoroutine(regenerationCoroutine);
+            }
 
-            if (started) {
+            enabled = true;
+
+            if (enabled) {
                 regenerationPool = CalculateTotalHp() / 2;
                 StartCoroutine(StartRegeneration());
             }
+        }
+
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
+
+            enabled = false;
         }
 
         public void Update() {
@@ -45,8 +56,8 @@ namespace BossChallengeMod.Modifiers {
 
         private IEnumerator StartRegeneration() {
             var postureSystem = Monster?.postureSystem ?? null;
-            while (started && regenerationPool > 0 && postureSystem != null) {
-                if (!postureSystem.IsMonsterEmptyPosture && postureSystem.MaxPostureValue > postureSystem.CurrentHealthValue && pausedFor <= 0f) {
+            while (enabled && regenerationPool > 0 && postureSystem != null) {
+                if ((!postureSystem.IsMonsterEmptyPosture && postureSystem.MaxPostureValue > postureSystem.CurrentHealthValue && pausedFor <= 0f) && !IsPaused) {
 
                     int hpToHeal = Mathf.Min((int)(postureSystem.MaxPostureValue - postureSystem.CurrentHealthValue), heal);
                     postureSystem.GainPosture(hpToHeal);
@@ -76,8 +87,8 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void OnDestroy() {
+            enabled = false;
             Monster?.postureSystem.OnPostureDecrease.RemoveListener(PauseRegeneration);
-            started = false;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace BossChallengeMod.Patches {
                 if (selectorComp != null) {
                     var collection = selectorComp.collection;
                     int talismansNum = collection.AcquiredCount;
-                    int variantsNum = UnityEngine.Random.Range(1, talismansNum);
+                    int variantsNum = BossChallengeMod.Random.Next(1, talismansNum);
                     for (int i = 0; i < variantsNum; i++) {
                         collection.Next();
                     }

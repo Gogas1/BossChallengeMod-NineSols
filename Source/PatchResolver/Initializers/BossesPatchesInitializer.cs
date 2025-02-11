@@ -42,22 +42,24 @@ namespace BossChallengeMod.PatchResolver.Initializers {
         private GeneralBossPatch GetMinibossBossPatch() {
             var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
 
-            var defaultBossPatch = new RevivalChallengeBossPatch();
-            defaultBossPatch.DieStates = [
+            var defaultMinibossPatch = new RevivalChallengeBossPatch();
+            defaultMinibossPatch.DieStates = [
                 MonsterBase.States.BossAngry,
             MonsterBase.States.LastHit,
             MonsterBase.States.Dead
             ];
-            defaultBossPatch.EnemyType = KillCounting.ChallengeEnemyType.Miniboss;
+            defaultMinibossPatch.EnemyType = KillCounting.ChallengeEnemyType.Miniboss;
+            defaultMinibossPatch.UseProximityActivation = true;
+            defaultMinibossPatch.UseCompositeTracking = true;
 
-            var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
+            var resetStateConfig = defaultMinibossPatch.ResetStateConfiguration;
             resetStateConfig.ExitState = MonsterBase.States.Engaging;
             resetStateConfig.Animations = [];
             resetStateConfig.PauseTime = 2f;
             resetStateConfig.StateType = bossReviveMonsterState;
             resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
 
-            return defaultBossPatch;
+            return defaultMinibossPatch;
         }
 
         private FuxiBossPatch GetFuxiBossPatch() {

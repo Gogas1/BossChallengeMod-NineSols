@@ -25,7 +25,7 @@ namespace BossChallengeMod.KillCounting {
 
         protected bool CanRecord {
             get {
-                return UseRecording && !ApplicationCore.IsInBossMemoryMode;
+                return UseRecording && ApplicationCore.IsInBossMemoryMode;
             }
         }        
 
@@ -68,18 +68,14 @@ namespace BossChallengeMod.KillCounting {
         public bool UseRecording { get; set; }
         public bool CanBeTracked { get; set; }
         public int MaxBossCycles { get; set; } = -1;
-        public bool UseProximityShow { get; set; } = true;
+        public bool UseProximityShow { get; set; }
         public Action? OnUpdate { get; set; }
         public Action? OnDestroyActions { get; set; }
 
         PlayerSensor playerSensor = null!;
         public MonsterKillCounter() {            
             monster = GetComponent<MonsterBase>();
-            challengeConfiguration = ConfigurationToUse;            
-
-            if(UseProximityShow) {
-                playerSensor = InitPlayerSensor();
-            }
+            challengeConfiguration = ConfigurationToUse;
         }
 
         private bool PlayerEnterCheck(Collider2D other) {
@@ -91,6 +87,12 @@ namespace BossChallengeMod.KillCounting {
             }
 
             return true;
+        }
+
+        private void Start() {
+            if (UseProximityShow) {
+                playerSensor = InitPlayerSensor();
+            }
         }
 
         public void CheckInit() {
@@ -121,7 +123,7 @@ namespace BossChallengeMod.KillCounting {
             switch (EnemyType) {
                 case ChallengeEnemyType.Regular:
                     if (challengeConfiguration.RandomizeEnemyCyclesNumber) {
-                        MaxBossCycles = UnityEngine.Random.Range(challengeConfiguration.MinRandomEnemyCycles, challengeConfiguration.MaxRandomEnemyCycles + 1);
+                        MaxBossCycles = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomEnemyCycles, challengeConfiguration.MaxRandomEnemyCycles + 1);
                     } else {
                         MaxBossCycles = challengeConfiguration.MaxEnemyCycles;
                     }
@@ -129,7 +131,7 @@ namespace BossChallengeMod.KillCounting {
                     break;
                 case ChallengeEnemyType.Miniboss:
                     if (challengeConfiguration.RandomizeMiniBossCyclesNumber) {
-                        MaxBossCycles = UnityEngine.Random.Range(challengeConfiguration.MinRandomMiniBossCycles, challengeConfiguration.MaxRandomMiniBossCycles + 1);
+                        MaxBossCycles = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomMiniBossCycles, challengeConfiguration.MaxRandomMiniBossCycles + 1);
                     } else {
                         MaxBossCycles = challengeConfiguration.MaxMinibossCycles;
                     }
@@ -137,7 +139,7 @@ namespace BossChallengeMod.KillCounting {
                     break;
                 case ChallengeEnemyType.Boss:
                     if (challengeConfiguration.RandomizeBossCyclesNumber) {
-                        MaxBossCycles = UnityEngine.Random.Range(challengeConfiguration.MinRandomBossCycles, challengeConfiguration.MaxRandomBossCycles + 1);
+                        MaxBossCycles = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomBossCycles, challengeConfiguration.MaxRandomBossCycles + 1);
                     } else {
                         MaxBossCycles = challengeConfiguration.MaxBossCycles;
                     }

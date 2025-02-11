@@ -14,13 +14,18 @@ namespace BossChallengeMod.Patches {
             if (bindDamage.Owner == null) return;
             var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
             if (modifiers != null) {
-                if (modifiers.FirstOrDefault(m => m.Key == "parry_damage")?.enabled ?? false) {
+                var parryDaamageModifier = modifiers.FirstOrDefault(m => m.Key == "parry_damage");
+                if (parryDaamageModifier != null) {
+                    Log.Info($"{parryDaamageModifier}, {parryDaamageModifier.enabled}, {parryDaamageModifier.IsPaused}");
+                }
+                if ((parryDaamageModifier?.enabled ?? false) && (!parryDaamageModifier?.IsPaused ?? false)) {
                     var playerHealth = Player.i.health;
                     playerHealth.CurrentInternalInjury = 0;
                     playerHealth.ResetRecoverableTime();
                 }
 
-                if (modifiers.FirstOrDefault(m => m.Key == "damage_buildup")?.enabled ?? false) {
+                var damageBuildupModifier = modifiers.FirstOrDefault(m => m.Key == "damage_buildup");
+                if ((damageBuildupModifier?.enabled ?? false) && (!damageBuildupModifier?.IsPaused ?? false)) {
                     var playerHealth = Player.i.health;
                     var damageAmount = bindDamage.DamageAmount;
                     playerHealth.RecoverInternalInjury(damageAmount / 2);
@@ -35,7 +40,8 @@ namespace BossChallengeMod.Patches {
             if (bindDamage.Owner == null) return;
             var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
             if (modifiers != null) {
-                if (modifiers.FirstOrDefault(m => m.Key == "knockback")?.enabled ?? false) {
+                var knockbackModifier = modifiers.FirstOrDefault(m => m.Key == "knockback");
+                if ((knockbackModifier?.enabled ?? false) && (!knockbackModifier?.IsPaused ?? false)) {
                     param.knockBackValue = param.knockBackValue * 1.5f;
                 }
             }

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers {
     public class DistanceShieldModifier : ShieldModifier {
 
-        protected float distanceTreshhold = 275;
+        protected float distanceTreshhold = 225f;
 
         public override void Awake() {
             base.Awake();

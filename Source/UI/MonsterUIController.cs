@@ -11,7 +11,7 @@ namespace BossChallengeMod.UI {
         private MonsterKillCounter? trackedKillCounter = null;
 
         private MonsterModifierController? trackedModifiersController = null;
-        private readonly List<MonsterModifierController> compositeUIControllers = new();
+        private readonly List<MonsterModifierController> compositeModifierControllers = new();
 
         private UIController UIController = BossChallengeMod.Instance.UIController;
 
@@ -85,14 +85,24 @@ namespace BossChallengeMod.UI {
         }
 
         public void AddCompositeModifierController(MonsterModifierController monsterModifierController) {
-            
+            if (!monsterModifierController.UseCompositeTracking) {
+                return;
+            }
+
+            compositeModifierControllers.Add(monsterModifierController);
+
+            monsterModifierController.OnModifiersRoll += UpdateModifierUI;
+
+            UpdateModifierUI();
         }
 
         public void RemoveCompositeModifierController(MonsterModifierController monsterModifierController) {
+            compositeModifierControllers.Remove(monsterModifierController);
 
+            monsterModifierController.OnModifiersRoll -= UpdateModifierUI;
+
+            UpdateModifierUI();
         }
-
-
 
         private void UpdateKillCounterUI() {
             if (trackedKillCounter == null) {
@@ -118,16 +128,35 @@ namespace BossChallengeMod.UI {
         }
 
         private void UpdateModifierUI() {
-            if (trackedModifiersController == null) {
-                UIController.HideModifiers();
-                return;
-            }
+            try {
+                if (trackedModifiersController == null) {
 
-            if (trackedModifiersController.Selected.Any()) {
-                UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => config.GetHashCode(), config => config.Key));
-            }
-            else {
-                UIController.HideModifiers();
+                    if(!compositeModifierControllers.Any()) {
+                        UIController.HideModifiers();
+                        return;
+                    }
+                    else {
+                        compositeModifierControllers.RemoveAllNull();
+                        UIController.UpdateModifiers(compositeModifierControllers
+                            .SelectMany(controller => controller.Selected, (controller, config) => new {
+                                CombinedKey = HashCode.Combine(controller.GetHashCode(), config.GetHashCode()),
+                                ConfigKey = config.Key
+                            })
+                            .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
+
+                        return;
+                    }
+                }
+
+                if (trackedModifiersController.Selected.Any()) {
+                    UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode()), config => config.Key));
+                }
+                else {
+                    UIController.HideModifiers();
+                }
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
             }
         }
 
