@@ -42,6 +42,7 @@ namespace BossChallengeMod.UI.QueueUI {
                 return obj.Id;
             }
         }
+
         private enum ModifiersUIState {
             Hidden,
             UnfoldingLine,
@@ -71,13 +72,15 @@ namespace BossChallengeMod.UI.QueueUI {
         private float modifiersRaisingAnimationDuration = 1f;
         private float modifiersLoweringAnimationDuration = 1f;
 
-        public UIControllerAnimationState UIControllerAnimationState;
-
         private ModifiersUIState currentState;
         private ModifiersUIState CurrentState {
             get { return currentState; }
             set { currentState = value; }
         }
+
+        private List<List<ModifierTextItem>> pendingModifiersChanges = new();
+
+        public UIControllerAnimationState UIControllerAnimationState;
 
         public void Awake() {
             line = CreateLine();
@@ -86,37 +89,21 @@ namespace BossChallengeMod.UI.QueueUI {
             OnOperationProcessed += ValidateModifiersShow;
         }
 
-        public void Show(bool forse = false) {
-            EnqueueOperation(UnfoldLineAnimation());
-            EnqueueOperation(RefreshModifiersItems());
-        }
-
-        public void Hide(bool force = false) {
-            EnqueueOperation(CollapseModifiers());
-            EnqueueOperation(CollapseLineAnimation());
-        }
-
-        public void AddModifiers(Dictionary<int, string> modifiers) {
-            EnqueueOperation(UnfoldLineAnimation());
-            EnqueueOperation(AddModifiersJob(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList()));
-        }
-
         public void SetModifiers(Dictionary<int, string> modifiers) {
             EnqueueOperation(UnfoldLineAnimation());
-            EnqueueOperation(SetModifiersJob(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList()));
+            pendingModifiersChanges.Add(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList());
+            EnqueueOperation(SetModifiersJob());
         }
 
         public void Reset() {
             EnqueueOperation(ResetModifiersJob());
         }
+
         private IEnumerator ResetModifiersJob() {
             modifiers.Clear();
             yield return RefreshModifiersItems();
         }
 
-        public void RemoveModifiers(List<int> ids) {
-            EnqueueOperation    (RemoveModifiersJob(ids));
-        }
         public void RaiseModifiers(Action? callback = null) {
             StartCoroutine(AnimateModifiersRaising(callback));
         }
@@ -124,24 +111,17 @@ namespace BossChallengeMod.UI.QueueUI {
         public void LowerModifiers(Action? callback = null) {
             StartCoroutine(AnimateModifiersLowering(callback));
         }
-        private IEnumerator SetModifiersJob(List<ModifierTextItem> newModifiers) {
-            var resultModifiers = newModifiers.Union(modifiers.Intersect(newModifiers, new ModifierTextItemComparer()), new ModifierTextItemComparer()).ToList();
-            modifiers.Clear();            
-            modifiers.AddRange(resultModifiers);
+        private IEnumerator SetModifiersJob() {
+            var latestModifiers = pendingModifiersChanges.LastOrDefault();
+            if(latestModifiers != null) {
+                pendingModifiersChanges.Clear();
+                var resultModifiers = latestModifiers.Union(modifiers.Intersect(latestModifiers, new ModifierTextItemComparer()), new ModifierTextItemComparer()).ToList();
+                modifiers.Clear();            
+                modifiers.AddRange(resultModifiers);
+
+            }
             yield return RefreshModifiersItems();
         }
-
-        private IEnumerator AddModifiersJob(List<ModifierTextItem> newModifiers) {
-            modifiers.AddRange(newModifiers);
-            yield return RefreshModifiersItems();
-        }
-
-
-        private IEnumerator RemoveModifiersJob(List<int> modifiersToRemove) {
-            modifiers.RemoveAll(m => modifiersToRemove.Contains(m.Id));
-            yield return RefreshModifiersItems();
-        }
-
 
         private RectTransform CreateLine() {
             Color lineColor = new Color(0.941f, 0.862f, 0.588f, 0.790f);
@@ -210,30 +190,6 @@ namespace BossChallengeMod.UI.QueueUI {
             }
         }
 
-        private IEnumerator UnfoldModifiers() {
-            if (CurrentState == ModifiersUIState.LineUnfolded ||
-                CurrentState == ModifiersUIState.ModifiersCollapsed ||
-                CurrentState == ModifiersUIState.CollapsingModifiers) {
-
-                CurrentState = ModifiersUIState.UnfoldingModifiers;
-
-                var modifiersEnumerator = modifiers.GetEnumerator();
-                int counter = 1;
-
-                while (modifiersEnumerator.MoveNext()) {
-                    var modifier = modifiersEnumerator.Current;
-                    var newText = UIController.InitializeText(Vector2.zero, gameObject, LocalizationResolver.Localize(modifier.Text), true, 21);
-                    counter++;
-                    newText.alpha = 0f;
-                    var newItem = new ModifierUIItem(modifier.Id, newText);
-                    items.Add(newItem);
-                    newText.transform.localPosition = CalculatePosition(newItem);
-                    StartCoroutine(AnimateModifierShow(newText, items.Count == modifiers.Count));
-                    yield return new WaitForSecondsRealtime(0.25f);
-                }
-            }
-        }
-
         private IEnumerator RefreshModifiersItems() {
             var modifiersToRemove = items
                 .Where(uiItem => !modifiers.Any(mod => mod.Id == uiItem.Id))
@@ -276,8 +232,12 @@ namespace BossChallengeMod.UI.QueueUI {
             while (itemsToRemove.Any()) {
                 var item = itemsToRemove.Pop();
                 items.Remove(item);
-                StartCoroutine(AnimateModifierHide(item.TextObj, !itemsToRemove.Any(), onDone));
-                yield return new WaitForSecondsRealtime(0.2f);
+
+                bool isLast = !itemsToRemove.Any();
+                StartCoroutine(AnimateModifierHide(item.TextObj, isLast, onDone));
+                if(!isLast) {
+                    yield return new WaitForSecondsRealtime(0.2f);
+                }
             }
         }
 
@@ -326,8 +286,12 @@ namespace BossChallengeMod.UI.QueueUI {
                 var newItem = new ModifierUIItem(modifier.Id, newText);
                 items.Add(newItem);
                 newText.transform.localPosition = CalculatePosition(newItem);
-                StartCoroutine(AnimateModifierShow(newText, items.Count == modifiers.Count));
-                yield return new WaitForSecondsRealtime(0.2f);
+
+                bool isLast = items.Count == modifiers.Count;
+                StartCoroutine(AnimateModifierShow(newText, isLast));
+                if (isLast) {
+                    yield return new WaitForSecondsRealtime(0.2f);
+                }
             }
         }
 

@@ -14,11 +14,11 @@ namespace BossChallengeMod.Patches {
             if (bindDamage.Owner == null) return;
             var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
             if (modifiers != null) {
-                var parryDaamageModifier = modifiers.FirstOrDefault(m => m.Key == "parry_damage");
-                if (parryDaamageModifier != null) {
-                    Log.Info($"{parryDaamageModifier}, {parryDaamageModifier.enabled}, {parryDaamageModifier.IsPaused}");
+                var parryDamageModifier = modifiers.FirstOrDefault(m => m.Key == "parry_damage");
+                if (parryDamageModifier != null) {
+                    Log.Info($"{parryDamageModifier}, {parryDamageModifier.enabled}, {parryDamageModifier.IsPaused}");
                 }
-                if ((parryDaamageModifier?.enabled ?? false) && (!parryDaamageModifier?.IsPaused ?? false)) {
+                if ((parryDamageModifier?.enabled ?? false) && (!parryDamageModifier?.IsPaused ?? false)) {
                     var playerHealth = Player.i.health;
                     playerHealth.CurrentInternalInjury = 0;
                     playerHealth.ResetRecoverableTime();
