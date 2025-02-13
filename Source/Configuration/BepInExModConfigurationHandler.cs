@@ -498,24 +498,26 @@ namespace BossChallengeMod.Configuration {
             config.AffectMiniBosses = true;
             config.AffectRegularEnemies = true;
 
-            config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
-            config.MinSpeedScalingValue = minSpeedScalingValue.Value;
-            config.MaxSpeedScalingValue = maxSpeedScalingValue.Value;
-            config.MaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
+            #region Scaling
+            config.BossesEnableSpeedScaling = config.MinibossesEnableSpeedScaling = config.EnemiesEnableSpeedScaling = isSpeedScalingEnabled.Value;
+            config.BossesMinSpeedScalingValue = config.MinibossesMinSpeedScalingValue = config.EnemiesMinSpeedScalingValue = minSpeedScalingValue.Value;
+            config.BossesMaxSpeedScalingValue = config.MinibossesMaxSpeedScalingValue = config.BossesMaxSpeedScalingValue = maxSpeedScalingValue.Value;
+            config.BossesMaxSpeedScalingCycle = config.MinibossesMaxSpeedScalingCycle = config.EnemiesMaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
 
-            config.EnableModifiersScaling = isModifiersScalingEnabled.Value;
-            config.MaxModifiersNumber = maxModifiersNumber.Value;
-            config.MaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
+            config.BossesEnableModifiersScaling = config.MinibossesEnableModifiersScaling = config.EnemiesEnableModifiersScaling = isModifiersScalingEnabled.Value;
+            config.BossesMaxModifiersNumber = config.MinibossesMaxModifiersNumber = config.EnemiesMaxModifiersNumber = maxModifiersNumber.Value;
+            config.BossesMaxModifiersScalingCycle = config.MinibossesMaxModifiersScalingCycle = config.EnemiesMaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
 
-            config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
-            config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
-            config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-            config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
+            config.BossesEnableRandomSpeedScaling = config.MinibossesEnableRandomSpeedScaling = config.EnemiesEnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
+            config.BossesRandomSpeedScalingStartDeath = config.MinibossesRandomSpeedScalingStartDeath = config.EnemiesRandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
+            config.BossesMinRandomSpeedScalingValue = config.MinibossesMinRandomSpeedScalingValue = config.EnemiesMinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
 
-            config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
-            config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
-            config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
-            config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
+            config.BossesMaxRandomSpeedScalingValue = config.MinibossesMaxRandomSpeedScalingValue = config.EnemiesMaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
+            config.BossesEnableRandomModifiersScaling = config.MinibossesEnableRandomModifiersScaling = config.EnemiesEnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
+            config.BossesRandomModifiersScalingStartDeath = config.MinibossesRandomModifiersScalingStartDeath = config.EnemiesRandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
+            config.BossesMinRandomModifiersNumber = config.MinibossesMinRandomModifiersNumber = config.EnemiesMinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
+            config.BossesMaxRandomModifiersNumber = config.MinibossesMaxRandomModifiersNumber = config.EnemiesMaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
+            #endregion Scaling
 
             config.ModifiersEnabled = isModifiersEnabled.Value;
             config.AllowRepeatModifiers = isModifiersRepeatingEnabled.Value;

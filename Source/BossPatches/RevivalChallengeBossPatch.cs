@@ -152,6 +152,7 @@ namespace BossChallengeMod.BossPatches {
                 PopulateModifierController(modifierController, config);
             }
 
+            modifierController.EnemyType = EnemyType;
             modifierController.CanBeTracked = UseModifierControllerTracking;
             modifierController.UseProximityShow = UseProximityActivation;
             modifierController.UseCompositeTracking = UseCompositeTracking;
@@ -297,6 +298,7 @@ namespace BossChallengeMod.BossPatches {
             result.Add(speedModifier);
 
             var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
+            scalingSpeedModifier.EnemyType = EnemyType;
             scalingSpeedModifier.challengeConfiguration = ConfigurationToUse;
             result.Add(scalingSpeedModifier);
 
