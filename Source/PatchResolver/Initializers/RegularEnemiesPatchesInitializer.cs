@@ -17,7 +17,10 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             "TrapMonster_LaserAltar_Circle(Clone)",
             "TrapMonster_Altar_Health_Drop(Clone)",
             "TrapMonster_Altar_Energy_Drop(Clone)",
-            "A1_S2_GameLevel/Room/Prefab/寶箱 Treasure Chests/EventBinder 小錢袋/StealthGameMonster_Statue_DangerJumpKickStatue_M"
+            "A1_S2_GameLevel/Room/Prefab/寶箱 Treasure Chests/EventBinder 小錢袋/StealthGameMonster_Statue_DangerJumpKickStatue_M",
+            "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieSpear",
+            "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieHammer",
+            "A0_S4 gameLevel/Room/軒軒野豬情境OnOff FSM/FSM Animator/LogicRoot/[On]Node/CullingGroup/SimpleCutSceneFSM_EncounterBoar (開頭介紹野豬的演出)/FSM Animator/LogicRoot/After/LootProvider/StealthGameMonster_RunningHog (1)"
             ];
 
         public MonsterPatchResolver MonsterPatchResolver { get; protected set; }
@@ -44,7 +47,7 @@ namespace BossChallengeMod.PatchResolver.Initializers {
                 MonsterBase.States.Dead
             ];
             defaultEnemyPatch.InsertPlaceState = MonsterBase.States.Dead;
-            defaultEnemyPatch.EnemyType = KillCounting.ChallengeEnemyType.Regular;
+            defaultEnemyPatch.EnemyType = ChallengeEnemyType.Regular;
             defaultEnemyPatch.UseKillCounterTracking = false;
             defaultEnemyPatch.UseModifierControllerTracking = false;
             defaultEnemyPatch.UseCompositeTracking = true;

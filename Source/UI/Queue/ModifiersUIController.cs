@@ -90,6 +90,10 @@ namespace BossChallengeMod.UI.QueueUI {
         }
 
         public void SetModifiers(Dictionary<int, string> modifiers) {
+            if (!modifiers.Any() && !pendingModifiersChanges.Any() && !items.Any()) {
+                return;
+            }
+
             EnqueueOperation(UnfoldLineAnimation());
             pendingModifiersChanges.Add(modifiers.Select(m => new ModifierTextItem(m.Key, m.Value)).ToList());
             EnqueueOperation(SetModifiersJob());

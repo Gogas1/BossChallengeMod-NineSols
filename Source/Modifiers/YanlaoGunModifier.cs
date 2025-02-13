@@ -13,11 +13,12 @@ namespace BossChallengeMod.Modifiers {
         protected MonsterYanlaoGunController? YanlaoGunController;
         public float MaxDistance { get; set; } = 800f;
 
+        public YanlaoGunModifier() {
+            Key = "ya_gun";
+        }
+
         public override void Awake() {
             base.Awake();
-
-            Key = "ya_gun";
-
         }
 
         private void Start() {
@@ -42,7 +43,7 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             base.NotifyDeactivation();
 
             if (YanlaoGunController == null) {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NineSolsAPI.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,13 @@ using System.Text;
 namespace BossChallengeMod.Modifiers {
     public class ParryDirectDamageModifier : ModifierBase {
 
+        public ParryDirectDamageModifier() {
+            Key = "parry_damage";
+            Log.Info(Key);
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "parry_damage";
         }
 
         public override void NotifyActivation(int iteration) {
@@ -17,8 +22,8 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
         }
 
-        public override void NotifyPause() {
-            base.NotifyPause();
+        public override void NotifyDeactivation(int iteration) {
+            base.NotifyDeactivation();
 
             enabled = false;
         }

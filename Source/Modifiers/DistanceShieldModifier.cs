@@ -9,10 +9,12 @@ namespace BossChallengeMod.Modifiers {
 
         protected float distanceTreshhold = 225f;
 
+        public DistanceShieldModifier() {
+            Key = "distance_shield";
+        }
+
         public override void Awake() {
             base.Awake();
-
-            Key = "distance_shield";            
         }
 
         private void Update() {

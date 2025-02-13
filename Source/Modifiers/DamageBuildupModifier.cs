@@ -13,10 +13,12 @@ namespace BossChallengeMod.Modifiers {
         public float delay = 0.006f;
         public float damagePerSecond = 3.8f;
 
+        public DamageBuildupModifier() {
+            Key = "damage_buildup";
+        }
 
         public override void Awake() {
             base.Awake();
-            Key = "damage_buildup";
         }
 
         public override void NotifyActivation(int iteration) {
@@ -25,8 +27,8 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
         }
 
-        public override void NotifyDeactivation() {
-            base.NotifyDeactivation();
+        public override void NotifyDeactivation(int iteration) {
+            base.NotifyDeactivation(iteration);
 
             enabled = false;
         }

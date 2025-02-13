@@ -47,8 +47,73 @@ namespace BossChallengeMod.Configuration {
         public int RandomModifiersScalingStartDeath;
         public int MinRandomModifiersNumber;
         public int MaxRandomModifiersNumber;
+
+        #region Bosses scaling
+        public bool BossesEnableSpeedScaling;
+        public float BossesMinSpeedScalingValue;
+        public float BossesMaxSpeedScalingValue;
+        public int BossesMaxSpeedScalingCycle;
+
+        public bool BossesEnableModifiersScaling;
+        public int BossesMaxModifiersNumber;
+        public int BossesMaxModifiersScalingCycle;
+
+        public bool BossesEnableRandomSpeedScaling;
+        public int BossesRandomSpeedScalingStartDeath;
+        public float BossesMinRandomSpeedScalingValue;
+        public float BossesMaxRandomSpeedScalingValue;
+
+        public bool BossesEnableRandomModifiersScaling;
+        public int BossesRandomModifiersScalingStartDeath;
+        public int BossesMinRandomModifiersNumber;
+        public int BossesMaxRandomModifiersNumber;
+        #endregion Bosses scaling
+
+        #region Minibosses scaling
+        public bool MinibossesEnableSpeedScaling;
+        public float MinibossesMinSpeedScalingValue;
+        public float MinibossesMaxSpeedScalingValue;
+        public int MinibossesMaxSpeedScalingCycle;
+
+        public bool MinibossesEnableModifiersScaling;
+        public int MinibossesMaxModifiersNumber;
+        public int MinibossesMaxModifiersScalingCycle;
+
+        public bool MinibossesEnableRandomSpeedScaling;
+        public int MinibossesRandomSpeedScalingStartDeath;
+        public float MinibossesMinRandomSpeedScalingValue;
+        public float MinibossesMaxRandomSpeedScalingValue;
+
+        public bool MinibossesEnableRandomModifiersScaling;
+        public int MinibossesRandomModifiersScalingStartDeath;
+        public int MinibossesMinRandomModifiersNumber;
+        public int MinibossesMaxRandomModifiersNumber;
+        #endregion Bosses scaling
+
+        #region Enemies scaling
+        public bool EnemiesEnableSpeedScaling;
+        public float EnemiesMinSpeedScalingValue;
+        public float EnemiesMaxSpeedScalingValue;
+        public int EnemiesMaxSpeedScalingCycle;
+
+        public bool EnemiesEnableModifiersScaling;
+        public int EnemiesMaxModifiersNumber;
+        public int EnemiesMaxModifiersScalingCycle;
+
+        public bool EnemiesEnableRandomSpeedScaling;
+        public int EnemiesRandomSpeedScalingStartDeath;
+        public float EnemiesMinRandomSpeedScalingValue;
+        public float EnemiesMaxRandomSpeedScalingValue;
+
+        public bool EnemiesEnableRandomModifiersScaling;
+        public int EnemiesRandomModifiersScalingStartDeath;
+        public int EnemiesMinRandomModifiersNumber;
+        public int EnemiesMaxRandomModifiersNumber;
+        #endregion Bosses scaling
+
         #endregion Scaling
 
+        #region Modifiers
         public bool ModifiersEnabled;
         public int ModifiersStartFromDeath;
         public bool AllowRepeatModifiers;
@@ -66,5 +131,6 @@ namespace BossChallengeMod.Configuration {
         public bool QiOverloadModifierEnabled;
         public bool DistanceShieldModifierEnabled;
         public bool YanlaoGunModifierEnabled;
+        #endregion Modifiers
     }
 }

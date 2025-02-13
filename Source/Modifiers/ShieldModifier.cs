@@ -11,10 +11,11 @@ namespace BossChallengeMod.Modifiers {
     public class ShieldModifier : ModifierBase {
 
         protected MonsterShieldController MonsterShieldController = null!;
-
+        public ShieldModifier() {
+            Key = "shield";
+        }
         public override void Awake() {
             base.Awake();
-            Key = "shield";
 
             MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
         }
@@ -38,7 +39,7 @@ namespace BossChallengeMod.Modifiers {
             
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             base.NotifyDeactivation();
 
             enabled = false;

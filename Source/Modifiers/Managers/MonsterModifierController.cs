@@ -1,6 +1,8 @@
-﻿using BossChallengeMod.Configuration;
+﻿using BossChallengeMod.BossPatches;
+using BossChallengeMod.Configuration;
 using BossChallengeMod.Interfaces;
 using BossChallengeMod.KillCounting;
+using NineSolsAPI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +27,114 @@ namespace BossChallengeMod.Modifiers.Managers {
         private bool _isDied = false;
 
         private ChallengeConfiguration challengeConfiguration;
+        
         private PlayerSensor playerSensor = null!;
+
         protected ChallengeConfiguration ConfigurationToUse {
             get {
                 if (ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
                 else return storyChallengeConfigurationManager.ChallengeConfiguration;
+            }
+        }
+
+        protected bool EnableModifiersScaling {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesEnableModifiersScaling;                        
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesEnableModifiersScaling;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesEnableModifiersScaling;
+                    default:
+                        return false;
+                }
+            }
+        }
+        protected int MaxModifiersNumber {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesMaxModifiersNumber;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesMaxModifiersNumber; ;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesMaxModifiersNumber; ;
+                    default:
+                        return 1;
+                }
+            }
+        }
+        protected int MaxModifiersScalingCycle {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesMaxModifiersScalingCycle;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesMaxModifiersScalingCycle;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesMaxModifiersScalingCycle;
+                    default:
+                        return 1;
+                }
+            }
+        }
+
+
+        protected bool EnableRandomModifiersScaling {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesEnableRandomModifiersScaling;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesEnableRandomModifiersScaling;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesEnableRandomModifiersScaling;
+                    default:
+                        return false;
+                }
+            }
+        }
+        protected int RandomModifiersScalingStartDeath {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesMaxModifiersNumber;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesMaxModifiersNumber; ;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesMaxModifiersNumber; ;
+                    default:
+                        return 1;
+                }
+            }
+        }
+        protected int MinRandomModifiersNumber {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesMinRandomModifiersNumber;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesMinRandomModifiersNumber; ;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesMinRandomModifiersNumber;
+                    default:
+                        return 1;
+                }
+            }
+        }
+        protected int MaxRandomModifiersNumber {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesMaxRandomModifiersNumber;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesMaxRandomModifiersNumber; ;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesMaxRandomModifiersNumber; ;
+                    default:
+                        return 1;
+                }
             }
         }
 
@@ -44,7 +149,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public float ShowDistance {
             get => showDistance;
         }
-
+        public ChallengeEnemyType EnemyType { get; set; }
 
         public MonsterModifierController() {
             challengeConfiguration = ConfigurationToUse;
@@ -52,7 +157,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             monster.OnDie.AddListener(OnDieHandler);
         }
 
-        public void Awake() {
+        public void Init() {
             FindModifiers();
             if (!ApplicationCore.IsInBossMemoryMode) {
                 PauseAll();
@@ -68,8 +173,12 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
 
             if (challengeConfiguration.ModifiersStartFromDeath == 0) {
-                RollModifiers(0);
-                ApplyModifiers(0);
+                try {
+                    RollModifiers(0);
+                    ApplyModifiers(0);
+                } catch (Exception ex) {
+                    Log.Error($"{ex.Message}, {ex.StackTrace}");
+                }
             }
             _isStarted = true;
         }
@@ -91,17 +200,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             var availablilities = new List<ModifierConfig>(Available);
 
-            if(iteration == 0) {
-                availablilities.RemoveAll(m => m.Key == "timer");
-            }
-
-            if(!Player.i.mainAbilities.ChargedAttackAbility.IsActivated) {
-                availablilities.RemoveAll(m => m.Key.Contains("shield"));
-            }
-
-            if(!ApplicationCore.IsInBossMemoryMode) {
-                availablilities.RemoveAll(m => m.Key == "timer");
-            }
+            CullInaccessible(availablilities, iteration);
 
             if (!AllowRepeating) {
                 availablilities = availablilities.Except(Selected).ToList();
@@ -117,6 +216,34 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
 
             OnModifiersRoll?.Invoke();
+        }
+
+        private void CullInaccessible(List<ModifierConfig> modifiers, int iteration) {
+            var player = Player.i;
+
+            if (iteration == 0) {
+                modifiers.RemoveAll(m => m.Key == "timer");
+            }
+
+            if (!player.mainAbilities.ChargedAttackAbility.IsActivated) {
+                modifiers.RemoveAll(m => m.Key.Contains("shield"));
+            }
+
+            if (!ApplicationCore.IsInBossMemoryMode) {
+                modifiers.RemoveAll(m => m.Key == "timer");
+            }
+
+            if (!player.mainAbilities.ArrowAbility.IsActivated) {
+                modifiers.RemoveAll(m => m.Key == "random_arrow");
+            }
+
+            bool blastIsActive = (player.mainAbilities.FooExplodeAllStyle.IsActivated || player.mainAbilities.FooExplodeAllStyleUpgrade.IsActivated);
+            bool flowIsActive = (player.mainAbilities.FooExplodeAutoStyle.IsActivated || player.mainAbilities.FooExplodeAutoStyleUpgrade.IsActivated);
+            bool fctIsActive = (player.mainAbilities.FooExplodeConsecutiveStyle.IsActivated || player.mainAbilities.FooExplodeConsecutiveStyleUpgrade.IsActivated);
+
+            if((blastIsActive ^ flowIsActive ^ fctIsActive) && !(blastIsActive && fctIsActive && fctIsActive)) {
+                modifiers.RemoveAll(m => m.Key == "random_talisman");
+            }
         }
 
         public void ApplyModifiers(int iteration) {
@@ -152,21 +279,26 @@ namespace BossChallengeMod.Modifiers.Managers {
             ApplyModifiers(0);
 
             BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+            playerSensor.gameObject.SetActive(false);
             _isDied = true;
         }
 
         private void NotifyModifiers(int iteration) {
-            var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
-            foreach (var modifier in Modifiers) {
-                try {
-                    if (selectedKeys.Contains(modifier.Key)) {
-                        modifier.NotifyActivation(iteration);
-                    } else {
-                        modifier.NotifyDeactivation();
+            try {
+                var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
+                foreach (var modifier in Modifiers) {
+                    try {
+                        if (selectedKeys.Contains(modifier.Key)) {
+                            modifier.NotifyActivation(iteration);
+                        } else {
+                            modifier.NotifyDeactivation(iteration);
+                        }
+                    } catch (Exception ex) {
+                        Log.Error($"Exception occured while applying {modifier.name}: {ex.Message}, {ex.StackTrace}");
                     }
-                } catch (Exception ex) {
-                    Log.Error($"Exception occured while applying {modifier.name}: {ex.Message}, {ex.StackTrace}");
                 }
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
         }
 
@@ -185,16 +317,16 @@ namespace BossChallengeMod.Modifiers.Managers {
         private int CalculateModifiersNumber(int iteration) {
             var result = 0;
 
-            if (challengeConfiguration.EnableModifiersScaling) {
+            if (EnableModifiersScaling) {
                 int baseScalingValue = 1;
-                float progress = Math.Max(iteration, 1) / MathF.Max(challengeConfiguration.MaxModifiersScalingCycle, 1);
+                float progress = Math.Max(iteration, 1) / MathF.Max(MaxModifiersScalingCycle, 1);
                 float progressMultiplier = MathF.Min(1, progress);
-                int scalingDiff = Math.Abs(challengeConfiguration.MaxModifiersNumber - 1);
+                int scalingDiff = Math.Abs(MaxModifiersNumber - 1);
                 result += baseScalingValue + (int)(scalingDiff * progressMultiplier);
             }
 
-            if (challengeConfiguration.EnableRandomModifiersScaling && iteration >= challengeConfiguration.RandomModifiersScalingStartDeath) {
-                int value = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomModifiersNumber, challengeConfiguration.MaxRandomModifiersNumber + 1);
+            if (EnableRandomModifiersScaling && iteration >= RandomModifiersScalingStartDeath) {
+                int value = BossChallengeMod.Random.Next(MinRandomModifiersNumber, MaxRandomModifiersNumber + 1);
 
                 result += value;
             } else {
@@ -206,6 +338,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void ResetComponent() {
             _isStarted = false;
+            playerSensor.gameObject.SetActive(false);
             challengeConfiguration = ConfigurationToUse;
             FindModifiers();
             if (!ApplicationCore.IsInBossMemoryMode) {
@@ -218,6 +351,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 RollModifiers(0);
                 ApplyModifiers(0);
             }
+            playerSensor.gameObject.SetActive(true);
         }
 
         private void PauseAll() {

@@ -44,11 +44,10 @@ namespace BossChallengeMod.PatchResolver.Initializers {
 
             var defaultMinibossPatch = new RevivalChallengeBossPatch();
             defaultMinibossPatch.DieStates = [
-                MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
+                MonsterBase.States.LastHit,
+                MonsterBase.States.Dead
             ];
-            defaultMinibossPatch.EnemyType = KillCounting.ChallengeEnemyType.Miniboss;
+            defaultMinibossPatch.EnemyType = ChallengeEnemyType.Miniboss;
             defaultMinibossPatch.UseProximityActivation = true;
             defaultMinibossPatch.UseCompositeTracking = true;
 

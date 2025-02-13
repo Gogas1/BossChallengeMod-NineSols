@@ -5,10 +5,12 @@ using System.Text;
 
 namespace BossChallengeMod.Modifiers {
     public class KnockbackModifier : ModifierBase {
+        public KnockbackModifier() {
+            Key = "knockback";
+        }
 
         public override void Awake() {
             base.Awake();
-            Key = "knockback";
         }
 
         public override void NotifyActivation(int iteration) {
@@ -18,7 +20,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             enabled = false;
         }
     }

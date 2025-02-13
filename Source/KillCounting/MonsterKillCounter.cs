@@ -1,4 +1,5 @@
-﻿using BossChallengeMod.Configuration;
+﻿using BossChallengeMod.BossPatches;
+using BossChallengeMod.Configuration;
 using BossChallengeMod.Interfaces;
 using BossChallengeMod.Modifiers;
 using NineSolsAPI.Utils;
@@ -190,9 +191,5 @@ namespace BossChallengeMod.KillCounting {
             return sensor;
         }
     }
-    public enum ChallengeEnemyType {
-        Boss,
-        Miniboss,
-        Regular
-    }
+    
 }

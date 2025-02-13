@@ -8,19 +8,24 @@ namespace BossChallengeMod.Modifiers {
     public class RandomArrowModifier : ModifierBase {
         private HashSet<object> _blockArrowVotes = BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes;
 
+        public RandomArrowModifier() {
+            Key = "random_arrow";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "random_arrow";
         }
 
         public override void NotifyActivation(int iteration) {
             base.NotifyActivation(iteration);
 
             enabled = true;
-            _blockArrowVotes.Add(this);
+            if(!IsPaused) {
+                _blockArrowVotes.Add(this);
+            }
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             base.NotifyDeactivation();
 
             enabled = false;

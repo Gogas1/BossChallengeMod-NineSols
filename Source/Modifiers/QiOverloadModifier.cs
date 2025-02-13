@@ -7,19 +7,25 @@ namespace BossChallengeMod.Modifiers {
     public class QiOverloadModifier : ModifierBase {
         private HashSet<object> _enableQiOverloadVotes = BossChallengeMod.Instance.GlobalModifiersFlags.EnableQiOverloadVotes;
 
+        public QiOverloadModifier() {
+            Key = "qi_overload";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "qi_overload";
         }
 
         public override void NotifyActivation(int iteration) {
             base.NotifyActivation(iteration);
 
             enabled = true;
-            _enableQiOverloadVotes.Add(this);
+
+            if(!IsPaused) {
+                _enableQiOverloadVotes.Add(this);
+            }
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             base.NotifyDeactivation();
 
             enabled = false;

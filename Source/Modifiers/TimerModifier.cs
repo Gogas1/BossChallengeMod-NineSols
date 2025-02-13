@@ -22,9 +22,12 @@ namespace BossChallengeMod.Modifiers {
 
         public bool ForcePause { get; set; } = false;
 
+        public TimerModifier() {
+            Key = "timer";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "timer";
             enabled = true;
             startStopwatch = true;
         }
@@ -51,7 +54,7 @@ namespace BossChallengeMod.Modifiers {
             }            
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             attempts.Add(stopwatch);
             stopwatch = 0;
             start = false;

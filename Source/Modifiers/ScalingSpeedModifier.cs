@@ -9,9 +9,12 @@ namespace BossChallengeMod.Modifiers {
     public class ScalingSpeedModifier : ModifierBase {
         private float modifier = 1.0f;
 
+        public ScalingSpeedModifier() {
+            Key = "speed_perm";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "speed_perm";
             enabled = true;
         }
 

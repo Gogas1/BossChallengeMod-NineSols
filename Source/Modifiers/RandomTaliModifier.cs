@@ -7,9 +7,12 @@ namespace BossChallengeMod.Modifiers {
     public class RandomTaliModifier : ModifierBase {
         private HashSet<object> _blockTalismanVotes = BossChallengeMod.Instance.GlobalModifiersFlags.BlockTalismanVotes;
 
+        public RandomTaliModifier() {
+            Key = "random_talisman";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "random_talisman";
         }
 
         public override void NotifyActivation(int iteration) {
@@ -19,7 +22,7 @@ namespace BossChallengeMod.Modifiers {
             _blockTalismanVotes.Add(this);
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             base.NotifyDeactivation();
 
             enabled = false;

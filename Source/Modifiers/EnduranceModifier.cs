@@ -6,9 +6,13 @@ using System.Text;
 
 namespace BossChallengeMod.Modifiers {
     public class EnduranceModifier : ModifierBase {
+
+        public EnduranceModifier() {
+            Key = "endurance";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "endurance";
         }
 
         public override void NotifyActivation(int iteration) {
@@ -17,7 +21,7 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             enabled = false;
         }
     }

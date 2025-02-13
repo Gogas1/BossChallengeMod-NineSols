@@ -155,6 +155,7 @@ namespace BossChallengeMod.BossPatches {
             modifierController.CanBeTracked = UseModifierControllerTracking;
             modifierController.UseProximityShow = UseProximityActivation;
             modifierController.UseCompositeTracking = UseCompositeTracking;
+            modifierController.Init();
             modifierController.GenerateAvailableMods();
 
             return modifierController;
@@ -343,5 +344,11 @@ namespace BossChallengeMod.BossPatches {
 
             return result;
         }
+    }
+
+    public enum ChallengeEnemyType {
+        Boss,
+        Miniboss,
+        Regular
     }
 }

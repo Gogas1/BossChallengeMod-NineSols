@@ -5,11 +5,12 @@ using System.Text;
 
 namespace BossChallengeMod.Modifiers {
     public class QiShieldModifier : ShieldModifier {
+        public QiShieldModifier() {
+            Key = "qi_shield";
+        }
 
         public override void Awake() {
             base.Awake();
-
-            Key = "qi_shield";
         }
 
         public override void MonsterNotify(MonsterNotifyType notifyType) {

@@ -15,9 +15,6 @@ namespace BossChallengeMod.Patches {
             var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
             if (modifiers != null) {
                 var parryDamageModifier = modifiers.FirstOrDefault(m => m.Key == "parry_damage");
-                if (parryDamageModifier != null) {
-                    Log.Info($"{parryDamageModifier}, {parryDamageModifier.enabled}, {parryDamageModifier.IsPaused}");
-                }
                 if ((parryDamageModifier?.enabled ?? false) && (!parryDamageModifier?.IsPaused ?? false)) {
                     var playerHealth = Player.i.health;
                     playerHealth.CurrentInternalInjury = 0;

@@ -16,10 +16,12 @@ namespace BossChallengeMod.Modifiers {
 
         protected Coroutine? regenerationCoroutine;
 
+        public RegenerationModifier() {
+            Key = "regeneration";
+        }
 
         public override void Awake() {
             base.Awake();
-            Key = "regeneration";
             Monster?.postureSystem.OnPostureDecrease.AddListener(PauseRegeneration);
         }
 
@@ -34,11 +36,11 @@ namespace BossChallengeMod.Modifiers {
 
             if (enabled) {
                 regenerationPool = CalculateTotalHp() / 2;
-                StartCoroutine(StartRegeneration());
+                regenerationCoroutine = StartCoroutine(StartRegeneration());
             }
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             base.NotifyDeactivation();
 
             enabled = false;

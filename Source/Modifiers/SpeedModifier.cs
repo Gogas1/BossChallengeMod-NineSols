@@ -6,16 +6,19 @@ using System.Text;
 namespace BossChallengeMod.Modifiers {
     public class SpeedModifier : ModifierBase {
 
+        public SpeedModifier() {
+            Key = "speed_temp";
+        }
+
         public override void Awake() {
             base.Awake();
-            Key = "speed_temp";
         }
 
         public override void NotifyActivation(int iteration) {
             enabled = true;
         }
 
-        public override void NotifyDeactivation() {
+        public override void NotifyDeactivation(int iteration) {
             enabled = false;
         }
 
@@ -24,7 +27,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void Update() {
-            if (Monster != null) {
+            if (Monster != null && !IsPaused) {
                 Monster.animator.speed = Monster.animator.speed * 1.2f;
             }
         }

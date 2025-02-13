@@ -31,24 +31,69 @@ namespace BossChallengeMod.Configuration.Holders {
         #endregion General
 
         #region Scaling
-        public ConfigEntry<bool> IsSpeedScalingEnabled { get; set; } = null!;
-        public ConfigEntry<float> MinSpeedScalingValue { get; set; } = null!;
-        public ConfigEntry<float> MaxSpeedScalingValue { get; set; } = null!;
-        public ConfigEntry<int> MaxSpeedScalingCycleValue { get; set; } = null!;
 
-        public ConfigEntry<bool> IsModifiersScalingEnabled { get; set; } = null!;
-        public ConfigEntry<int> MaxModifiersNumber { get; set; } = null!;
-        public ConfigEntry<int> MaxModifiersNumberScalingValue { get; set; } = null!;
+        #region Bosses scaling
+        public ConfigEntry<bool> BossesIsSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<float> BossesMinSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> BossesMaxSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<int> BossesMaxSpeedScalingCycleValue { get; set; } = null!;
 
-        public ConfigEntry<bool> IsRandomSpeedScalingEnabled { get; set; } = null!;
-        public ConfigEntry<int> StartRandomSpeedScalingDeath { get; set; } = null!;
-        public ConfigEntry<float> MinRandomSpeedScalingValue { get; set; } = null!;
-        public ConfigEntry<float> MaxRandomSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<bool> BossesIsModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> BossesMaxModifiersNumber { get; set; } = null!;
+        public ConfigEntry<int> BossesMaxModifiersNumberScalingValue { get; set; } = null!;
 
-        public ConfigEntry<bool> IsRandomModifiersScalingEnabled { get; set; } = null!;
-        public ConfigEntry<int> StartRandomModifiersScalingDeath { get; set; } = null!;
-        public ConfigEntry<int> MinRandomModifiersScalingValue { get; set; } = null!;
-        public ConfigEntry<int> MaxRandomModifiersScalingValue { get; set; } = null!;
+        public ConfigEntry<bool> BossesIsRandomSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> BossesStartRandomSpeedScalingDeath { get; set; } = null!;
+        public ConfigEntry<float> BossesMinRandomSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> BossesMaxRandomSpeedScalingValue { get; set; } = null!;
+
+        public ConfigEntry<bool> BossesIsRandomModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> BossesStartRandomModifiersScalingDeath { get; set; } = null!;
+        public ConfigEntry<int> BossesMinRandomModifiersScalingValue { get; set; } = null!;
+        public ConfigEntry<int> BossesMaxRandomModifiersScalingValue { get; set; } = null!;
+        #endregion Bosses scaling
+
+        #region Minibosses scaling
+        public ConfigEntry<bool> MinibossesIsSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<float> MinibossesMinSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> MinibossesMaxSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<int> MinibossesMaxSpeedScalingCycleValue { get; set; } = null!;
+
+        public ConfigEntry<bool> MinibossesIsModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> MinibossesMaxModifiersNumber { get; set; } = null!;
+        public ConfigEntry<int> MinibossesMaxModifiersNumberScalingValue { get; set; } = null!;
+
+        public ConfigEntry<bool> MinibossesIsRandomSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> MinibossesStartRandomSpeedScalingDeath { get; set; } = null!;
+        public ConfigEntry<float> MinibossesMinRandomSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> MinibossesMaxRandomSpeedScalingValue { get; set; } = null!;
+
+        public ConfigEntry<bool> MinibossesIsRandomModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> MinibossesStartRandomModifiersScalingDeath { get; set; } = null!;
+        public ConfigEntry<int> MinibossesMinRandomModifiersScalingValue { get; set; } = null!;
+        public ConfigEntry<int> MinibossesMaxRandomModifiersScalingValue { get; set; } = null!;
+        #endregion Minibosses scaling
+
+        #region Enemy scaling
+        public ConfigEntry<bool> EnemiesIsSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMinSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMaxSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMaxSpeedScalingCycleValue { get; set; } = null!;
+
+        public ConfigEntry<bool> EnemiesIsModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMaxModifiersNumber { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMaxModifiersNumberScalingValue { get; set; } = null!;
+
+        public ConfigEntry<bool> EnemiesIsRandomSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> EnemiesStartRandomSpeedScalingDeath { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMinRandomSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMaxRandomSpeedScalingValue { get; set; } = null!;
+
+        public ConfigEntry<bool> EnemiesIsRandomModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> EnemiesStartRandomModifiersScalingDeath { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMinRandomModifiersScalingValue { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMaxRandomModifiersScalingValue { get; set; } = null!;
+        #endregion Enemy scaling
 
         #endregion Scaling
 
