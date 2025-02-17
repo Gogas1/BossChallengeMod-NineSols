@@ -16,7 +16,6 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch("CheckInit")]
         [HarmonyPrefix]
         private static void CheckInit_Prefix(MonsterBase __instance, out IEnumerable<MonsterState> __state) {
-            Log.Info($"Prefix Patching {ObjectUtils.ObjectPath(__instance.gameObject)}");
             __state = new List<MonsterState>();
 
             try {
@@ -24,7 +23,6 @@ namespace BossChallengeMod.Patches {
 
                 if (__instance.tag == "Boss") {
                     GeneralBossPatch? bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
-
                     if (bossPatch != null && bossPatch.CanBeApplied()) {
                         bossPatch.PatchMonsterPostureSystem(__instance);
                         __state = bossPatch.PatchMonsterStates(__instance);
@@ -62,7 +60,6 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch("CheckInit")]
         [HarmonyPostfix]
         private static void CheckInit_Postfix(MonsterBase __instance, IEnumerable<MonsterState> __state) {
-            Log.Info($"Postfix Patching {ObjectUtils.ObjectPath(__instance.gameObject)}");
 
             try {
                 bool skipped = true;
@@ -114,23 +111,23 @@ namespace BossChallengeMod.Patches {
             }
         }
 
-        [HarmonyPatch(typeof(MonsterBase), nameof(MonsterBase.HurtInterruptCheck))]
-        [HarmonyPrefix]
-        private static bool HurtInterruptCheck_Prefix(MonsterBase __instance) {
-            if (__instance.name.Contains("Boss_ButterFly")) {
-                return true;
-            }
+        //[HarmonyPatch(typeof(MonsterBase), nameof(MonsterBase.HurtInterruptCheck))]
+        //[HarmonyPrefix]
+        //private static bool HurtInterruptCheck_Prefix(MonsterBase __instance) {
+        //    if (__instance.name.Contains("Boss_ButterFly")) {
+        //        return true;
+        //    }
 
-            var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
-            if (modifiers != null) {
-                var enduranceMod = modifiers.FirstOrDefault(m => m.Key == "endurance");
-                if ((enduranceMod?.enabled ?? false) && (!enduranceMod?.IsPaused ?? false)) {
-                    return false;
-                }
-            }
+        //    var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
+        //    if (modifiers != null) {
+        //        var enduranceMod = modifiers.FirstOrDefault(m => m.Key == "endurance");
+        //        if ((enduranceMod?.enabled ?? false) && (!enduranceMod?.IsPaused ?? false)) {
+        //            return false;
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
         [HarmonyPatch(typeof(MonsterBase), "OnExplode")]
         [HarmonyPostfix]

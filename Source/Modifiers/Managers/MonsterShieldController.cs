@@ -14,7 +14,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         private bool adjustingNeeded = false;
         private bool initNeeded = true;
-
+        private bool isOriginalShield = false;
         public bool IsShieldEnabled {
             get => shieldComponent?.isActiveAndEnabled ?? false;
         }
@@ -30,9 +30,11 @@ namespace BossChallengeMod.Modifiers.Managers {
                 adjustingNeeded = true;
             } else {
                 shieldObject = shieldComponent.gameObject;
+                shieldComponent = shieldObject?.GetComponent<MonsterShield>() ?? null;
+                isOriginalShield = true;
             }
 
-            if (shieldObject != null && shieldComponent != null && Monster != null) {
+            if (shieldObject != null && shieldComponent != null && Monster != null && adjustingNeeded) {
                 var buffPosObject = Monster?.monsterCore.buffPos ?? null;
 
                 if (buffPosObject != null) {
@@ -65,7 +67,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void Deactivate() {
-            if (IsShieldEnabled) {
+            if (IsShieldEnabled && !isOriginalShield) {
                 shieldComponent?.RemoveShield();
             }
         }

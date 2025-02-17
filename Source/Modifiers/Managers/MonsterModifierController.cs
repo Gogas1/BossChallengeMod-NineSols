@@ -159,7 +159,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void Init() {
             FindModifiers();
-            if (!ApplicationCore.IsInBossMemoryMode) {
+            if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
             }
             modifiersNumber = CalculateModifiersNumber(0);
@@ -237,9 +237,9 @@ namespace BossChallengeMod.Modifiers.Managers {
                 modifiers.RemoveAll(m => m.Key == "random_arrow");
             }
 
-            bool blastIsActive = (player.mainAbilities.FooExplodeAllStyle.IsActivated || player.mainAbilities.FooExplodeAllStyleUpgrade.IsActivated);
-            bool flowIsActive = (player.mainAbilities.FooExplodeAutoStyle.IsActivated || player.mainAbilities.FooExplodeAutoStyleUpgrade.IsActivated);
-            bool fctIsActive = (player.mainAbilities.FooExplodeConsecutiveStyle.IsActivated || player.mainAbilities.FooExplodeConsecutiveStyleUpgrade.IsActivated);
+            bool blastIsActive = (player.mainAbilities.FooExplodeAllStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAllStyleUpgrade.AbilityData.IsAcquired);
+            bool flowIsActive = (player.mainAbilities.FooExplodeAutoStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAutoStyleUpgrade.AbilityData.IsAcquired);
+            bool fctIsActive = (player.mainAbilities.FooExplodeConsecutiveStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeConsecutiveStyleUpgrade.AbilityData.IsAcquired);
 
             if((blastIsActive ^ flowIsActive ^ fctIsActive) && !(blastIsActive && fctIsActive && fctIsActive)) {
                 modifiers.RemoveAll(m => m.Key == "random_talisman");
@@ -337,11 +337,12 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void ResetComponent() {
-            _isStarted = false;
             playerSensor.gameObject.SetActive(false);
+            _isDied = false;
+            BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
             challengeConfiguration = ConfigurationToUse;
             FindModifiers();
-            if (!ApplicationCore.IsInBossMemoryMode) {
+            if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
             }
             modifiersNumber = CalculateModifiersNumber(1);

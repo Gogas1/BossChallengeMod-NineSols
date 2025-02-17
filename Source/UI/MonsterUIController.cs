@@ -131,21 +131,15 @@ namespace BossChallengeMod.UI {
             try {
                 if (trackedModifiersController == null) {
 
-                    if(!compositeModifierControllers.Any()) {
-                        UIController.HideModifiers();
-                        return;
-                    }
-                    else {
-                        compositeModifierControllers.RemoveAllNull();
-                        UIController.UpdateModifiers(compositeModifierControllers
-                            .SelectMany(controller => controller.Selected, (controller, config) => new {
-                                CombinedKey = HashCode.Combine(controller.GetHashCode(), config.GetHashCode()),
-                                ConfigKey = config.Key
-                            })
-                            .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
+                    compositeModifierControllers.RemoveAllNull();
+                    UIController.UpdateModifiers(compositeModifierControllers
+                        .SelectMany(controller => controller.Selected, (controller, config) => new {
+                            CombinedKey = HashCode.Combine(controller.GetHashCode(), config.GetHashCode()),
+                            ConfigKey = config.Key
+                        })
+                        .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
 
-                        return;
-                    }
+                    return;
                 }
 
                 if (trackedModifiersController.Selected.Any()) {

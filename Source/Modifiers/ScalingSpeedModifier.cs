@@ -158,7 +158,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public override void OnDisable() {
-            Monster?.animator.SetFloat("AnimationSpeed", 0);
+            Monster?.animator.SetFloat("AnimationSpeed", 1);
         }
 
         private float CalculateModifier(int iteration) {

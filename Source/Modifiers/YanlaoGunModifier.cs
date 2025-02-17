@@ -27,7 +27,22 @@ namespace BossChallengeMod.Modifiers {
         }
 
         private void Update() {
+            if(YanlaoGunController == null) return;
 
+            var postureSystem = Monster?.postureSystem ?? null;
+            if (postureSystem != null && 
+                (postureSystem.IsMonsterEmptyPosture || Player.i.lockMoving) && 
+                YanlaoGunController.IsRunning) {
+                YanlaoGunController.StopGun();
+            }
+
+            if(postureSystem != null && 
+                !postureSystem.IsMonsterEmptyPosture && 
+                !YanlaoGunController.IsRunning && 
+                !IsPaused &&
+                !Player.i.lockMoving) {
+                YanlaoGunController.StartGun();
+            }
         }
 
         public override void NotifyActivation(int iteration) {

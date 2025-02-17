@@ -9,7 +9,6 @@ namespace BossChallengeMod.Modifiers {
 
         public ParryDirectDamageModifier() {
             Key = "parry_damage";
-            Log.Info(Key);
         }
 
         public override void Awake() {

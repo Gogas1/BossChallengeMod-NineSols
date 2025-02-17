@@ -24,6 +24,7 @@ namespace BossChallengeMod.BossPatches {
             }
         }
 
+
         private MonsterBase.States bossReviveMonsterState = BossChallengeMod.Instance.MonsterStateValuesResolver.GetState("BossRevive");
         protected string resetBossStateEventType = "RestoreBoss_enter";
 
@@ -52,40 +53,48 @@ namespace BossChallengeMod.BossPatches {
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = base.PatchMonsterStates(monsterBase).ToList();
             
-            if(ConfigurationToUse.EnableMod) {
-                var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
-                var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                resetBossState.AssignChallengeConfig(ConfigurationToUse);
+            try {
+                if(ConfigurationToUse.EnableMod) {
+                    var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
+                    var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                    resetBossState.AssignChallengeConfig(ConfigurationToUse);
 
-                if (ConfigurationToUse.EnableMod && UseKillCounter) {
-                    var killCounter = InitializeKillCounter(monsterBase);
-                    killCounter.UseRecording = UseRecording;
+                    if (ConfigurationToUse.EnableMod && UseKillCounter) {
+                        var killCounter = InitializeKillCounter(monsterBase);
+                        killCounter.UseRecording = UseRecording;
 
-                    Action stateEnterEventActions = () => killCounter.IncrementCounter();
+                        Action stateEnterEventActions = () => {
+                            killCounter.IncrementCounter();
+                        };
 
-                    var modifiersController = InitializeModifiers(monsterBase);
+                        var modifiersController = InitializeModifiers(monsterBase);
 
-                    stateEnterEventActions += () => {
-                        modifiersController.RollModifiers(killCounter.KillCounter);
-                        modifiersController.ApplyModifiers(killCounter.KillCounter);
-                    };
+                        stateEnterEventActions += () => {
+                            modifiersController.RollModifiers(killCounter.KillCounter);
+                            modifiersController.ApplyModifiers(killCounter.KillCounter);
+                        };
 
 
-                    resetBossState.monsterKillCounter = killCounter;
+                        resetBossState.monsterKillCounter = killCounter;
 
-                    resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
+                        resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
 
-                    if(!UseProximityActivation) {
-                        BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
-                        BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+                        if(!UseProximityActivation) {
+                            BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+                            BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+                        }
+
+                        killCounter.CheckInit();
                     }
 
-                    killCounter.CheckInit();
+
+                    monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
+                    result.Add(resetBossState);
                 }
 
-
-                monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
-                result.Add(resetBossState);
+            }
+            catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
 
             return result;

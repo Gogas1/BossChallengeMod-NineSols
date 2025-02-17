@@ -168,6 +168,8 @@ namespace BossChallengeMod.UI.QueueUI {
                     yield return null;
                 }
 
+                line.sizeDelta = new Vector2(lineDefaultLength, line.sizeDelta.y);
+
                 CurrentState = ModifiersUIState.LineUnfolded;
             }
         }
@@ -189,6 +191,8 @@ namespace BossChallengeMod.UI.QueueUI {
 
                     yield return null;
                 }
+
+                line.sizeDelta = new Vector2(0, line.sizeDelta.y);
 
                 CurrentState = ModifiersUIState.Hidden;
             }

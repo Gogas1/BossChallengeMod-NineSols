@@ -24,6 +24,7 @@ namespace BossChallengeMod.CustomMonsterStates {
         public string[] TargetDamageReceivers { get; set; }
         public MonsterBase.States StateType { get; set; }
         public float PauseTime { get; set; } = 0f;
+        public bool UseFlashing { get; set; } = false;
         public float FlashingDelay { get; set; } = 0.33f;
 
         protected CancellationTokenSource stateLifetimeCancellationTokenSource = null!;
@@ -49,35 +50,41 @@ namespace BossChallengeMod.CustomMonsterStates {
 
                 return;
             }
-            
-            stateLifetimeCancellationTokenSource = new CancellationTokenSource();
 
-            ResetAnimationQueue();
-            monster.UnFreeze();
-            monster.HurtClearHintFxs();
-            monster.monsterCore.DisablePushAway();
+            try {
+                stateLifetimeCancellationTokenSource = new CancellationTokenSource();
 
-            StartCoroutine(FlashingTask());
+                ResetAnimationQueue();
+                monster.UnFreeze();
+                monster.HurtClearHintFxs();
+                monster.monsterCore.DisablePushAway();
 
-            SwitchDamageReceivers(false);
-            for (int i = 0; i < base.monster.attackSensors.Length; i++) {
-                if (base.monster.attackSensors[i] != null) {
-                    base.monster.attackSensors[i].ClearQueue();
+                if (UseFlashing) {
+                    StartCoroutine(FlashingTask());
                 }
-            }
-            base.monster.VelX = 0f;
-            if (AnimationsQueue.Any()) {
-                PlayAnimation(AnimationsQueue.Dequeue(), false);
-            } else if(PauseTime <= 0) {
-                End();
-            } else {
-                monster.FreezeFor(PauseTime);
-                StartCoroutine(DelayAction(() => End(), PauseTime));
-            }
 
-            ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
-            ResetMustEnqAttacks(monster);
-            ResetSequenceManagersAttacks(monster);
+                SwitchDamageReceivers(false);
+                for (int i = 0; i < base.monster.attackSensors.Length; i++) {
+                    if (base.monster.attackSensors[i] != null) {
+                        base.monster.attackSensors[i].ClearQueue();
+                    }
+                }
+                base.monster.VelX = 0f;
+                if (AnimationsQueue.Any()) {
+                    PlayAnimation(AnimationsQueue.Dequeue(), false);
+                } else if(PauseTime <= 0) {
+                    End();
+                } else {
+                    monster.FreezeFor(PauseTime);
+                    StartCoroutine(DelayAction(() => End(), PauseTime));
+                }
+
+                ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
+                ResetMustEnqAttacks(monster);
+                ResetSequenceManagersAttacks(monster);
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
+            }
         }
 
         protected void End() {
@@ -152,23 +159,39 @@ namespace BossChallengeMod.CustomMonsterStates {
             }
 
             foreach (var item in phasesAttacks) {
-                item.EnterLevelReset();
+                try {
+                    item.EnterLevelReset();
+                } catch (Exception ex) {
+                    Log.Warning($"Couldn't reset phase a attack of the attack sequence module due to internal exception");
+                }
             }
         }
 
         private void ResetMustEnqAttacks(MonsterBase monsterBase) {
             foreach (var attackSensor in monsterBase.attackSensors) {
                 foreach (var item in attackSensor.AttackWeightPhaseList) {
-                    item.EnterLevelReset();
+                    try {
+                        item.EnterLevelReset();
+                    } catch (Exception ex) {
+                        Log.Warning($"Couldn't reset must enq attacks of {monsterBase.gameObject} due to internal exception");
+                    }
                 }
             }
         }
 
         private void ResetSequenceManagersAttacks(MonsterBase monsterBase) {
-            Transform parent = monsterBase.transform.parent;
-            var sequenceManagers = parent.gameObject.GetComponentsInChildren<EventSequenceManager>(true);
-            foreach (var item in sequenceManagers) {
-                item.setting.EnterLevelReset();
+            try {
+                Transform parent = monsterBase.transform.parent;
+                var sequenceManagers = parent.gameObject.GetComponentsInChildren<EventSequenceManager>(true);
+                foreach (var item in sequenceManagers) {
+                    try {
+                        item.setting.EnterLevelReset();
+                    } catch (Exception ex) {
+                        Log.Warning($"Couldn't reset sequence menager of {monsterBase.gameObject} due to internal exception");
+                    }
+                }
+            } catch (Exception ex) {
+                Log.Warning($"Couldn't reset sequence menagers attacks of {monsterBase.gameObject} due to internal exception");
             }
         }
 

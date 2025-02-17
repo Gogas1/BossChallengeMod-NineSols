@@ -19,7 +19,9 @@ namespace BossChallengeMod.Modifiers {
             base.NotifyActivation(iteration);
 
             enabled = true;
-            _blockTalismanVotes.Add(this);
+            if(!IsPaused) {
+                _blockTalismanVotes.Add(this);
+            }
         }
 
         public override void NotifyDeactivation(int iteration) {

@@ -867,7 +867,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_enabled_description"));
             _storyConfigs.BossesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableSpeedScaling = _storyConfigs.BossesIsSpeedScalingEnabled.Value;
+                config.BossesEnableSpeedScaling = _storyConfigs.BossesIsSpeedScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -878,7 +878,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_minspeed_description"));
             _storyConfigs.BossesMinSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinSpeedScalingValue = _storyConfigs.BossesMinSpeedScalingValue.Value;
+                config.BossesMinSpeedScalingValue = _storyConfigs.BossesMinSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -889,7 +889,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxspeed_description"));
             _storyConfigs.BossesMaxSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = _storyConfigs.BossesMaxSpeedScalingValue.Value;
+                config.BossesMaxSpeedScalingValue = _storyConfigs.BossesMaxSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -900,7 +900,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             _storyConfigs.BossesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingCycle = _storyConfigs.BossesMaxSpeedScalingCycleValue.Value;
+                config.BossesMaxSpeedScalingCycle = _storyConfigs.BossesMaxSpeedScalingCycleValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -912,7 +912,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
             _storyConfigs.BossesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableModifiersScaling = _storyConfigs.BossesIsModifiersScalingEnabled.Value;
+                config.BossesEnableModifiersScaling = _storyConfigs.BossesIsModifiersScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -923,7 +923,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
             _storyConfigs.BossesMaxModifiersNumber.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersNumber = _storyConfigs.BossesMaxModifiersNumber.Value;
+                config.BossesMaxModifiersNumber = _storyConfigs.BossesMaxModifiersNumber.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -934,7 +934,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
             _storyConfigs.BossesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersScalingCycle = _storyConfigs.BossesMaxModifiersNumberScalingValue.Value;
+                config.BossesMaxModifiersScalingCycle = _storyConfigs.BossesMaxModifiersNumberScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -946,7 +946,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
             _storyConfigs.BossesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableRandomSpeedScaling = _storyConfigs.BossesIsRandomSpeedScalingEnabled.Value;
+                config.BossesEnableRandomSpeedScaling = _storyConfigs.BossesIsRandomSpeedScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -957,7 +957,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
             _storyConfigs.BossesStartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.RandomSpeedScalingStartDeath = _storyConfigs.BossesStartRandomSpeedScalingDeath.Value;
+                config.BossesRandomSpeedScalingStartDeath = _storyConfigs.BossesStartRandomSpeedScalingDeath.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -968,7 +968,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
             _storyConfigs.BossesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinRandomSpeedScalingValue = _storyConfigs.BossesMinRandomSpeedScalingValue.Value;
+                config.BossesMinRandomSpeedScalingValue = _storyConfigs.BossesMinRandomSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -979,7 +979,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
             _storyConfigs.BossesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = _storyConfigs.BossesMaxRandomSpeedScalingValue.Value;
+                config.BossesMaxSpeedScalingValue = _storyConfigs.BossesMaxRandomSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -991,7 +991,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
             _storyConfigs.BossesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableRandomModifiersScaling = _storyConfigs.BossesIsRandomModifiersScalingEnabled.Value;
+                config.BossesEnableRandomModifiersScaling = _storyConfigs.BossesIsRandomModifiersScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1002,7 +1002,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
             _storyConfigs.BossesStartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.RandomModifiersScalingStartDeath = _storyConfigs.BossesStartRandomModifiersScalingDeath.Value;
+                config.BossesRandomModifiersScalingStartDeath = _storyConfigs.BossesStartRandomModifiersScalingDeath.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1013,7 +1013,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
             _storyConfigs.BossesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinRandomModifiersNumber = _storyConfigs.BossesMinRandomModifiersScalingValue.Value;
+                config.BossesMinRandomModifiersNumber = _storyConfigs.BossesMinRandomModifiersScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1024,7 +1024,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
             _storyConfigs.BossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxRandomModifiersNumber = _storyConfigs.BossesMaxRandomModifiersScalingValue.Value;
+                config.BossesMaxRandomModifiersNumber = _storyConfigs.BossesMaxRandomModifiersScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1039,7 +1039,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_enabled_description"));
             _storyConfigs.MinibossesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableSpeedScaling = _storyConfigs.MinibossesIsSpeedScalingEnabled.Value;
+                config.MinibossesEnableSpeedScaling = _storyConfigs.MinibossesIsSpeedScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1050,7 +1050,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_minspeed_description"));
             _storyConfigs.MinibossesMinSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinSpeedScalingValue = _storyConfigs.MinibossesMinSpeedScalingValue.Value;
+                config.MinibossesMinSpeedScalingValue = _storyConfigs.MinibossesMinSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1061,7 +1061,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxspeed_description"));
             _storyConfigs.MinibossesMaxSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = _storyConfigs.MinibossesMaxSpeedScalingValue.Value;
+                config.MinibossesMaxSpeedScalingValue = _storyConfigs.MinibossesMaxSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1072,7 +1072,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             _storyConfigs.MinibossesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingCycle = _storyConfigs.MinibossesMaxSpeedScalingCycleValue.Value;
+                config.MinibossesMaxSpeedScalingCycle = _storyConfigs.MinibossesMaxSpeedScalingCycleValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1084,7 +1084,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
             _storyConfigs.MinibossesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableModifiersScaling = _storyConfigs.MinibossesIsModifiersScalingEnabled.Value;
+                config.MinibossesEnableModifiersScaling = _storyConfigs.MinibossesIsModifiersScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1095,7 +1095,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
             _storyConfigs.MinibossesMaxModifiersNumber.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersNumber = _storyConfigs.MinibossesMaxModifiersNumber.Value;
+                config.MinibossesMaxModifiersNumber = _storyConfigs.MinibossesMaxModifiersNumber.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1106,7 +1106,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
             _storyConfigs.MinibossesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersScalingCycle = _storyConfigs.MinibossesMaxModifiersNumberScalingValue.Value;
+                config.MinibossesMaxModifiersScalingCycle = _storyConfigs.MinibossesMaxModifiersNumberScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1118,7 +1118,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
             _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableRandomSpeedScaling = _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.Value;
+                config.MinibossesEnableRandomSpeedScaling = _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1129,7 +1129,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
             _storyConfigs.MinibossesStartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.RandomSpeedScalingStartDeath = _storyConfigs.MinibossesStartRandomSpeedScalingDeath.Value;
+                config.MinibossesRandomSpeedScalingStartDeath = _storyConfigs.MinibossesStartRandomSpeedScalingDeath.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1140,7 +1140,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
             _storyConfigs.MinibossesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinRandomSpeedScalingValue = _storyConfigs.MinibossesMinRandomSpeedScalingValue.Value;
+                config.MinibossesMinRandomSpeedScalingValue = _storyConfigs.MinibossesMinRandomSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1151,7 +1151,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
             _storyConfigs.MinibossesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = _storyConfigs.MinibossesMaxRandomSpeedScalingValue.Value;
+                config.MinibossesMaxSpeedScalingValue = _storyConfigs.MinibossesMaxRandomSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1163,7 +1163,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
             _storyConfigs.MinibossesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableRandomModifiersScaling = _storyConfigs.MinibossesIsRandomModifiersScalingEnabled.Value;
+                config.MinibossesEnableRandomModifiersScaling = _storyConfigs.MinibossesIsRandomModifiersScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1174,7 +1174,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
             _storyConfigs.MinibossesStartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.RandomModifiersScalingStartDeath = _storyConfigs.MinibossesStartRandomModifiersScalingDeath.Value;
+                config.MinibossesRandomModifiersScalingStartDeath = _storyConfigs.MinibossesStartRandomModifiersScalingDeath.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1185,7 +1185,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
             _storyConfigs.MinibossesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinRandomModifiersNumber = _storyConfigs.MinibossesMinRandomModifiersScalingValue.Value;
+                config.MinibossesMinRandomModifiersNumber = _storyConfigs.MinibossesMinRandomModifiersScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1196,7 +1196,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
             _storyConfigs.MinibossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxRandomModifiersNumber = _storyConfigs.MinibossesMaxRandomModifiersScalingValue.Value;
+                config.MinibossesMaxRandomModifiersNumber = _storyConfigs.MinibossesMaxRandomModifiersScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1211,7 +1211,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_enabled_description"));
             _storyConfigs.EnemiesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableSpeedScaling = _storyConfigs.EnemiesIsSpeedScalingEnabled.Value;
+                config.EnemiesEnableSpeedScaling = _storyConfigs.EnemiesIsSpeedScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1222,7 +1222,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_minspeed_description"));
             _storyConfigs.EnemiesMinSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinSpeedScalingValue = _storyConfigs.EnemiesMinSpeedScalingValue.Value;
+                config.EnemiesMinSpeedScalingValue = _storyConfigs.EnemiesMinSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1233,7 +1233,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxspeed_description"));
             _storyConfigs.EnemiesMaxSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = _storyConfigs.EnemiesMaxSpeedScalingValue.Value;
+                config.EnemiesMaxSpeedScalingValue = _storyConfigs.EnemiesMaxSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1244,7 +1244,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             _storyConfigs.EnemiesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingCycle = _storyConfigs.EnemiesMaxSpeedScalingCycleValue.Value;
+                config.EnemiesMaxSpeedScalingCycle = _storyConfigs.EnemiesMaxSpeedScalingCycleValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1256,7 +1256,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
             _storyConfigs.EnemiesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableModifiersScaling = _storyConfigs.EnemiesIsModifiersScalingEnabled.Value;
+                config.EnemiesEnableModifiersScaling = _storyConfigs.EnemiesIsModifiersScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1267,7 +1267,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
             _storyConfigs.EnemiesMaxModifiersNumber.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersNumber = _storyConfigs.EnemiesMaxModifiersNumber.Value;
+                config.EnemiesMaxModifiersNumber = _storyConfigs.EnemiesMaxModifiersNumber.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1278,7 +1278,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
             _storyConfigs.EnemiesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersScalingCycle = _storyConfigs.EnemiesMaxModifiersNumberScalingValue.Value;
+                config.EnemiesMaxModifiersScalingCycle = _storyConfigs.EnemiesMaxModifiersNumberScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1290,7 +1290,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
             _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableRandomSpeedScaling = _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.Value;
+                config.EnemiesEnableRandomSpeedScaling = _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1301,7 +1301,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
             _storyConfigs.EnemiesStartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.RandomSpeedScalingStartDeath = _storyConfigs.EnemiesStartRandomSpeedScalingDeath.Value;
+                config.EnemiesRandomSpeedScalingStartDeath = _storyConfigs.EnemiesStartRandomSpeedScalingDeath.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1312,7 +1312,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
             _storyConfigs.EnemiesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinRandomSpeedScalingValue = _storyConfigs.EnemiesMinRandomSpeedScalingValue.Value;
+                config.EnemiesMinRandomSpeedScalingValue = _storyConfigs.EnemiesMinRandomSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1323,7 +1323,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
             _storyConfigs.EnemiesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = _storyConfigs.EnemiesMaxRandomSpeedScalingValue.Value;
+                config.EnemiesMaxSpeedScalingValue = _storyConfigs.EnemiesMaxRandomSpeedScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1335,7 +1335,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
             _storyConfigs.EnemiesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableRandomModifiersScaling = _storyConfigs.EnemiesIsRandomModifiersScalingEnabled.Value;
+                config.EnemiesEnableRandomModifiersScaling = _storyConfigs.EnemiesIsRandomModifiersScalingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1346,7 +1346,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
             _storyConfigs.EnemiesStartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.RandomModifiersScalingStartDeath = _storyConfigs.EnemiesStartRandomModifiersScalingDeath.Value;
+                config.EnemiesRandomModifiersScalingStartDeath = _storyConfigs.EnemiesStartRandomModifiersScalingDeath.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1357,7 +1357,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
             _storyConfigs.EnemiesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinRandomModifiersNumber = _storyConfigs.EnemiesMinRandomModifiersScalingValue.Value;
+                config.EnemiesMinRandomModifiersNumber = _storyConfigs.EnemiesMinRandomModifiersScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1368,7 +1368,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
             _storyConfigs.EnemiesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxRandomModifiersNumber = _storyConfigs.EnemiesMaxRandomModifiersScalingValue.Value;
+                config.EnemiesMaxRandomModifiersNumber = _storyConfigs.EnemiesMaxRandomModifiersScalingValue.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
