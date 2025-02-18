@@ -1,4 +1,5 @@
 ﻿using BossChallengeMod.BossPatches;
+using BossChallengeMod.Configuration;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,19 @@ namespace BossChallengeMod.Patches {
         [HarmonyPostfix]
         private static void SetPhase_Postfix(ButterflyBossFightLogic __instance, int targetPhase) {
             if (targetPhase == 2) {
-                GeneralBossPatch bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch("StealthGameMonster_Boss_ButterFly Variant")!;
+                GeneralBossPatch bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant")!;
 
-                //if(bossPatch is ButterflyBossPatch butterflyBossPatch) {
-                //    if(butterflyBossPatch.ChallengeConfiguration.EnableRestoration) {
-                var targetMonster = __instance.allMonsters[0];
-                targetMonster.postureSystem.DieHandleingStates.Clear();
-                targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
-                targetMonster.postureSystem.GenerateCurrentDieHandleStacks();
-                //    }
-                //}
+                ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
+                StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+
+                ChallengeConfiguration ConfigurationToUse = ApplicationCore.IsInBossMemoryMode ? challengeConfigurationManager.ChallengeConfiguration : storyChallengeConfigurationManager.ChallengeConfiguration;
+
+                if(ConfigurationToUse.EnableMod) {
+                    var targetMonster = __instance.allMonsters[0];
+                    targetMonster.postureSystem.DieHandleingStates.Clear();
+                    targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
+                    targetMonster.postureSystem.GenerateCurrentDieHandleStacks();
+                }
             }
         }
 

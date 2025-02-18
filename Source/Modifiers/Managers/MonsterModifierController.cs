@@ -190,6 +190,8 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void RollModifiers(int iteration) {
             if (_isDied) {
+                Selected.Clear();
+                OnModifiersRoll?.Invoke();
                 return;
             }
 
@@ -281,6 +283,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
             playerSensor.gameObject.SetActive(false);
             _isDied = true;
+            OnModifiersRoll?.Invoke();
         }
 
         private void NotifyModifiers(int iteration) {
@@ -319,10 +322,10 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             if (EnableModifiersScaling) {
                 int baseScalingValue = 1;
-                float progress = Math.Max(iteration, 1) / MathF.Max(MaxModifiersScalingCycle, 1);
+                float progress = MaxModifiersScalingCycle > 0 ? (float)Math.Max(iteration, 0) / MathF.Max(MaxModifiersScalingCycle, 1) : 1;
                 float progressMultiplier = MathF.Min(1, progress);
-                int scalingDiff = Math.Abs(MaxModifiersNumber - 1);
-                result += baseScalingValue + (int)(scalingDiff * progressMultiplier);
+                int scalingDiff = Math.Abs(MaxModifiersNumber);
+                result += Math.Max(baseScalingValue, (int)Math.Round(scalingDiff * progressMultiplier, MidpointRounding.AwayFromZero));
             }
 
             if (EnableRandomModifiersScaling && iteration >= RandomModifiersScalingStartDeath) {
@@ -345,7 +348,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
             }
-            modifiersNumber = CalculateModifiersNumber(1);
+            modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
 
             if (challengeConfiguration.ModifiersStartFromDeath == 0 && _isStarted) {

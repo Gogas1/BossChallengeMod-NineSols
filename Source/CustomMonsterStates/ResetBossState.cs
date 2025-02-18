@@ -59,6 +59,10 @@ namespace BossChallengeMod.CustomMonsterStates {
                 monster.HurtClearHintFxs();
                 monster.monsterCore.DisablePushAway();
 
+                if(monster.monsterCore.fooAttachable.bindingFoo != null) {
+                    monster.monsterCore.fooAttachable.bindingFoo.FooExpired();
+                }
+
                 if (UseFlashing) {
                     StartCoroutine(FlashingTask());
                 }

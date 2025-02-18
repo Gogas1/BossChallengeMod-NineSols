@@ -16,64 +16,67 @@ using BossChallengeMod.Modifiers.Managers;
 namespace BossChallengeMod.BossPatches.TargetPatches {
     public class ButterflyBossPatch : RevivalChallengeBossPatch {
 
-        public ChallengeConfiguration ChallengeConfiguration { get; set; }
-
         protected string resetBossStateExitEventType = "RestoreBoss_exit";
 
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = new List<MonsterState>();
 
-            if (ConfigurationToUse.EnableMod) {
-                var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
-                var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                resetBossState.AssignChallengeConfig(ConfigurationToUse);
-                resetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
-                monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
-                result.Add(resetBossState);
+            try {
+                if (ConfigurationToUse.EnableMod) {
+                    var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
+                    var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                    resetBossState.AssignChallengeConfig(ConfigurationToUse);
+                    resetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
+                    monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
+                    result.Add(resetBossState);
 
-                var clones = GetClones(monsterBase);
-                var cloneResetBossStates = new List<ResetBossState>();
-                foreach (var clone in clones) {
-                    var cloneMonsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(clone);
-                    var cloneResetBossState = (ResetBossState)InstantiateStateObject(clone.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                    cloneResetBossState.AssignChallengeConfig(ConfigurationToUse);
-                    cloneResetBossStates.Add(cloneResetBossState);
-                    monsterStatesFieldRef.SetValue(clone, cloneMonsterStatesRefs.Append(cloneResetBossState).ToArray());
-                    cloneResetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
-                    result.Add(cloneResetBossState);
-                }
+                    var clones = GetClones(monsterBase);
+                    var cloneResetBossStates = new List<ResetBossState>();
 
-                if (ConfigurationToUse.EnableMod && UseKillCounter) {
-                    var killCounter = InitializeKillCounter(monsterBase);
-                    killCounter.UseRecording = UseRecording;
-
-                    Action stateEnterEventActions = () => killCounter.IncrementCounter();
-
-                    var modifiersController = InitializeModifiers(monsterBase);
-
-                    stateEnterEventActions += () => {
-                        modifiersController.RollModifiers(killCounter.KillCounter);
-                        modifiersController.ApplyModifiers(killCounter.KillCounter);
-                    };
-
-                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
-
-                    resetBossState.monsterKillCounter = killCounter;
-
-                    resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
-                    BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
-
-                    foreach (var cloneState in cloneResetBossStates) {
-                        cloneState.monsterKillCounter = killCounter;
-                        cloneState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
+                    foreach (var clone in clones) {
+                        var cloneMonsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(clone);
+                        var cloneResetBossState = (ResetBossState)InstantiateStateObject(clone.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                        cloneResetBossState.AssignChallengeConfig(ConfigurationToUse);
+                        cloneResetBossStates.Add(cloneResetBossState);
+                        monsterStatesFieldRef.SetValue(clone, cloneMonsterStatesRefs.Append(cloneResetBossState).ToArray());
+                        cloneResetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
+                        result.Add(cloneResetBossState);
                     }
 
-                    killCounter.CheckInit();
-                }
+                    if (ConfigurationToUse.EnableMod && UseKillCounter) {
+                        var killCounter = InitializeKillCounter(monsterBase);
+                        killCounter.UseRecording = UseRecording;
 
+                        Action stateEnterEventActions = () => killCounter.IncrementCounter();
+
+                        var modifiersController = InitializeModifiers(monsterBase);
+
+                        stateEnterEventActions += () => {
+                            modifiersController.RollModifiers(killCounter.KillCounter);
+                            modifiersController.ApplyModifiers(killCounter.KillCounter);
+                        };
+
+                        BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+
+                        resetBossState.monsterKillCounter = killCounter;
+
+                        resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
+                        BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+
+                        foreach (var cloneState in cloneResetBossStates) {
+                            cloneState.monsterKillCounter = killCounter;
+                            cloneState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
+                        }
+
+                        killCounter.CheckInit();
+                    }
+
+                    PatchGroundBreaking(monsterBase);
+                }
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
 
-            PatchGroundBreaking(monsterBase);
 
             return result;
         }

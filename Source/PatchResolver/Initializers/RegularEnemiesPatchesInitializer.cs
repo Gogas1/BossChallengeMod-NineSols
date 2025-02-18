@@ -291,10 +291,120 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             "A5_S4/神像Gameplay/StealthGameMonster_Statue_Counter Variant_M (2)",
 
             #endregion A5_S4
+
+            #region A7_S2
+
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/Period Cycle Acitvate Group (2)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/Period Cycle Acitvate Group (6)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (1)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/Period Cycle Acitvate Group (4)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (2)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (4)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (5)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/StealthMonster_ParrallelUniverse_FollowingGhost",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/StealthMonster_ParrallelUniverse_FollowingGhost (1)",
+
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (1)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (6)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (7)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (6)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (2)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (6)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (3)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (6)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (4)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (8)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (6)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (8)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (5)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (8)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (6)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (10)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (5)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/Period Cycle Acitvate Group (10)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (6)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/StealthMonster_ParrallelUniverse_FollowingGhost (1)",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/StealthMonster_ParrallelUniverse_FollowingGhost (2)",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/StealthMonster_ParrallelUniverse_FollowingGhost (3)",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part2/StealthMonster_ParrallelUniverse_FollowingGhost (4)",
+
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part3/Period Cycle Acitvate Group/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (10)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part3/Period Cycle Acitvate Group (2)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part3/Period Cycle Acitvate Group (1)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (11)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part3/StealthMonster_ParrallelUniverse_FollowingGhost",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part3/StealthMonster_ParrallelUniverse_FollowingGhost (1)",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part3/StealthMonster_ParrallelUniverse_FollowingGhost (2)",
+
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (1)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (13)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (1)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (14)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (1)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (15)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (1)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (16)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (2)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant (12)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/StealthGameMonster_Minion_A7_LightMask Variant/[Monsters&Interactables]/StealthGameMonster_Minion_A7_LightMask",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/StealthGameMonster_Minion_A7_LightMask Variant (1)/[Monsters&Interactables]/StealthGameMonster_Minion_A7_LightMask",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (1)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/Period Cycle Acitvate Group (7)/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (2)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/StealthGameMonster_Minion_A7_LightMask Variant (2)/[Monsters&Interactables]/StealthGameMonster_Minion_A7_LightMask",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/StealthMonster_ParrallelUniverse_FollowingGhost",
+            "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part4/StealthMonster_ParrallelUniverse_FollowingGhost (1)",
+
+            "A7_ButterflyTest/StealthGameMonster_Minion_A7_LightMask Variant/[Monsters&Interactables]/StealthGameMonster_Minion_A7_LightMask",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (1)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (7)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (8)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (9)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (10)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (11)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (12)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (13)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (14)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase4/MovingButterfly_4/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Shooter_Black/Period Cycle FSM_Shoot Danger Projectile Variant (15)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/SequencePuzzlePhasesFSM Variant (Note請看筆記 不用開Culling)/FSM Animator/PhasesActivateNodes/Phase6/MovingButterfly_6/FSM Animator/ButterflyControlRoot/AnimatorForPath(關卡設計Override我)/Period Cycle FSM_Shoot Jump Ball Variant (2)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/Period Cycle Acitvate Group/FSMs/Period Cycle FSM_Shoot Jump Ball Variant/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/Period Cycle Acitvate Group/FSMs/Period Cycle FSM_Shoot Jump Ball Variant (1)/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",
+            "A7_ButterflyTest/Room/Prefab/StealthMonster_ParrallelUniverse_FollowingGhost/StealthMonster_ParrallelUniverse_FollowingGhost",
+            "A7_ButterflyTest/Room/Prefab/StealthMonster_ParrallelUniverse_FollowingGhost/StealthMonster_ParrallelUniverse_FollowingGhost (2)",
+            "A7_ButterflyTest/Room/Prefab/StealthMonster_ParrallelUniverse_FollowingGhost/StealthMonster_ParrallelUniverse_FollowingGhost (3)",
+            "A7_ButterflyTest/Room/Prefab/StealthMonster_ParrallelUniverse_FollowingGhost/StealthMonster_ParrallelUniverse_FollowingGhost (4)",
+            "A7_ButterflyTest/Room/Prefab/StealthMonster_ParrallelUniverse_FollowingGhost/StealthMonster_ParrallelUniverse_FollowingGhost (1)",
+
+            #endregion A7_S2
+
+            #region AG_SG1
+
+            "AG_SG1/Room/[Set] CloseDoorFight View&Wave (1)/Monster Wave Sequence Spawner Variant/FSM Animator/LogicRoot/MonsterRegisterNode/Wave1/ [0] [關門戰出場情境]GameMonster_Turret_Danger_Bullet 砲台 (2)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/GameMonster_Turret_Danger_Bullet 砲台 (2)",
+            "AG_SG1/Room/[Set] CloseDoorFight View&Wave (1)/Monster Wave Sequence Spawner Variant/FSM Animator/LogicRoot/MonsterRegisterNode/Wave1/ [1] [關門戰出場情境]GameMonster_Turret_Danger_Bullet 砲台 (3)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/GameMonster_Turret_Danger_Bullet 砲台 (3)",
+
+            #endregion AG_SG1
+
+            #region A10_S3
+
+            "A10_S3/Room/AllTreasure 寶箱 Chests/LootProvider 藥斗功率/Chest Runner SpiderMine Spawner 盜寶哥布林 丟蜘蛛雷 (1)",
+            "A10_S3/Room/StealthGameMonster_Shield Totem",
+            "A10_S3/Room/Enemy/StealthGameMonster_Shield Totem (2)",
+            "NinjaWaterGhostElite_Phantom 殘影(Clone)",
+            "StealthGameMonster_NinjaWaterGhost 殘影水鬼的影(Clone)"
+
+            #endregion A10_S3
+
+            #region A10_SG1 Cave 1
+
+            ,"A10_SG1_Cave1/Room/Prefab/A10_SG1_StatueFight_and_HackButtonSet/StatueFight FSM Variant/FSM Animator/LogicRoot/ [0] [關門戰出場情境]CaveStatue_Reflect/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/CaveStatue_Reflect",
+            "A10_SG1_Cave1/Room/Prefab/A10_SG1_StatueFight_and_HackButtonSet/StatueFight FSM Variant/FSM Animator/LogicRoot/ [0] [關門戰出場情境]CaveStatue_Reflect (3)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/CaveStatue_Reflect",
+            "A10_SG1_Cave1/Room/Prefab/A10_SG1_StatueFight_and_HackButtonSet/StatueFight FSM Variant/FSM Animator/LogicRoot/ [0] [關門戰出場情境]CaveStatue_Reflect (5)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/CaveStatue_Reflect",
+            "A10_SG1_Cave1/Room/Prefab/A10_SG1_StatueFight_and_HackButtonSet/StatueFight FSM Variant/FSM Animator/LogicRoot/ [0] [關門戰出場情境]CaveStatue_Reflect (1)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/CaveStatue_Reflect",
+            "A10_SG1_Cave1/Room/Prefab/A10_SG1_StatueFight_and_HackButtonSet/StatueFight FSM Variant/FSM Animator/LogicRoot/ [0] [關門戰出場情境]CaveStatue_Reflect (2)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/CaveStatue_Reflect",
+            "A10_SG1_Cave1/Room/Prefab/A10_SG1_StatueFight_and_HackButtonSet/StatueFight FSM Variant/FSM Animator/LogicRoot/ [0] [關門戰出場情境]CaveStatue_Reflect (4)/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/CaveStatue_Reflect",
+            "A10_SG1_Cave1/Room/Prefab/[觸發框架]/[MonsterBehaviorProvider] LevelDesign_CullingAndResetGroup/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_PlayerSensor/StealthGameMonster_Statue_ReflectProjectile Variant",
+
+            #endregion A10_SG1 Cave 1
+
+            #region A10_S4
+
+            "A10_S4/Room/[觸發框架]/[MonsterBehaviorProvider] LevelDesign_CullingAndResetGroup/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_PlayerSensor/CaveStatue_Reflect",
+            "A10_S4/Room/[觸發框架] (1)/[MonsterBehaviorProvider] LevelDesign_CullingAndResetGroup/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_PlayerSensor/CaveStatue_Reflect (1)",
+
+            #endregion A10_S4
         ];
 
         protected List<string> minibossesPatches = [
-            "A3_S2/Room/Prefab/Gameplay_8/RCGEventSharingGroup/LootProvider 貪財玉/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_NinjaWaterGhostMiniBoss 水鬼小王 榴彈"
+            "A3_S2/Room/Prefab/Gameplay_8/RCGEventSharingGroup/LootProvider 貪財玉/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_NinjaWaterGhostMiniBoss 水鬼小王 榴彈",
+            "AG_SG1/Room/[Set] CloseDoorFight View&Wave (1)/Monster Wave Sequence Spawner Variant/FSM Animator/LogicRoot/MonsterRegisterNode/Wave1/ [0] [關門戰出場情境]StealthGameMonster_Double_Axe_Fat/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/StealthGameMonster_Double_Axe_Fat"
+            ];
+
+        protected List<string> pseudoMinibossesPatches = [
+            "AG_SG1/Room/[Set] CloseDoorFight View&Wave (1)/Monster Wave Sequence Spawner Variant/FSM Animator/LogicRoot/MonsterRegisterNode/Wave1/ [0] [關門戰出場情境]StealthGameMonster_Double_Axe_Fat/[MonsterBehaviorProvider] LevelDesign_Spawner/[MonsterBehaviorProvider] LevelDesign_Init_Scenario/[MonsterBehaviorProvider] LevelDesign_SpawnDoorProvider/StealthGameMonster_Double_Axe_Fat"
             ];
 
         public MonsterPatchResolver MonsterPatchResolver { get; protected set; }
@@ -310,6 +420,7 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             resolver.AddDefaultPatch(GetRegularMonsterPatch());
             AddNullExceptions(resolver);
             AddMinibossesPatches(resolver);
+            AddPseudoMinibossesPatches(resolver);
 
             return resolver;
         }
@@ -351,6 +462,12 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             }
         }
 
+        protected virtual void AddPseudoMinibossesPatches(MonsterPatchResolver patchResolver) {
+            foreach (var name in pseudoMinibossesPatches) {
+                patchResolver.AddPatch(name, GetPseudoMinibossBossPatch());
+            }
+        }
+
         private GeneralBossPatch GetMinibossBossPatch() {
             var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
 
@@ -359,6 +476,29 @@ namespace BossChallengeMod.PatchResolver.Initializers {
                 MonsterBase.States.LastHit,
                 MonsterBase.States.Dead
             ];
+            defaultMinibossPatch.EnemyType = ChallengeEnemyType.Miniboss;
+            defaultMinibossPatch.UseProximityActivation = true;
+            defaultMinibossPatch.UseCompositeTracking = true;
+
+            var resetStateConfig = defaultMinibossPatch.ResetStateConfiguration;
+            resetStateConfig.ExitState = MonsterBase.States.Engaging;
+            resetStateConfig.Animations = [];
+            resetStateConfig.PauseTime = 2f;
+            resetStateConfig.StateType = bossReviveMonsterState;
+            resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
+            resetStateConfig.UseFlashing = true;
+
+            return defaultMinibossPatch;
+        }
+
+        private GeneralBossPatch GetPseudoMinibossBossPatch() {
+            var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
+
+            var defaultMinibossPatch = new RevivalChallengeBossPatch();
+            defaultMinibossPatch.DieStates = [
+                MonsterBase.States.Dead
+            ];
+            defaultMinibossPatch.InsertPlaceState = MonsterBase.States.Dead;
             defaultMinibossPatch.EnemyType = ChallengeEnemyType.Miniboss;
             defaultMinibossPatch.UseProximityActivation = true;
             defaultMinibossPatch.UseCompositeTracking = true;
