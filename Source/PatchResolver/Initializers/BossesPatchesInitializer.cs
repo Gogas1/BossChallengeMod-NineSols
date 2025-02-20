@@ -21,7 +21,8 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             "A5_S2/Room/Prefab/[觸發巡邏框架]/[MonsterBehaviorProvider] LevelDesign_CullingAndResetGroup/[MonsterBehaviorProvider] LevelDesign_Init_Scenario (巡邏的人)/[MonsterBehaviorProvider] LevelDesign_WanderingGroup/[MonsterBehaviorProvider] LevelDesign_PlayerSensor/StealthGameMonster_MrX Variant(Chase)",
             "A5_S2/A5_S2_BossFight_Logic/StealthGameMonster_MrX Variant(BossFight)",
             "A5_S2/A5_S2_BossFight_Logic/StealthGameMonster_MrX_TrueBody_Room Variant",
-            "A5_S2/Room/JailBossRoom/LootProvider/Boss Fight FSM MrX/FSM Animator/LogicRoot/AnimatorControlNode(Note)/StealthGameMonster_MrX Variant"
+            "A5_S2/Room/JailBossRoom/LootProvider/Boss Fight FSM MrX/FSM Animator/LogicRoot/AnimatorControlNode(Note)/StealthGameMonster_MrX Variant",
+            "_depre_StealthGameMonster_伏羲 Variant(Clone)",
             ];
 
         protected List<string> minibossesPatches = [
@@ -38,6 +39,8 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             "GameLevel/Room/Prefab/LootProvider 玄鐵/EvenBinder/General Boss Fight FSM A0_S9 GiantBladeFire/FSM Animator/LogicRoot/---Boss---/StealthMonster_GiantBlade_FireBlade_A0_S9",
             "A2_Stage_Remake/Room/Prefab/[EventBinder]BossFight/General Boss Fight FSM Object_鳳凰飛兵小王 Variant (1)/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthMonster_Flying Teleport Wizard_MiniBoss 幻象區平行宇宙版 Variant",
             "A10_S4/Room/MiniBossLearDoorEventBinder/General Boss Fight FSM Object_殘像Miniboss/FSM Animator/LogicRoot/---Boss---/LootProvider/[傳送範圍]/StealthGameMonster_NinjaWaterGhostMiniBoss 水鬼小王 殘影Phantom Summoner",
+            "A9_S1/Room/Prefab/WaterFallEventBinder/LootProvider 弓箭強度 玄鐵/General Boss Fight FSM Object_A9_S1_大錘兵 (1)/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/Hammer FatGuy 大錘兵",
+            "A11_SG1/Room/Prefab/LootProvider/EventBinder/General Boss Fight FSM Object Variant_Headless刑天 Variant/FSM Animator/LogicRoot/---Boss---/StealthGameMonster_ShingTen Variant"
             ];
 
         public BossesPatchesInitializer(CustomMonsterStateValuesResolver monsterStateValuesResolver) {
@@ -49,8 +52,8 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             var resolver = new MonsterPatchResolver();
             resolver.AddDefaultPatch(GetDefaultBossPatch());
             resolver.AddPatch("A2_S5_ BossHorseman_GameLevel/Room/StealthGameMonster_SpearHorseMan", GetHorseBossPatch());
-            resolver.AddPatch("StealthGameMonster_伏羲_新", GetFuxiBossPatch());
-            resolver.AddPatch("StealthGameMonster_新女媧 Variant", GetNuwaBossPatch());
+            resolver.AddPatch("P2_R22_Savepoint_GameLevel/Room/Prefab/EventBinder (Boss Fight 相關)/General Boss Fight FSM Object_風氏兄妹/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_伏羲_新", GetFuxiBossPatch());
+            resolver.AddPatch("P2_R22_Savepoint_GameLevel/Room/Prefab/EventBinder (Boss Fight 相關)/General Boss Fight FSM Object_風氏兄妹/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_新女媧 Variant", GetNuwaBossPatch());
             resolver.AddPatch("A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_GouMang Variant", GetGoumangBossPatch());
             resolver.AddPatch("A4_S5/MechClaw Game Play/Monster_GiantMechClaw", GetClawBossPatch());
 
@@ -60,7 +63,7 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant (2)", new RevivalChallengeBossClonePatch());
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant (3)", new RevivalChallengeBossClonePatch());
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant (4)", new RevivalChallengeBossClonePatch());
-            resolver.AddPatch("Boss_Yi Gung", GetEigongBossPatch());
+            resolver.AddPatch("GameLevel/Room/Prefab/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/---Boss---/Boss_Yi Gung", GetEigongBossPatch());
 
             AddMinibossesPatches(resolver);
             AddNullExceptions(resolver);
@@ -185,7 +188,7 @@ namespace BossChallengeMod.PatchResolver.Initializers {
         private GeneralBossPatch GetEigongBossPatch() {
             var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
 
-            var eigongBossPatch = new RevivalChallengeBossPatch();
+            var eigongBossPatch = new EigongBossPatch();
             eigongBossPatch.DieStates = [
                 MonsterBase.States.BossAngry,
             MonsterBase.States.FooStunEnter,

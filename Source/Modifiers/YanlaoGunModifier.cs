@@ -31,7 +31,7 @@ namespace BossChallengeMod.Modifiers {
 
             var postureSystem = Monster?.postureSystem ?? null;
             if (postureSystem != null && 
-                (postureSystem.IsMonsterEmptyPosture || Player.i.lockMoving) && 
+                (postureSystem.IsMonsterEmptyPosture || Player.i.lockMoving || Player.i.freeze) && 
                 YanlaoGunController.IsRunning) {
                 YanlaoGunController.StopGun();
             }
@@ -40,7 +40,8 @@ namespace BossChallengeMod.Modifiers {
                 !postureSystem.IsMonsterEmptyPosture && 
                 !YanlaoGunController.IsRunning && 
                 !IsPaused &&
-                !Player.i.lockMoving) {
+                !Player.i.lockMoving &&
+                !Player.i.freeze) {
                 YanlaoGunController.StartGun();
             }
         }
