@@ -15,7 +15,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
 
             var flag = SaveManager.Instance.allFlags.FlagDict["e78958a13315eb9418325caf25da9d4dScriptableDataBool"];
             if (flag != null && flag is ScriptableDataBool boolFlag) {
-                if(!boolFlag.CurrentValue) {
+                if(!boolFlag.CurrentValue && !ApplicationCore.IsInBossMemoryMode) {
                     var postureSystem = monsterBase.postureSystem;
                     postureSystem.DieHandleingStates.Remove(MonsterBase.States.FooStunEnter);
                 }
