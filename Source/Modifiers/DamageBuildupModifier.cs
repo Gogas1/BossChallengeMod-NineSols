@@ -30,7 +30,10 @@ namespace BossChallengeMod.Modifiers {
         }
 
         private void Update() {
-            if (!Monster!.postureSystem.IsMonsterEmptyPosture && !IsPaused) {
+            if (!Monster!.postureSystem.IsMonsterEmptyPosture && 
+                !IsPaused && 
+                !Player.i.lockMoving &&
+                !Player.i.freeze) {
                 var playerHealth = Player.i.health;
                 float damagePerFrame = damagePerSecond * Time.deltaTime;
 

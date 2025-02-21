@@ -39,30 +39,37 @@ namespace BossChallengeMod.Preloading {
                 List<AsyncOperation> ops = [];
 
                 var add = (string scenePath, Scene scene) => {
-                    var rootObjects = scene.GetRootGameObjects();
-                    var sceneName = Path.GetFileNameWithoutExtension(scenePath);
-                    var scenePreloadsConsumers = preloadConsumers[sceneName];
-                    if (!preloads.TryGetValue(sceneName, out var scenePreloads)) {
-                        scenePreloads = [];
-                        preloads[sceneName] = scenePreloads;
-                    }
-
-                    foreach (var obj in rootObjects) {
-                        try {
-                            Log.Info($"Preloading {obj.name}");
-                            if(scenePreloads.ContainsKey(obj.name) || scenePreloadsConsumers.ContainsKey(obj.name)) {
-                                scenePreloads[obj.name] = obj;
-                                scenePreloadsConsumers[obj.name].ForEach(c => c.Set(obj));
-                                Log.Info($"No consumers for {obj.name} preload");
-                            }
-
-                            RCGLifeCycle.DontDestroyForever(obj);
-                            AutoAttributeManager.AutoReference(obj);
-                            AutoAttributeManager.AutoReferenceAllChildren(obj);
-                        } catch (Exception ex) {
-                            Log.Error($"{ex.Message}, {ex.StackTrace}");
+                    try {
+                        var rootObjects = scene.GetRootGameObjects();
+                        var sceneName = Path.GetFileNameWithoutExtension(scenePath);
+                        if (!preloadConsumers.TryGetValue(sceneName, out var scenePreloadsConsumers)) {
+                            scenePreloadsConsumers = new();
                         }
+
+                        if (!preloads.TryGetValue(sceneName, out var scenePreloads)) {
+                            scenePreloads = [];
+                            preloads[sceneName] = scenePreloads;
+                        }
+                        foreach (var obj in rootObjects) {
+                            try {
+                                Log.Info($"Preloading {obj.name}");
+                                if(scenePreloads.ContainsKey(obj.name) || scenePreloadsConsumers.ContainsKey(obj.name)) {
+                                    scenePreloads[obj.name] = obj;
+                                    scenePreloadsConsumers[obj.name].ForEach(c => c.Set(obj));
+                                    Log.Info($"No consumers for {obj.name} preload");
+                                }
+
+                                RCGLifeCycle.DontDestroyForever(obj);
+                                AutoAttributeManager.AutoReference(obj);
+                                AutoAttributeManager.AutoReferenceAllChildren(obj);
+                            } catch (Exception ex) {
+                                Log.Error($"{ex.Message}, {ex.StackTrace}");
+                            }
+                        }
+                    } catch (Exception ex) {
+                        Log.Error($"{ex.Message}, {ex.StackTrace}");
                     }
+
                 };
 
                 foreach (var scenePath in bundle.GetAllScenePaths()) {

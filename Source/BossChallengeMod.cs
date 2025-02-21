@@ -41,6 +41,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     public ShieldProvider ShieldProvider { get; private set; } = null!;
     public YanlaoGunProvider YanlaoGunProvider { get; private set; } = null!;
+    public BombProvider BombShooterProvider { get; private set; } = null!;
 
     public static ModifiersStore Modifiers { get; private set; } = null!;
 
@@ -68,6 +69,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         Preloader = new Preloader();
         ShieldProvider = new ShieldProvider();
         YanlaoGunProvider = new YanlaoGunProvider();
+        BombShooterProvider = new BombProvider();
 
         Modifiers = new ModifiersStore();
 
@@ -122,6 +124,11 @@ public class BossChallengeMod : BaseUnityPlugin {
         string gunName = "ZGun FSM Object Variant";
 
         Preloader.AddPreload(gunScene, gunName, YanlaoGunProvider);
+
+        string bomdShooterScene = "A1_S3_InnerHumanDisposal_Final";
+        string bombShooterName = "Shooter_GrenadeUp";
+
+        Preloader.AddPreload(bomdShooterScene, bombShooterName, BombShooterProvider);
     }
 
     private string GetLanguageCode() {
