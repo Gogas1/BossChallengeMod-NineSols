@@ -19,14 +19,8 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 var spearZombie = GameObject.Find(spearZombiePath).GetComponent<StealthGameMonster>();
                 var hammerZombie = GameObject.Find(hammerZombiePath).GetComponent<StealthGameMonster>();
 
-                var spearZombieModifiers = CreateModifiers(spearZombie);
-                var hammerZombieModifiers = CreateModifiers(hammerZombie);
-
-                spearZombie.gameObject.AddComponent<MonsterShieldController>();
-                hammerZombie.gameObject.AddComponent<MonsterShieldController>();
-
-                controller.Modifiers.AddRange(spearZombieModifiers);
-                controller.Modifiers.AddRange(hammerZombieModifiers);
+                var spearZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
+                var hammerZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
             }
 
             return controller;

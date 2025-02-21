@@ -51,11 +51,11 @@ namespace BossChallengeMod.PatchResolver.Initializers {
         public override MonsterPatchResolver CreateResolver() {
             var resolver = new MonsterPatchResolver();
             resolver.AddDefaultPatch(GetDefaultBossPatch());
-            resolver.AddPatch("A2_S5_ BossHorseman_GameLevel/Room/StealthGameMonster_SpearHorseMan", GetHorseBossPatch());
+            //resolver.AddPatch("A2_S5_ BossHorseman_GameLevel/Room/StealthGameMonster_SpearHorseMan", GetHorseBossPatch());
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/Room/Prefab/EventBinder (Boss Fight 相關)/General Boss Fight FSM Object_風氏兄妹/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_伏羲_新", GetFuxiBossPatch());
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/Room/Prefab/EventBinder (Boss Fight 相關)/General Boss Fight FSM Object_風氏兄妹/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_新女媧 Variant", GetNuwaBossPatch());
             resolver.AddPatch("A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_GouMang Variant", GetGoumangBossPatch());
-            resolver.AddPatch("A4_S5/MechClaw Game Play/Monster_GiantMechClaw", GetClawBossPatch());
+            //resolver.AddPatch("A4_S5/MechClaw Game Play/Monster_GiantMechClaw", GetClawBossPatch());
 
             var butterflyPatch = GetButterflyBossPatch();
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant", butterflyPatch);

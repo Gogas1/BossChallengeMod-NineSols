@@ -152,8 +152,6 @@ namespace BossChallengeMod.BossPatches {
         protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
             var config = ConfigurationToUse;
 
-            var shieldController = monsterBase.gameObject.AddComponent<MonsterShieldController>();
-            var yanlaoGunController = monsterBase.gameObject.AddComponent<MonsterYanlaoGunController>();
             var bombController = monsterBase.gameObject.AddComponent<MonsterBombController>();
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
 

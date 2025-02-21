@@ -192,49 +192,11 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 var clones = GetClones(monsterBase);
 
                 foreach (var clone in clones) {
-                    var cloneModifiers = CreateCloneModifiers(clone);
-                    controller.Modifiers.AddRange(cloneModifiers);
+                    var cloneModifiers = InitModifiers(monsterBase, controller, ConfigurationToUse);
                 }
             }
 
             return controller;
-        }
-
-        protected IEnumerable<ModifierBase> CreateCloneModifiers(MonsterBase monsterBase) {
-            var result = new List<ModifierBase>();
-            var modifiersFolder = new GameObject("Modifiers");
-            modifiersFolder.transform.SetParent(monsterBase.transform, false);
-
-            var speedModifier = modifiersFolder.AddChildrenComponent<SpeedModifier>("SpeedModifier");
-            result.Add(speedModifier);
-
-            var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
-            scalingSpeedModifier.challengeConfiguration = ConfigurationToUse;
-            result.Add(scalingSpeedModifier);
-
-            var parryDamageModifier = modifiersFolder.AddChildrenComponent<ParryDirectDamageModifier>("ParryDamageModifier");
-            result.Add(parryDamageModifier);
-
-            var damageBuildupModifier = modifiersFolder.AddChildrenComponent<DamageBuildupModifier>("DamageBuildupModifier");
-            result.Add(parryDamageModifier);
-
-            var knockbackModifier = modifiersFolder.AddChildrenComponent<KnockbackModifier>("KnockbackModifier");
-            result.Add(knockbackModifier);
-
-            //var knockoutModifier = modifiersFolder.AddChildrenComponent<KnockoutModifier>("KnockoutModifier");
-            //result.Add(knockoutModifier);
-
-
-            var enduranceModifier = modifiersFolder.AddChildrenComponent<EnduranceModifier>("EnduranceModifier");
-            result.Add(enduranceModifier);
-
-            return result;
-        }
-
-        protected override void PopulateModifierController(MonsterModifierController modifierController, ChallengeConfiguration config) {
-            base.PopulateModifierController(modifierController, config);
-
-            modifierController.ModifierConfigs.RemoveAll(m => m.Key.Contains("shield"));
         }
     }
 }

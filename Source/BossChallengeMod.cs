@@ -184,6 +184,12 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<TimerModifier>("timer", "TimerModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                ])
             .BuildAndAdd();
 
         modifiersStore
@@ -197,10 +203,26 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<DamageBuildupModifier>("damage_buildup", "DamageBuildupModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<RegenerationModifier>("regeneration", "RegenerationModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
 
         modifiersStore
@@ -209,10 +231,26 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<RandomArrowModifier>("random_arrow", "RandomArrowModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<RandomTaliModifier>("random_talisman", "RandomTalismanModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
 
         modifiersStore
@@ -222,28 +260,71 @@ public class BossChallengeMod : BaseUnityPlugin {
         modifiersStore
             .CreateModifierBuilder<QiShieldModifier>("qi_shield", "QiShieldModifer")
             .AddIncompatibles(["timer_shield", "distance_shield"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_SpearHorseMan",
+                "Monster_GiantMechClaw",
+                ])
             .AddController(typeof(MonsterShieldController), true)
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<TimedShieldModifier>("timer_shield", "CooldownShieldModifier")
             .AddIncompatibles(["qi_shield", "distance_shield"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_SpearHorseMan",
+                "Monster_GiantMechClaw",
+                ])
             .AddController(typeof(MonsterShieldController), true)
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<DistanceShieldModifier>("distance_shield", "DistanceShieldModifier")
             .AddIncompatibles(["timer_shield", "qi_shield"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_SpearHorseMan",
+                "Monster_GiantMechClaw",
+                ])
             .AddController(typeof(MonsterShieldController), true)
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<QiOverloadModifier>("qi_overload", "QiOverloadModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<YanlaoGunModifier>("ya_gun", "YanlaoGunModifier")
             .AddController(typeof(MonsterYanlaoGunController), true)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
     }
 }
