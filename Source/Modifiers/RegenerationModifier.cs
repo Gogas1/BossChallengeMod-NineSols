@@ -16,9 +16,6 @@ namespace BossChallengeMod.Modifiers {
 
         protected Coroutine? regenerationCoroutine;
 
-        public RegenerationModifier() {
-            Key = "regeneration";
-        }
 
         public override void Awake() {
             base.Awake();

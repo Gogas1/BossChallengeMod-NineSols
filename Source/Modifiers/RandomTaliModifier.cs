@@ -7,9 +7,6 @@ namespace BossChallengeMod.Modifiers {
     public class RandomTaliModifier : ModifierBase {
         private HashSet<object> _blockTalismanVotes = BossChallengeMod.Instance.GlobalModifiersFlags.BlockTalismanVotes;
 
-        public RandomTaliModifier() {
-            Key = "random_talisman";
-        }
 
         public override void Awake() {
             base.Awake();

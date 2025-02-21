@@ -13,10 +13,6 @@ namespace BossChallengeMod.Modifiers {
         protected MonsterYanlaoGunController? YanlaoGunController;
         public float MaxDistance { get; set; } = 800f;
 
-        public YanlaoGunModifier() {
-            Key = "ya_gun";
-        }
-
         public override void Awake() {
             base.Awake();
         }

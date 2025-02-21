@@ -22,10 +22,6 @@ namespace BossChallengeMod.Modifiers {
 
         public bool ForcePause { get; set; } = false;
 
-        public TimerModifier() {
-            Key = "timer";
-        }
-
         public override void Awake() {
             base.Awake();
             enabled = true;

@@ -9,8 +9,7 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers {
     public class ScalingSpeedModifier : ModifierBase {
         private float modifier = 1.0f;
-
-        public ChallengeEnemyType EnemyType { get; set; }
+        
 
         protected bool EnableSpeedScaling {
             get {
@@ -124,10 +123,6 @@ namespace BossChallengeMod.Modifiers {
                         return 1f;
                 }
             }
-        }
-
-        public ScalingSpeedModifier() {
-            Key = "speed_perm";
         }
 
         public override void Awake() {

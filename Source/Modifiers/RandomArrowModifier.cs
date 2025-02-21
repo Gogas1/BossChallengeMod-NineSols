@@ -8,9 +8,6 @@ namespace BossChallengeMod.Modifiers {
     public class RandomArrowModifier : ModifierBase {
         private HashSet<object> _blockArrowVotes = BossChallengeMod.Instance.GlobalModifiersFlags.BlockArrowVotes;
 
-        public RandomArrowModifier() {
-            Key = "random_arrow";
-        }
 
         public override void Awake() {
             base.Awake();

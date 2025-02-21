@@ -7,10 +7,6 @@ using System.Text;
 namespace BossChallengeMod.Modifiers {
     public class EnduranceModifier : ModifierBase {
 
-        public EnduranceModifier() {
-            Key = "endurance";
-        }
-
         public override void Awake() {
             base.Awake();
         }

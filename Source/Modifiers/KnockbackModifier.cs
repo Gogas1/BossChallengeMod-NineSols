@@ -5,10 +5,6 @@ using System.Text;
 
 namespace BossChallengeMod.Modifiers {
     public class KnockbackModifier : ModifierBase {
-        public KnockbackModifier() {
-            Key = "knockback";
-        }
-
         public override void Awake() {
             base.Awake();
         }

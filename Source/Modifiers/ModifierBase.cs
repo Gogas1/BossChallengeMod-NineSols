@@ -1,4 +1,5 @@
-﻿using BossChallengeMod.Configuration;
+﻿using BossChallengeMod.BossPatches;
+using BossChallengeMod.Configuration;
 using BossChallengeMod.Patches;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,10 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers {
     public class ModifierBase : MonoBehaviour {
         public bool IsPaused { get; protected set; }
-        public string Key { get; protected set; } = string.Empty;
+        public string Key { get; set; } = string.Empty;
         public MonsterBase? Monster;
         public ChallengeConfiguration challengeConfiguration;
+        public ChallengeEnemyType EnemyType { get; set; }
 
         public virtual void Awake() {
             Monster = GetComponentInParent<MonsterBase>();
@@ -51,6 +53,10 @@ namespace BossChallengeMod.Modifiers {
 
         public virtual void MonsterNotify(MonsterNotifyType notifyType) {
 
+        }
+
+        public virtual void SetController(Component controllerComponent) {
+            throw new NotImplementedException();
         }
     }
 }

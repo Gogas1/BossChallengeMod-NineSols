@@ -6,10 +6,6 @@ using System.Text;
 namespace BossChallengeMod.Modifiers {
     public class SpeedModifier : ModifierBase {
 
-        public SpeedModifier() {
-            Key = "speed_temp";
-        }
-
         public override void Awake() {
             base.Awake();
         }

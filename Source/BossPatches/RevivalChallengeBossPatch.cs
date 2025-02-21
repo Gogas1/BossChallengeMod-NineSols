@@ -152,13 +152,12 @@ namespace BossChallengeMod.BossPatches {
         protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
             var config = ConfigurationToUse;
 
-            var modifiers = CreateModifiers(monsterBase);
             var shieldController = monsterBase.gameObject.AddComponent<MonsterShieldController>();
             var yanlaoGunController = monsterBase.gameObject.AddComponent<MonsterYanlaoGunController>();
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
 
             if (config.ModifiersEnabled && UseModifiers) {
-                PopulateModifierController(modifierController, config);
+                InitModifiers(monsterBase, modifierController, config);
             }
 
             modifierController.EnemyType = EnemyType;
@@ -169,6 +168,80 @@ namespace BossChallengeMod.BossPatches {
             modifierController.GenerateAvailableMods();
 
             return modifierController;
+        }
+
+        protected virtual IEnumerable<ModifierBase> InitModifiers(
+            MonsterBase monsterBase,
+            MonsterModifierController modifierController,
+            ChallengeConfiguration config) {
+            var result = new List<ModifierBase>();
+            var modifiersFolder = new GameObject("Modifiers");
+            modifiersFolder.transform.SetParent(monsterBase.transform, false);
+
+            var modifiersConfigs = BossChallengeMod.Modifiers.Modifiers
+                .Where(mc => !mc.IgnoredMonsters.Contains(monsterBase.name))
+                .ToList();
+
+            var sharedControllers = new Dictionary<Type, Component>();
+
+            foreach (var modifierConfig in modifiersConfigs) {
+                if (modifierConfig.IgnoredMonsters.Contains(monsterBase.gameObject.name)) {
+                    continue;
+                }
+
+                var controllerComponent = GetOrCreateControllerComponent(monsterBase, modifierConfig, sharedControllers);
+
+                var modifierObject = modifiersFolder.AddChildrenComponent(modifierConfig.ModifierType, modifierConfig.ObjectName);
+                if (modifierObject is not ModifierBase createdModifier) {
+                    GameObject.Destroy(modifierObject);
+
+                    if (modifierConfig.ControllerConfig != null && controllerComponent != null && !modifierConfig.ControllerConfig.IsShared) {
+                        GameObject.Destroy(controllerComponent);
+                    }
+
+                    Log.Error("Created modifier is not ModifierBase");
+                    continue;
+                }
+
+                InitializeModifier(createdModifier, modifierConfig, controllerComponent);
+
+                result.Add(createdModifier);
+
+                modifierController.ModifierConfigs.Add(modifierConfig);            
+            }
+
+            return result;
+        }
+
+        protected Component? GetOrCreateControllerComponent(
+            MonsterBase monsterBase,
+            ModifierConfig modifierConfig,
+            Dictionary<Type, Component> sharedControllers) {
+            if (modifierConfig.ControllerConfig is not { } controllerConfig) return null;
+
+            if (!controllerConfig.IsShared ||
+                !sharedControllers.TryGetValue(controllerConfig.ControllerType, out var controllerComponent)) {
+                controllerComponent = monsterBase.gameObject.AddComponent(controllerConfig.ControllerType);
+            }
+
+            if (controllerConfig.IsShared) {
+                sharedControllers.TryAdd(controllerConfig.ControllerType, controllerComponent);
+            }
+
+            return controllerComponent;
+        }
+
+        protected void InitializeModifier(
+            ModifierBase modifier,
+            ModifierConfig modifierConfig,
+            Component? controllerComponent) {
+            modifier.Key = modifierConfig.Key;
+            modifier.EnemyType = EnemyType;
+            modifier.challengeConfiguration = ConfigurationToUse;
+
+            if (controllerComponent != null) {
+                modifier.SetController(controllerComponent);
+            }
         }
 
         protected virtual void PopulateModifierController(MonsterModifierController modifierController, ChallengeConfiguration config) {

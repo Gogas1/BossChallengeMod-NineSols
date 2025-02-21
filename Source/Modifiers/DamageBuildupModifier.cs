@@ -13,10 +13,6 @@ namespace BossChallengeMod.Modifiers {
         public float delay = 0.006f;
         public float damagePerSecond = 3.8f;
 
-        public DamageBuildupModifier() {
-            Key = "damage_buildup";
-        }
-
         public override void Awake() {
             base.Awake();
         }

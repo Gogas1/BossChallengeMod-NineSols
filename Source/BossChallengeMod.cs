@@ -1,27 +1,22 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
 using HarmonyLib;
 using I2.Loc;
 using NineSolsAPI;
-using BossChallengeMod.BossPatches;
 using BossChallengeMod.Configuration;
 using BossChallengeMod.Configuration.Repositories;
 using BossChallengeMod.Global;
 using BossChallengeMod.UI;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BossChallengeMod.ObjectProviders;
-using System.IO;
 using BossChallengeMod.Preloading;
-using BossChallengeMod.BossPatches.TargetPatches;
 using BossChallengeMod.PatchResolver;
 using BossChallengeMod.PatchResolver.Initializers;
+using BossChallengeMod.Modifiers;
+using System.Collections.Generic;
+using static BossChallengeMod.Modifiers.ModifiersStore;
+using BossChallengeMod.Modifiers.Managers;
 
 namespace BossChallengeMod;
 
@@ -46,6 +41,8 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     public ShieldProvider ShieldProvider { get; private set; } = null!;
     public YanlaoGunProvider YanlaoGunProvider { get; private set; } = null!;
+
+    public static ModifiersStore Modifiers { get; private set; } = null!;
 
     public static BossChallengeMod Instance { get; private set; } = null!;
     public static System.Random Random { get; private set; } = null!;
@@ -72,7 +69,10 @@ public class BossChallengeMod : BaseUnityPlugin {
         ShieldProvider = new ShieldProvider();
         YanlaoGunProvider = new YanlaoGunProvider();
 
+        Modifiers = new ModifiersStore();
+
         AssignPreloadingTargets();
+        SetupModifiers(Modifiers);
 
         LocalizationResolver.LoadLanguage(GetLanguageCode());
 
@@ -168,5 +168,75 @@ public class BossChallengeMod : BaseUnityPlugin {
             ToastManager.Toast(LocalizationResolver.Localize($"toast_message{i}"));
             yield return new WaitForSeconds(4);
         }
+    }
+
+    private void SetupModifiers(ModifiersStore modifiersStore) {
+        modifiersStore
+            .CreateModifierBuilder<SpeedModifier>("speed_temp", "SpeedModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<TimerModifier>("timer", "TimerModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<ScalingSpeedModifier>("speed_perm", "SpeedScalingModifier")
+            .SetPersistance(true)
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<ParryDirectDamageModifier>("parry_damage", "ParryDamageModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<DamageBuildupModifier>("damage_buildup", "DamageBuildupModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<RegenerationModifier>("regeneration", "RegenerationModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<KnockbackModifier>("knockback", "KnockbackModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<RandomArrowModifier>("random_arrow", "RandomArrowModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<RandomTaliModifier>("random_talisman", "RandomTalismanModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<EnduranceModifier>("endurance", "EnduranceModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<QiShieldModifier>("qi_shield", "QiShieldModifer")
+            .AddIncompatibles(["timer_shield", "distance_shield"])
+            .AddController(typeof(MonsterShieldController), true)
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<TimedShieldModifier>("timer_shield", "CooldownShieldModifier")
+            .AddIncompatibles(["qi_shield", "distance_shield"])
+            .AddController(typeof(MonsterShieldController), true)
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<DistanceShieldModifier>("distance_shield", "DistanceShieldModifier")
+            .AddIncompatibles(["timer_shield", "qi_shield"])
+            .AddController(typeof(MonsterShieldController), true)
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<QiOverloadModifier>("qi_overload", "QiOverloadModifier")
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<YanlaoGunModifier>("ya_gun", "YanlaoGunModifier")
+            .AddController(typeof(MonsterYanlaoGunController), true)
+            .BuildAndAdd();
     }
 }

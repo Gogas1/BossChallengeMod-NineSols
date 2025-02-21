@@ -20,6 +20,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public List<ModifierBase> Modifiers = new List<ModifierBase>();
 
         public List<ModifierConfig> ModifierConfigs = new List<ModifierConfig>();
+        public List<ModifierConfig> RollableModifiers = new List<ModifierConfig>();
         public List<ModifierConfig> Available = new List<ModifierConfig>();
         public List<ModifierConfig> Selected = new List<ModifierConfig>();
 
@@ -162,6 +163,8 @@ namespace BossChallengeMod.Modifiers.Managers {
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
             }
+            RollableModifiers.Clear();
+            RollableModifiers.AddRange(ModifierConfigs.Where(mc => !mc.IsPersistentModifier));
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
@@ -185,7 +188,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void GenerateAvailableMods() {
             Available.Clear();
-            Available.AddRange(ModifierConfigs);
+            Available.AddRange(RollableModifiers);
         }
 
         public void RollModifiers(int iteration) {
@@ -348,6 +351,10 @@ namespace BossChallengeMod.Modifiers.Managers {
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
             }
+
+            RollableModifiers.Clear();
+            RollableModifiers.AddRange(ModifierConfigs.Where(mc => !mc.IsPersistentModifier));
+
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
 

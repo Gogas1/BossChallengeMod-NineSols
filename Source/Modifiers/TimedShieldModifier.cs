@@ -9,10 +9,6 @@ namespace BossChallengeMod.Modifiers {
 
         private float timer = 7f;
 
-        public TimedShieldModifier() {
-            Key = "timer_shield";
-        }
-
         public override void Awake() {
             base.Awake();
         }

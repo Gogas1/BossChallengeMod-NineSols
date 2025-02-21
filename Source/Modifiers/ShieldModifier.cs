@@ -11,9 +11,6 @@ namespace BossChallengeMod.Modifiers {
     public class ShieldModifier : ModifierBase {
 
         protected MonsterShieldController MonsterShieldController = null!;
-        public ShieldModifier() {
-            Key = "shield";
-        }
         public override void Awake() {
             base.Awake();
 

@@ -7,10 +7,6 @@ using System.Text;
 namespace BossChallengeMod.Modifiers {
     public class ParryDirectDamageModifier : ModifierBase {
 
-        public ParryDirectDamageModifier() {
-            Key = "parry_damage";
-        }
-
         public override void Awake() {
             base.Awake();
         }
