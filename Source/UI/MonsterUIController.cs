@@ -132,18 +132,27 @@ namespace BossChallengeMod.UI {
                 if (trackedModifiersController == null) {
 
                     compositeModifierControllers.RemoveAllNull();
-                    UIController.UpdateModifiers(compositeModifierControllers
-                        .SelectMany(controller => controller.Selected, (controller, config) => new {
-                            CombinedKey = HashCode.Combine(controller.GetHashCode(), config.GetHashCode()),
-                            ConfigKey = config.Key
-                        })
-                        .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
+                    if(compositeModifierControllers.Any()) {
+                        UIController.UpdateModifiers(compositeModifierControllers
+                            .SelectMany(controller => controller.Selected, (controller, config) => new {
+                                CombinedKey = HashCode.Combine(controller.GetHashCode(), config.GetHashCode()),
+                                ConfigKey = config.Key
+                            })
+                            .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
+                    }
+                    else {
+                        UIController.HideModifiers();
+                    }
 
                     return;
                 }
 
                 if (trackedModifiersController.Selected.Any()) {
-                    UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode()), config => config.Key));
+                    UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => { 
+                        var hash = HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode());
+                        Log.Info($"{hash}, {trackedModifiersController.name}, {config.Key}");
+                        return hash;
+                    }, config => config.Key));
                 }
                 else {
                     UIController.HideModifiers();
@@ -163,8 +172,8 @@ namespace BossChallengeMod.UI {
         }
 
         public void ValidateOnSceneUnload(Scene scene) {
-            UpdateKillCounterUI();
-            UpdateModifierUI();
+            //UpdateKillCounterUI();
+            //UpdateModifierUI();
         }
 
         public void Unload() {

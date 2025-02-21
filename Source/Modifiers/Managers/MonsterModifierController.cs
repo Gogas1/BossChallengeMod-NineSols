@@ -17,6 +17,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         private MonsterBase monster = null!;
         private int modifiersNumber = 1;
 
+        public List<ModifierBase> MustIncludeModifiers = new List<ModifierBase>();
         public List<ModifierBase> Modifiers = new List<ModifierBase>();
 
         public List<ModifierConfig> ModifierConfigs = new List<ModifierConfig>();
@@ -24,7 +25,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public List<ModifierConfig> Available = new List<ModifierConfig>();
         public List<ModifierConfig> Selected = new List<ModifierConfig>();
 
-        private bool _isStarted = false;
+        private bool _isStartRolled = false;
         private bool _isDied = false;
 
         private ChallengeConfiguration challengeConfiguration;
@@ -175,15 +176,15 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             }
 
-            if (challengeConfiguration.ModifiersStartFromDeath == 0) {
+            if (challengeConfiguration.ModifiersStartFromDeath == 0 && !_isStartRolled) {
                 try {
                     RollModifiers(0);
                     ApplyModifiers(0);
+                    _isStartRolled = true;
                 } catch (Exception ex) {
                     Log.Error($"{ex.Message}, {ex.StackTrace}");
                 }
             }
-            _isStarted = true;
         }
 
         public void GenerateAvailableMods() {
@@ -269,6 +270,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public void FindModifiers() {
             Modifiers.Clear();
             Modifiers.AddRange(gameObject.GetComponentsInChildren<ModifierBase>());
+            Modifiers.AddRange(MustIncludeModifiers);
         }
 
         public void OnDestroy() {
@@ -294,6 +296,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
                 foreach (var modifier in Modifiers) {
                     try {
+                        Log.Info($"Notifying {modifier.name}, {modifier.Monster?.name}, {modifier.Key}");
                         if (selectedKeys.Contains(modifier.Key)) {
                             modifier.NotifyActivation(iteration);
                         } else {
@@ -302,6 +305,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                     } catch (Exception ex) {
                         Log.Error($"Exception occured while applying {modifier.name}: {ex.Message}, {ex.StackTrace}");
                     }
+                    Log.Info(modifier.enabled);
                 }
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
@@ -343,9 +347,14 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void ResetComponent() {
-            playerSensor.gameObject.SetActive(false);
+            playerSensor?.gameObject.SetActive(false);
+
             _isDied = false;
-            BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+
+            if(UseCompositeTracking || UseProximityShow) {
+                BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+            }
+
             challengeConfiguration = ConfigurationToUse;
             FindModifiers();
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
@@ -358,11 +367,13 @@ namespace BossChallengeMod.Modifiers.Managers {
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
 
-            if (challengeConfiguration.ModifiersStartFromDeath == 0 && _isStarted) {
+            if (challengeConfiguration.ModifiersStartFromDeath == 0 && !_isStartRolled) {
                 RollModifiers(0);
                 ApplyModifiers(0);
+                _isStartRolled = true;
             }
-            playerSensor.gameObject.SetActive(true);
+
+            playerSensor?.gameObject.SetActive(true);
         }
 
         private void PauseAll() {
@@ -407,7 +418,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                     ResumeAll();
                     BossChallengeMod.Instance.MonsterUIController.AddCompositeModifierController(this);
                 }
-                else {
+                else if(UseProximityShow) {
                     BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(this);
                 }
             });
@@ -415,7 +426,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 if (UseCompositeTracking) {
                     PauseAll();
                     BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
-                } else {
+                } else if(UseProximityShow) {
                     BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(null);
                 }
             });

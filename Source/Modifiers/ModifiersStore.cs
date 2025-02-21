@@ -17,6 +17,7 @@ namespace BossChallengeMod.Modifiers {
             var builder = new ModifierConfigBuilder(ModifiersConfigs, typeof(T));
             builder.AddKey(key);
             builder.AddObjectName(objectName);
+            builder.AddIncompatibles([key]);
 
             return builder;
         }

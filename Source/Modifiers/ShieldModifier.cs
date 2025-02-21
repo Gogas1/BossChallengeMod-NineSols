@@ -13,8 +13,6 @@ namespace BossChallengeMod.Modifiers {
         protected MonsterShieldController MonsterShieldController = null!;
         public override void Awake() {
             base.Awake();
-
-            MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
         }
 
         public void AssignShieldController(MonsterShieldController monsterShieldController) {
@@ -75,6 +73,12 @@ namespace BossChallengeMod.Modifiers {
         protected void ActivateCheck() {
             if (enabled && !IsPaused) {
                 MonsterShieldController?.Activate();
+            }
+        }
+
+        public override void SetController(Component controllerComponent) {
+            if (controllerComponent is MonsterShieldController monsterShieldController) {
+                MonsterShieldController = monsterShieldController;
             }
         }
     }

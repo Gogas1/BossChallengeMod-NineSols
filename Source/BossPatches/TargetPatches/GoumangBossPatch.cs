@@ -21,6 +21,9 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
 
                 var spearZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
                 var hammerZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
+
+                controller.MustIncludeModifiers.AddRange(spearZombieModifiers);
+                controller.MustIncludeModifiers.AddRange(hammerZombieModifiers);
             }
 
             return controller;

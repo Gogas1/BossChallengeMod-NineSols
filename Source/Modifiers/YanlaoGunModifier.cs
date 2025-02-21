@@ -17,11 +17,6 @@ namespace BossChallengeMod.Modifiers {
             base.Awake();
         }
 
-        private void Start() {
-
-            YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
-        }
-
         private void Update() {
             if(YanlaoGunController == null) return;
 
@@ -90,6 +85,12 @@ namespace BossChallengeMod.Modifiers {
 
             if (!YanlaoGunController.IsRunning && enabled) {
                 YanlaoGunController?.StartGun();
+            }
+        }
+
+        public override void SetController(Component controllerComponent) {
+            if(controllerComponent is MonsterYanlaoGunController gunController) {
+                YanlaoGunController = gunController;
             }
         }
     }

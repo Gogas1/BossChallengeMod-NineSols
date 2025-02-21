@@ -229,6 +229,9 @@ namespace BossChallengeMod.UI {
         public void UpdateModifiers(Dictionary<int, string> modifiers) {
             modifiersController.SetModifiers(modifiers);
         }
+        public void HideModifiers() {
+            modifiersController.Reset();
+        }
 
         public void ShowText() {
             bossCounterTextController.Show();
@@ -238,9 +241,6 @@ namespace BossChallengeMod.UI {
             bossCounterTextController.Hide(callback);
         }
 
-        public void HideModifiers() {
-            modifiersController.Reset();
-        }
 
         public void ShowExpandedKillNumbersText() {
             modifiersController.LowerModifiers(() => {

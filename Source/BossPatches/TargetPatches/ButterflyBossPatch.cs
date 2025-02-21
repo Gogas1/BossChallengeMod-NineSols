@@ -50,6 +50,8 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                         Action stateEnterEventActions = () => killCounter.IncrementCounter();
 
                         var modifiersController = InitializeModifiers(monsterBase);
+                        modifiersController.Init();
+                        modifiersController.GenerateAvailableMods();
 
                         stateEnterEventActions += () => {
                             modifiersController.RollModifiers(killCounter.KillCounter);
@@ -192,7 +194,8 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 var clones = GetClones(monsterBase);
 
                 foreach (var clone in clones) {
-                    var cloneModifiers = InitModifiers(monsterBase, controller, ConfigurationToUse);
+                    var cloneModifiers = InitModifiers(clone, controller, ConfigurationToUse);
+                    controller.MustIncludeModifiers.AddRange(cloneModifiers);
                 }
             }
 

@@ -14,9 +14,12 @@ namespace BossChallengeMod.Modifiers {
         public ChallengeConfiguration challengeConfiguration;
         public ChallengeEnemyType EnemyType { get; set; }
 
+        public ModifierBase() {
+            DisableComponent();
+        }
+
         public virtual void Awake() {
             Monster = GetComponentInParent<MonsterBase>();
-            DisableComponent();
         }
 
         public virtual void OnEnable() {

@@ -68,6 +68,8 @@ namespace BossChallengeMod.BossPatches {
                         };
 
                         var modifiersController = InitializeModifiers(monsterBase);
+                        modifiersController.Init();
+                        modifiersController.GenerateAvailableMods();
 
                         stateEnterEventActions += () => {
                             modifiersController.RollModifiers(killCounter.KillCounter);
@@ -163,8 +165,6 @@ namespace BossChallengeMod.BossPatches {
             modifierController.CanBeTracked = UseModifierControllerTracking;
             modifierController.UseProximityShow = UseProximityActivation;
             modifierController.UseCompositeTracking = UseCompositeTracking;
-            modifierController.Init();
-            modifierController.GenerateAvailableMods();
 
             return modifierController;
         }
