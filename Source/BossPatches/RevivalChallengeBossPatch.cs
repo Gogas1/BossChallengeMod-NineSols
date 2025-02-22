@@ -154,7 +154,6 @@ namespace BossChallengeMod.BossPatches {
         protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
             var config = ConfigurationToUse;
 
-            var bombController = monsterBase.gameObject.AddComponent<MonsterBombController>();
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
 
             if (config.ModifiersEnabled && UseModifiers) {
@@ -184,6 +183,10 @@ namespace BossChallengeMod.BossPatches {
             var sharedControllers = new Dictionary<Type, Component>();
 
             foreach (var modifierConfig in modifiersConfigs) {
+                if(!modifierConfig.CreateConditionPredicate?.Invoke(modifierConfig) ?? false) {
+                    continue;
+                }
+
                 if (modifierConfig.IgnoredMonsters.Contains(monsterBase.gameObject.name)) {
                     continue;
                 }
@@ -241,191 +244,6 @@ namespace BossChallengeMod.BossPatches {
             if (controllerComponent != null) {
                 modifier.SetController(controllerComponent);
             }
-        }
-
-        protected virtual void PopulateModifierController(MonsterModifierController modifierController, ChallengeConfiguration config) {
-            if (config.SpeedModifierEnabled) {
-                var speedModifier = new Modifiers.ModifierConfig() {
-                    Key = "speed_temp",
-                };
-                speedModifier.Incompatibles.Add(speedModifier.Key);
-                modifierController.ModifierConfigs.Add(speedModifier);
-            }
-
-            if (config.TimerModifierEnabled) {
-                var timerModifier = new Modifiers.ModifierConfig() {
-                    Key = "timer",
-                };
-                timerModifier.Incompatibles.Add(timerModifier.Key);
-                timerModifier.Incompatibles.Add("regeneration");
-                modifierController.ModifierConfigs.Add(timerModifier);
-            }
-
-            if (config.ParryDirectDamageModifierEnabled) {
-                var parryDamageModifier = new Modifiers.ModifierConfig() {
-                    Key = "parry_damage",
-                };
-                parryDamageModifier.Incompatibles.Add(parryDamageModifier.Key);
-                modifierController.ModifierConfigs.Add(parryDamageModifier);
-            }
-
-            if (config.DamageBuildupModifierEnabled) {
-                var damageBuildupModifier = new Modifiers.ModifierConfig() {
-                    Key = "damage_buildup",
-                };
-                damageBuildupModifier.Incompatibles.Add(damageBuildupModifier.Key);
-                modifierController.ModifierConfigs.Add(damageBuildupModifier);
-            }
-
-            if (config.RegenerationModifierEnabled) {
-                var regenerationModifier = new Modifiers.ModifierConfig() {
-                    Key = "regeneration",
-                };
-                regenerationModifier.Incompatibles.Add(regenerationModifier.Key);
-                regenerationModifier.Incompatibles.AddRange(["timer"]);
-                modifierController.ModifierConfigs.Add(regenerationModifier);
-            }
-
-            if (config.KnockbackModifierEnabled) {
-                var knockbackModifier = new ModifierConfig() {
-                    Key = "knockback"
-                };
-                knockbackModifier.Incompatibles.Add(knockbackModifier.Key);
-                modifierController.ModifierConfigs.Add(knockbackModifier);
-            }
-
-            //if (config.KnockoutModifierEnabled) {
-            //    var knockoutModifier = new ModifierConfig() {
-            //        Key = "knockout"
-            //    };
-            //    knockoutModifier.Incompatibles.Add(knockoutModifier.Key);
-            //    modifierController.ModifierConfigs.Add(knockoutModifier);
-            //}
-
-            if (config.RandomArrowModifierEnabled) {
-                var arrowModifier = new ModifierConfig() {
-                    Key = "random_arrow"
-                };
-                arrowModifier.Incompatibles.Add(arrowModifier.Key);
-                modifierController.ModifierConfigs.Add(arrowModifier);
-            }
-
-            if (config.RandomTalismanModifierEnabled) {
-                var talismanModifier = new ModifierConfig() {
-                    Key = "random_talisman"
-                };
-                talismanModifier.Incompatibles.Add(talismanModifier.Key);
-                modifierController.ModifierConfigs.Add(talismanModifier);
-            }
-
-            if (config.EnduranceModifierEnabled) {
-                var enduranceModifier = new ModifierConfig() {
-                    Key = "endurance"
-                };
-                enduranceModifier.Incompatibles.Add(enduranceModifier.Key);
-                modifierController.ModifierConfigs.Add(enduranceModifier);
-            }
-
-            if (config.QiShieldModifierEnabled) {
-                var qiShieldModifier = new ModifierConfig() {
-                    Key = "qi_shield"
-                };
-                qiShieldModifier.Incompatibles.Add(qiShieldModifier.Key);
-                qiShieldModifier.Incompatibles.AddRange(["timer_shield", "distance_shield"]);
-                modifierController.ModifierConfigs.Add(qiShieldModifier);
-            }
-
-            if (config.TimedShieldModifierEnabled) {
-                var impactShieldModifier = new ModifierConfig() {
-                    Key = "timer_shield"
-                };
-                impactShieldModifier.Incompatibles.Add(impactShieldModifier.Key);
-                impactShieldModifier.Incompatibles.AddRange(["qi_shield", "distance_shield"]);
-                modifierController.ModifierConfigs.Add(impactShieldModifier);
-            }
-
-            if (config.QiOverloadModifierEnabled) {
-                var qiOverloadModifier = new ModifierConfig() {
-                    Key = "qi_overload"
-                };
-                qiOverloadModifier.Incompatibles.Add(qiOverloadModifier.Key);
-                modifierController.ModifierConfigs.Add(qiOverloadModifier);
-            }
-
-            if (config.DistanceShieldModifierEnabled) {
-                var distanceShieldModifier = new ModifierConfig() {
-                    Key = "distance_shield"
-                };
-                distanceShieldModifier.Incompatibles.Add(distanceShieldModifier.Key);
-                distanceShieldModifier.Incompatibles.AddRange(["qi_shield", "timer_shield"]);
-                modifierController.ModifierConfigs.Add(distanceShieldModifier);
-            }
-
-            if(config.YanlaoGunModifierEnabled) {
-                var yanlaoModifier = new ModifierConfig() {
-                    Key = "ya_gun"
-                };
-                yanlaoModifier.Incompatibles.Add(yanlaoModifier.Key);
-                modifierController.ModifierConfigs.Add(yanlaoModifier);
-            }
-        }
-
-        protected virtual IEnumerable<ModifierBase> CreateModifiers(MonsterBase monsterBase) {
-            var result = new List<ModifierBase>();
-            var modifiersFolder = new GameObject("Modifiers");
-            modifiersFolder.transform.SetParent(monsterBase.transform, false);
-
-            var speedModifier = modifiersFolder.AddChildrenComponent<SpeedModifier>("SpeedModifier");
-            result.Add(speedModifier);
-
-            var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
-            scalingSpeedModifier.EnemyType = EnemyType;
-            scalingSpeedModifier.challengeConfiguration = ConfigurationToUse;
-            result.Add(scalingSpeedModifier);
-
-            var timerModifier = modifiersFolder.AddChildrenComponent<TimerModifier>("TimerModifier");
-            result.Add(timerModifier);
-
-            var parryDamageModifier = modifiersFolder.AddChildrenComponent<ParryDirectDamageModifier>("ParryDamageModifier");
-            result.Add(parryDamageModifier);
-
-            var damageBuildupModifier = modifiersFolder.AddChildrenComponent<DamageBuildupModifier>("DamageBuildupModifier");
-            result.Add(parryDamageModifier);
-
-            var regenModifier = modifiersFolder.AddChildrenComponent<RegenerationModifier>("RegenerationModifier");
-            result.Add(regenModifier);
-
-            var knockbackModifier = modifiersFolder.AddChildrenComponent<KnockbackModifier>("KnockbackModifier");
-            result.Add(knockbackModifier);
-
-            //var knockoutModifier = modifiersFolder.AddChildrenComponent<KnockoutModifier>("KnockoutModifier");
-            //result.Add(knockoutModifier);
-
-            var arrowModifier = modifiersFolder.AddChildrenComponent<RandomArrowModifier>("RandomArrowModifier");
-            result.Add(arrowModifier);
-
-            var talismanModifier = modifiersFolder.AddChildrenComponent<RandomTaliModifier>("RandomTalismanModifier");
-            result.Add(talismanModifier);
-
-            var enduranceModifier = modifiersFolder.AddChildrenComponent<EnduranceModifier>("EnduranceModifier");
-            result.Add(enduranceModifier);
-
-            var qiShieldModifier = modifiersFolder.AddChildrenComponent<QiShieldModifier>("QiShieldModifer");
-            result.Add(qiShieldModifier);
-
-            var impactShieldModifier = modifiersFolder.AddChildrenComponent<TimedShieldModifier>("ImpactShieldModifier");
-            result.Add(impactShieldModifier);
-
-            var qiOverloadModifier = modifiersFolder.AddChildrenComponent<QiOverloadModifier>("QiOverloadModifier");
-            result.Add(qiOverloadModifier);
-
-            var distanceShieldModifier = modifiersFolder.AddChildrenComponent<DistanceShieldModifier>("DistanceShieldModifier");
-            result.Add(distanceShieldModifier);
-
-            var yanlaoGunModifier = modifiersFolder.AddChildrenComponent<YanlaoGunModifier>("YanlaoGunModifier");
-            result.Add(yanlaoGunModifier);
-
-            return result;
         }
     }
 

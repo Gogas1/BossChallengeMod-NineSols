@@ -149,24 +149,6 @@ namespace BossChallengeMod.PatchResolver.Initializers {
 
             return goumangBossPatch;
         }
-        private GeneralBossPatch GetClawBossPatch() {
-            var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
-
-            var clawBossPatch = new ClawBossPatch();
-            clawBossPatch.DieStates = [
-                MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-            ];
-
-            var resetStateConfig = clawBossPatch.ResetStateConfiguration;
-            resetStateConfig.Animations = ["PostureBreak"];
-            resetStateConfig.ExitState = MonsterBase.States.Attack7;
-            resetStateConfig.StateType = bossReviveMonsterState;
-            resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-            return clawBossPatch;
-        }
         private ButterflyBossPatch GetButterflyBossPatch() {
             var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
 
@@ -203,24 +185,6 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
 
             return eigongBossPatch;
-        }
-        private GeneralBossPatch GetHorseBossPatch() {
-            var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
-
-            var defaultBossPatch = new HorseBossPatch();
-            defaultBossPatch.DieStates = [
-                MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-            ];
-
-            var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
-            resetStateConfig.ExitState = MonsterBase.States.Engaging;
-            resetStateConfig.Animations = ["PostureBreak"];
-            resetStateConfig.StateType = bossReviveMonsterState;
-            resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-            return defaultBossPatch;
         }
         private GeneralBossPatch GetDefaultBossPatch() {
             var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");

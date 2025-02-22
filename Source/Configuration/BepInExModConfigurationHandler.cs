@@ -50,6 +50,10 @@ namespace BossChallengeMod.Configuration {
         private ConfigEntry<bool> isQiOverloadModifierEnabled = null!;
         private ConfigEntry<bool> isDistanceShieldModifierEnabled = null!;
         private ConfigEntry<bool> isYanlaoGunModifierEnabled = null!;
+        private ConfigEntry<bool> isQiBombModifierEnabled = null!;
+        private ConfigEntry<bool> isShieldBreakBombModifierEnabled = null!;
+        private ConfigEntry<bool> isQiOverloadBombModifierEnabled = null!;
+        private ConfigEntry<bool> isQiDepletionBombModifierEnabled = null!;
 
         #endregion Challenge configs
 
@@ -486,6 +490,50 @@ namespace BossChallengeMod.Configuration {
                 config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
+
+            isQiBombModifierEnabled = Config.Bind(
+                "3. Modifiers",
+                "3.M Bomb: Qi Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"));
+            isQiBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = ChallengeConfigurationManager.ChallengeConfiguration;
+                config.QiBombModifierEnabled = isQiBombModifierEnabled.Value;
+                ChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            isShieldBreakBombModifierEnabled = Config.Bind(
+                "3. Modifiers",
+                "3.M Bomb: Shield Break Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"));
+            isShieldBreakBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = ChallengeConfigurationManager.ChallengeConfiguration;
+                config.ShieldBreakBombModifierEnabled = isShieldBreakBombModifierEnabled.Value;
+                ChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            isQiOverloadBombModifierEnabled = Config.Bind(
+                "3. Modifiers",
+                "3.M Bomb: Qi Overload Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"));
+            isQiOverloadBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = ChallengeConfigurationManager.ChallengeConfiguration;
+                config.QiOverloadBombModifierEnabled = isQiOverloadBombModifierEnabled.Value;
+                ChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            isQiDepletionBombModifierEnabled = Config.Bind(
+                "3. Modifiers",
+                "3.M Bomb: Qi Depletion Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"));
+            isQiDepletionBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = ChallengeConfigurationManager.ChallengeConfiguration;
+                config.QiDepletionBombModifierEnabled = isQiDepletionBombModifierEnabled.Value;
+                ChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
         }
 
         public void HandleConfigurationValues() {
@@ -536,6 +584,11 @@ namespace BossChallengeMod.Configuration {
             config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
             config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
             config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
+            config.QiBombModifierEnabled = isQiBombModifierEnabled.Value;
+            config.ShieldBreakBombModifierEnabled = isShieldBreakBombModifierEnabled.Value;
+            config.QiOverloadBombModifierEnabled = isQiOverloadBombModifierEnabled.Value;
+            config.QiDepletionBombModifierEnabled = isQiDepletionBombModifierEnabled.Value;
+
             config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
 
             ChallengeConfigurationManager.ChallengeConfiguration = config;

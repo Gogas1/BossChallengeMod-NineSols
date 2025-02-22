@@ -148,11 +148,7 @@ namespace BossChallengeMod.UI {
                 }
 
                 if (trackedModifiersController.Selected.Any()) {
-                    UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => { 
-                        var hash = HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode());
-                        Log.Info($"{hash}, {trackedModifiersController.name}, {config.Key}");
-                        return hash;
-                    }, config => config.Key));
+                    UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode()), config => config.Key));
                 }
                 else {
                     UIController.HideModifiers();

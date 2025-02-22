@@ -18,5 +18,6 @@ public class Patches {
 public enum MonsterNotifyType {
     Generic,
     OnExplode,
-    OnChargeAttack
+    OnChargeAttack,
+    OnShieldBroken
 }

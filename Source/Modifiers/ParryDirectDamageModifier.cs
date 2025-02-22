@@ -18,7 +18,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public override void NotifyDeactivation(int iteration) {
-            base.NotifyDeactivation();
+            base.NotifyDeactivation(iteration);
 
             enabled = false;
         }

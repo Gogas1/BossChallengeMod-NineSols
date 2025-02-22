@@ -41,6 +41,10 @@
   "qi_overload": "氣過載",
   "distance_shield": "距離護盾",
   "ya_gun": "奄老的協助",
+  "qi_bomb": "氣炸彈",
+  "shield_break_bomb": "破盾炸彈",
+  "qi_overload_bomb": "氣過載炸彈",
+  "qi_depletion_bomb": "氣耗竭炸彈",
 
   "config_cycling_enabled_description": "啟用首領復活。\n首領將恢復生命值並返回第一階段，而不是死亡。",
   "config_single_recording_enabled_description": "記錄戰鬥結果，而不受配置影響。預設情況下，每種唯一的配置狀態（包括第1、2、3節）都會生成結果，以便每種設定的挑戰難度都有自己的結果。啟用此設定後，將會記錄並使用統一的結果，而不考慮挑戰設定。",
@@ -80,5 +84,9 @@
   "config_modifiers_cooldown_shield_enabled_description": "冷卻護盾修改器。\n敵人會在短時間延遲後持續獲得護盾。",
   "config_modifiers_distance_shield_enabled_description": "距離護盾修改器。\n若敵人與羿的距離較遠，敵人將會獲得護盾。",
   "config_modifiers_qi_overload_enabled_description": "氣過載修改器。\n獲得超過最大值的氣充能將導致內部傷害。如果沒有生命值，當獲得六次額外充能時，累積的充能將會丟失。使用氣充能會重置額外充能計數器。",
-  "config_modifiers_yanlao_gun_enabled_description": "奄老之槍修改器。\n奄老之槍將以羿為目標。"
+  "config_modifiers_yanlao_gun_enabled_description": "奄老之槍修改器。\n奄老之槍將以羿為目標。",
+  "config_modifiers_qi_bomb_enabled_description": "氣炸彈修改器。\n護符爆炸後，羿身上將出現兩個炸彈。",
+  "config_modifiers_shield_break_bomb_enabled_description": "破盾炸彈修改器。\n在敵人護盾破裂後，羿身上將出現兩個炸彈。敵人只有在擁有任一護盾修改器時才能獲得此修改器。",
+  "config_modifiers_qi_overload_bomb_enabled_description": "氣過載炸彈修改器。\n達到氣充能上限後，羿身上將出現一個炸彈。",
+  "config_modifiers_qi_depletion_bomb_enabled_description": "氣耗竭炸彈修改器。\n耗盡所有氣充能後，羿身上將出現兩個炸彈。"
 }

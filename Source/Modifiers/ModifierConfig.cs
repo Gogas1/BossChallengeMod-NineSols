@@ -20,10 +20,13 @@ namespace BossChallengeMod.Modifiers {
         public string Key { get; set; } = string.Empty;
         public string ObjectName { get; set; } = string.Empty;
         public bool IsPersistentModifier { get; set; }
+        public bool IsCombinationModifier { get; set; }
         public Type ModifierType { get; set; }
         public ModifierControllerConfig? ControllerConfig { get; private set; }
         public List<string> Incompatibles { get; } = new List<string>();
         public List<string> IgnoredMonsters { get; } = new List<string>();
+        public List<string> CombinationModifiers { get; } = new List<string>();
+        public Predicate<ModifierConfig>? CreateConditionPredicate { get; set; }
 
         public ModifierConfig() {
             
@@ -34,13 +37,22 @@ namespace BossChallengeMod.Modifiers {
             Type modifierType, 
             string objectName = "Modifier",
             ModifierControllerConfig? controllerConfig = null,
-            bool persistent = false) {
+            bool persistent = false,
+            Predicate<ModifierConfig>? conditionPredicate = null,
+            IEnumerable<string>? combinationModifiers = null,
+            bool isCombinationModifier = false) {
 
             Key = key;
             ModifierType = modifierType;
             ObjectName = objectName;
             ControllerConfig = controllerConfig;
             IsPersistentModifier = persistent;
+            IsCombinationModifier = isCombinationModifier;
+            CreateConditionPredicate = conditionPredicate;
+
+            if (combinationModifiers != null) {
+                CombinationModifiers.AddRange(combinationModifiers);
+            }
         }
 
         public ModifierConfig(
@@ -49,8 +61,12 @@ namespace BossChallengeMod.Modifiers {
             IEnumerable<string> incompatibles, 
             string objectName = "Modifiers",
             ModifierControllerConfig? controllerConfig = null,
-            bool persistent = false) : this(key, modifierType, objectName, controllerConfig, persistent) {
-            Incompatibles = incompatibles.ToList();            
+            bool persistent = false,
+            Predicate<ModifierConfig>? conditionPredicate = null,
+            IEnumerable<string>? combinationModifiers = null,
+            bool isCombinationModifier = false) : this(key, modifierType, objectName, controllerConfig, persistent, conditionPredicate, combinationModifiers, isCombinationModifier) {
+            Incompatibles = incompatibles.ToList();
+
         }
 
         public ModifierConfig(
@@ -60,7 +76,10 @@ namespace BossChallengeMod.Modifiers {
             IEnumerable<string> ignoredMonsters, 
             string objectName = "Modifiers",
             ModifierControllerConfig? controllerConfig = null,
-            bool persistent = false) : this(key, modifierType, incompatibles, objectName, controllerConfig, persistent) {
+            bool persistent = false,
+            Predicate<ModifierConfig>? conditionPredicate = null,
+            IEnumerable<string>? combinationModifiers = null,
+            bool isCombinationModifier = false) : this(key, modifierType, incompatibles, objectName, controllerConfig, persistent, conditionPredicate, combinationModifiers, isCombinationModifier) {
             IgnoredMonsters = ignoredMonsters.ToList();
         }
 

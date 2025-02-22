@@ -1,14 +1,16 @@
-﻿using System;
+﻿using BossChallengeMod.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace BossChallengeMod.Modifiers {
-    public class QiOverloadModifier : ModifierBase {
-        private HashSet<object> _enableQiOverloadVotes = BossChallengeMod.Instance.GlobalModifiersFlags.EnableQiOverloadVotes;
+    internal class QiDepletionBombModifier : BombModifier, IModifierSubscriber {
 
-        public override void Awake() {
-            base.Awake();
+        private HashSet<IModifierSubscriber> _subscribers = BossChallengeMod.Instance.GlobalModifiersFlags.PlayerDepletedQiSubscribers;
+
+        public QiDepletionBombModifier() {
+            BombCount = 2;
         }
 
         public override void NotifyActivation(int iteration) {
@@ -16,8 +18,8 @@ namespace BossChallengeMod.Modifiers {
 
             enabled = true;
 
-            if(!IsPaused) {
-                _enableQiOverloadVotes.Add(this);
+            if (!IsPaused) {
+                _subscribers.Add(this);
             }
         }
 
@@ -25,14 +27,14 @@ namespace BossChallengeMod.Modifiers {
             base.NotifyDeactivation(iteration);
 
             enabled = false;
-            _enableQiOverloadVotes.Remove(this);
+            _subscribers.Remove(this);
         }
 
         public override void NotifyPause() {
             base.NotifyPause();
 
             if (enabled) {
-                _enableQiOverloadVotes.Remove(this);
+                _subscribers.Remove(this);
             }
         }
 
@@ -40,12 +42,16 @@ namespace BossChallengeMod.Modifiers {
             base.NotifyResume();
 
             if (enabled) {
-                _enableQiOverloadVotes.Add(this);
+                _subscribers.Add(this);
             }
         }
 
+        public void NotifySubscriber(object args) {
+            SpawnAtPlayer();
+        }
+
         public void OnDestroy() {
-            _enableQiOverloadVotes.Remove(this);
+            _subscribers.Remove(this);
         }
     }
 }

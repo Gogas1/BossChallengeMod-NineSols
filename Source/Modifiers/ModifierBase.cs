@@ -38,10 +38,6 @@ namespace BossChallengeMod.Modifiers {
 
         }
 
-        public virtual void NotifyDeactivation() {
-
-        }
-
         public virtual void NotifyDeactivation(int iteration = 0) {
 
         }

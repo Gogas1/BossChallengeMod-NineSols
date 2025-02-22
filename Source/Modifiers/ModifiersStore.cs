@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InControl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public ModifierConfigBuilder CreateModifierBuilder<T>(string key, string objectName) {
-            var builder = new ModifierConfigBuilder(ModifiersConfigs, typeof(T));
+            var builder = new ModifierConfigBuilder(typeof(T), this);
             builder.AddKey(key);
             builder.AddObjectName(objectName);
             builder.AddIncompatibles([key]);
@@ -22,51 +23,33 @@ namespace BossChallengeMod.Modifiers {
             return builder;
         }
 
-        public void AddModifier<T>(
-            string key, 
-            string objectName = "Modifier", 
-            Type? monsterController = null,
-            bool persistent = false) where T : ModifierBase {
-            AddModifier<T>(key, [key], [], objectName, monsterController, persistent);
-        }
+        public void AddModifierConfig(ModifierConfig config) {
+            if (ModifiersConfigs.Any(mc => mc.Key == config.Key)) {
+                Log.Error($"Modifier with the key \"{config.Key}\" already added");
+                return;
+            }
 
-        public void AddModifier<T>(
-            string key, 
-            IEnumerable<string> 
-            incompatibles, 
-            string objectName = "Modifier", 
-            Type? monsterController = null,
-            bool persistent = false) where T : ModifierBase {
-            AddModifier<T>(key, incompatibles, [], objectName, monsterController, persistent);
+            ModifiersConfigs.Add(config);
         }
-
-        public void AddModifier<T>(
-            string key, 
-            IEnumerable<string> incompatibles, 
-            IEnumerable<string> ignoredMonsters, 
-            string objectName = "Modifier", 
-            Type? monsterController = null,
-            bool persistent = false) where T : ModifierBase {
-            ModifiersConfigs.Add(new ModifierConfig(key, typeof(T), incompatibles, ignoredMonsters, objectName: objectName, persistent: persistent));
-        }
-
-        
 
         public class ModifierConfigBuilder {
-            private List<ModifierConfig> ModifiersCollectionRef;
+            private ModifiersStore modifiersStore;
 
-            public ModifierConfigBuilder(List<ModifierConfig> modifiersCollectionRef, Type type) {
-                ModifiersCollectionRef = modifiersCollectionRef;
+            public ModifierConfigBuilder(Type type, ModifiersStore modifiersStore) {
                 modifierType = type;
+                this.modifiersStore = modifiersStore;
             }
 
             private string key;
             private string objectName;
             private bool isPersistent;
+            private bool isCombination;
             private Type modifierType;
             private ModifierControllerConfig? modifierControllerConfig = null;
             private List<string> incompatibles = new();
             private List<string> ignoredMonsters = new();
+            private List<string> combinationModifiers = new();
+            public Predicate<ModifierConfig>? conditionPredicate = null;
 
             public ModifierConfigBuilder AddKey(string key) {
                 this.key = key;
@@ -92,6 +75,12 @@ namespace BossChallengeMod.Modifiers {
                 return this;
             }
 
+            public ModifierConfigBuilder AddCombinationModifiers(IEnumerable<string> configs) {
+                combinationModifiers.AddRange(configs);
+
+                return this;
+            }
+
             public ModifierConfigBuilder AddController(Type controllerType, bool isShared = false) {
                 modifierControllerConfig = new ModifierControllerConfig(controllerType, isShared);
 
@@ -104,17 +93,22 @@ namespace BossChallengeMod.Modifiers {
                 return this;
             }
 
-            public ModifierConfig BuildAndAdd() {
-                var config = new ModifierConfig(
-                        key,
-                        modifierType,
-                        incompatibles,
-                        ignoredMonsters,
-                        objectName: objectName,
-                        controllerConfig: modifierControllerConfig,
-                        persistent: isPersistent);
+            public ModifierConfigBuilder SetIsCombination(bool isCombination) {
+                this.isCombination = isCombination;
 
-                ModifiersCollectionRef.Add(config);
+                return this;
+            }
+
+            public ModifierConfigBuilder AddConditionPredicate(Predicate<ModifierConfig> predicate) {
+                conditionPredicate = predicate;
+
+                return this;
+            }
+
+            public ModifierConfig BuildAndAdd() {
+                var config = Build();
+
+                modifiersStore.AddModifierConfig(config);
 
                 return config;
             }
@@ -127,7 +121,10 @@ namespace BossChallengeMod.Modifiers {
                         ignoredMonsters,
                         objectName: objectName,
                         controllerConfig: modifierControllerConfig,
-                        persistent: isPersistent);
+                        persistent: isPersistent,
+                        conditionPredicate,
+                        combinationModifiers,
+                        isCombination);
 
                 return config;
             }

@@ -40,8 +40,10 @@ namespace BossChallengeMod.Modifiers {
                     StopCoroutine(timerCoroutine);
                 }
 
-                attempts.Add(stopwatch);
-                stopwatch = 0;
+                if(iteration > 0) {
+                    attempts.Add(stopwatch);
+                    stopwatch = 0;
+                }
                 start = true;
                 if (start) {
                     time = (int)CalculateTime(attempts.ToArray(), iteration);
@@ -51,8 +53,10 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public override void NotifyDeactivation(int iteration) {
-            attempts.Add(stopwatch);
-            stopwatch = 0;
+            if(iteration > 0) {
+                attempts.Add(stopwatch);
+                stopwatch = 0;
+            }
             start = false;
         }
 
@@ -75,7 +79,7 @@ namespace BossChallengeMod.Modifiers {
 
             yield return new WaitForSeconds(2);
 
-            if(!enabled) {
+            if(!start) {
                 UIController.HideTimer();
             }
         }

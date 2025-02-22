@@ -25,6 +25,8 @@ namespace BossChallengeMod.Modifiers.Managers {
         public List<ModifierConfig> Available = new List<ModifierConfig>();
         public List<ModifierConfig> Selected = new List<ModifierConfig>();
 
+        public Dictionary<string, ModifierConfig> CombinationModifiers = new();
+
         private bool _isStartRolled = false;
         private bool _isDied = false;
 
@@ -164,8 +166,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
             }
-            RollableModifiers.Clear();
-            RollableModifiers.AddRange(ModifierConfigs.Where(mc => !mc.IsPersistentModifier));
+            SetupModifiersLists();
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
@@ -215,9 +216,21 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             if (availablilities.Any()) {
                 for (int i = 0; i < modifiersNumber && availablilities.Any(); i++) {
-                    var selected = availablilities[BossChallengeMod.Random.Next(0, availablilities.Count)];
-                    availablilities.RemoveAll(am => selected.Incompatibles.Select(i => i).Contains(am.Key));
-                    Selected.Add(selected);
+                    try {
+                        var selected = availablilities[BossChallengeMod.Random.Next(0, availablilities.Count)];
+
+                        foreach (var cm in selected.CombinationModifiers) {
+                            if (CombinationModifiers.TryGetValue(cm, out var combinationModifier)) {
+                                Available.Add(combinationModifier);
+                            }
+                        }
+
+                        Selected.Add(selected);
+                        availablilities.RemoveAll(am => Selected.SelectMany(s => s.Incompatibles).Select(i => i).Contains(am.Key));
+
+                    } catch (Exception ex) {
+                        Log.Error($"{ex.Message}, {ex.StackTrace}");
+                    }
                 }
             }
 
@@ -296,16 +309,16 @@ namespace BossChallengeMod.Modifiers.Managers {
                 var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
                 foreach (var modifier in Modifiers) {
                     try {
-                        Log.Info($"Notifying {modifier.name}, {modifier.Monster?.name}, {modifier.Key}");
                         if (selectedKeys.Contains(modifier.Key)) {
+                            Log.Warning($"{modifier.name} Activation");
                             modifier.NotifyActivation(iteration);
                         } else {
+                            Log.Warning($"{modifier.name} Deactivation");
                             modifier.NotifyDeactivation(iteration);
                         }
                     } catch (Exception ex) {
                         Log.Error($"Exception occured while applying {modifier.name}: {ex.Message}, {ex.StackTrace}");
                     }
-                    Log.Info(modifier.enabled);
                 }
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
@@ -361,8 +374,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 PauseAll();
             }
 
-            RollableModifiers.Clear();
-            RollableModifiers.AddRange(ModifierConfigs.Where(mc => !mc.IsPersistentModifier));
+            SetupModifiersLists();
 
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
@@ -374,6 +386,13 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
 
             playerSensor?.gameObject.SetActive(true);
+        }
+
+        private void SetupModifiersLists() {
+            RollableModifiers.Clear();
+            RollableModifiers.AddRange(ModifierConfigs.Where(mc => !mc.IsPersistentModifier && !mc.IsCombinationModifier));
+
+            CombinationModifiers = ModifierConfigs.Where(mc => mc.IsCombinationModifier).ToDictionary(mc => mc.Key, mc => mc);
         }
 
         private void PauseAll() {

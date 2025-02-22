@@ -131,6 +131,10 @@ namespace BossChallengeMod.Configuration {
         public bool QiOverloadModifierEnabled;
         public bool DistanceShieldModifierEnabled;
         public bool YanlaoGunModifierEnabled;
+        public bool QiBombModifierEnabled;
+        public bool ShieldBreakBombModifierEnabled;
+        public bool QiOverloadBombModifierEnabled;
+        public bool QiDepletionBombModifierEnabled;
         #endregion Modifiers
     }
 }

@@ -11,9 +11,12 @@ namespace BossChallengeMod.Patches {
 
         private static int overloadCounter = 0;
         private static int overloadThreshold = 6;
+
         [HarmonyPatch(nameof(PlayerEnergy.Gain))]
         [HarmonyPrefix]
-        private static bool Gain_Prefix(PlayerEnergy __instance, float amount) {
+        private static void Gain_Prefix(PlayerEnergy __instance, float amount, out bool __state) {
+            __state = false;
+
             if (__instance == Player.i.chiContainer) {
                 if (BossChallengeMod.Instance.GlobalModifiersFlags.EnableQiOverloadVotes.Any()) {
                     int extraCharges = Math.Max(0, (int)(__instance.Value + amount - __instance.MaxValue));
@@ -23,9 +26,8 @@ namespace BossChallengeMod.Patches {
                         if (Player.i.health.currentValue <= Player.i.health.maxHealth.Value / 10) {
                             overloadCounter += extraCharges;
                             if (overloadCounter >= overloadThreshold) {
-                                __instance.Clear();
+                                __state = true;
                                 overloadCounter = 0;
-                                return false;
                             }
                         }
 
@@ -33,15 +35,33 @@ namespace BossChallengeMod.Patches {
                         overloadCounter = 0;
                     }
                 }
-            }
 
-            return true;
+                if (__instance.Value < __instance.MaxValue && __instance.Value + amount >= __instance.MaxValue) {
+                    BossChallengeMod.Instance.GlobalModifiersFlags.NotifyPlayerGainFullQiSubscribers(__instance);
+                }
+            }
+        }
+
+        [HarmonyPatch(nameof(PlayerEnergy.Gain))]
+        [HarmonyPostfix]
+        private static void Gain_Postfix(PlayerEnergy __instance, float amount, bool __state) {
+            if (__instance == Player.i.chiContainer) {
+                if(__state) {
+                    __instance.Clear();
+                }
+            }
         }
 
         [HarmonyPatch(nameof(PlayerEnergy.Consume))]
         [HarmonyPostfix]
         private static void Consume_Postfix(PlayerEnergy __instance) {
-            overloadCounter = 0;
+            if (__instance == Player.i.chiContainer) {
+                overloadCounter = 0;
+
+                if (__instance.Value <= 0) {
+                    BossChallengeMod.Instance.GlobalModifiersFlags.NotifyPlayerDepletedQiSubscribers(__instance);
+                }
+            }
         }
     }
 }

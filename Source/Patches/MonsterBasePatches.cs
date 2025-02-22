@@ -129,7 +129,7 @@ namespace BossChallengeMod.Patches {
         //    return true;
         //}
 
-        [HarmonyPatch(typeof(MonsterBase), "OnExplode")]
+        [HarmonyPatch("OnExplode")]
         [HarmonyPostfix]
         private static void OnExplode_Postfix(MonsterBase __instance) {
             var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
