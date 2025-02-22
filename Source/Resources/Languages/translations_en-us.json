@@ -42,9 +42,9 @@
   "distance_shield": "Distance shield",
   "ya_gun": "Yanlao's Assistance",
   "qi_bomb": "Qi-Bomb",
-  "shield_break_bomb": "Shield break bomb",
-  "qi_overload_bomb": "Qi overload bomb",
-  "qi_depletion_bomb": "Qi depletion bomb",
+  "shield_break_bomb": "Shield Break bomb",
+  "qi_overload_bomb": "Qi Overload Bomb",
+  "qi_depletion_bomb": "Qi Depletion Bomb",
 
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",

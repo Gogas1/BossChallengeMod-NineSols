@@ -11,6 +11,8 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         private MonsterBase Monster { get; set; } = null!;
 
+        private List<GameObject> spawnedBomds = new List<GameObject>();
+
         private void Awake() {
             Monster = GetComponent<MonsterBase>();
 
@@ -30,9 +32,27 @@ namespace BossChallengeMod.Modifiers.Managers {
             AutoAttributeManager.AutoReferenceAllChildren(shooterObject);
         }
 
+        public void DeactivateBombs() {
+            foreach (var item in spawnedBomds) {
+                GameObject.Destroy(item);
+            }
+        }
+
         public void PlaceBombAtPlayer() {
             var playerPos = Player.i.transform.position;
-            shooterComponent?.PlayCustomAt(new Vector3(playerPos.x, playerPos.y + 20, playerPos.z));
+            spawnedBomds.RemoveAllNull();
+            var spawnedBomb = shooterComponent?.PlayCustomAt(new Vector3(playerPos.x, playerPos.y + 20, playerPos.z));
+            if (spawnedBomb != null) {
+                spawnedBomds.Add(spawnedBomb);
+            }
+        }
+
+        public void PlaceBombAt(Vector3 place) {
+            spawnedBomds.RemoveAllNull();
+            var spawnedBomb = shooterComponent?.PlayCustomAt(place);
+            if (spawnedBomb != null) {
+                spawnedBomds.Add(spawnedBomb);
+            }
         }
     }
 }

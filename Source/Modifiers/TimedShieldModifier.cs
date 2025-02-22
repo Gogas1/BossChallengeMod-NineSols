@@ -14,7 +14,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         private void Update() {
-            if (!MonsterShieldController.IsShieldEnabled) {
+            if (!MonsterShieldController.IsShieldEnabled && !IsPaused) {
                 timer -= Time.deltaTime;
 
                 if (timer <= 0) {

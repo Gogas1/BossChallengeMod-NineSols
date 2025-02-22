@@ -820,7 +820,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MinRandomBossCycles = Config.Bind(
                 "5. Story Challenge General",
                 "5.4.1 Min boss deaths random number",
-                1,
+                2,
                 LocalizationResolver.Localize("config_boss_deaths_randomized_min_description"));
             _storyConfigs.MinRandomBossCycles.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -854,7 +854,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MinRandomMiniBossCycles = Config.Bind(
                 "5. Story Challenge General",
                 "5.5.1 Min miniboss deaths random number",
-                1,
+                2,
                 LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_min_description"));
             _storyConfigs.MinRandomMiniBossCycles.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -888,7 +888,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MinRandomEnemyCycles = Config.Bind(
                 "5. Story Challenge General",
                 "5.6.1 Min regular enemy deaths random number",
-                1,
+                2,
                 LocalizationResolver.Localize("config_story_enemy_deaths_randomized_min_description"));
             _storyConfigs.MinRandomEnemyCycles.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -949,7 +949,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.BossesMaxSpeedScalingCycleValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.1.1.3 Bosses Maximum Speed Scaling After Deaths",
-                5,
+                1,
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             _storyConfigs.BossesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -983,7 +983,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.BossesMaxModifiersNumberScalingValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.1.2.2 Bosses Maximum Modifiers Number Scaling After Deaths",
-                3,
+                1,
                 LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
             _storyConfigs.BossesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1073,7 +1073,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.BossesMaxRandomModifiersScalingValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.1.4.3 Bosses Random Scaling: Max Modifiers Number",
-                4,
+                3,
                 LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
             _storyConfigs.BossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1121,7 +1121,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MinibossesMaxSpeedScalingCycleValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.2.1.3 Minibosses Maximum Speed Scaling After Deaths",
-                5,
+                1,
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             _storyConfigs.MinibossesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1155,7 +1155,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.MinibossesMaxModifiersNumberScalingValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.2.2.2 Minibosses Maximum Modifiers Number Scaling After Deaths",
-                3,
+                1,
                 LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
             _storyConfigs.MinibossesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1293,7 +1293,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.EnemiesMaxSpeedScalingCycleValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.3.1.3 Enemies Maximum Speed Scaling After Deaths",
-                5,
+                1,
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             _storyConfigs.EnemiesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1327,7 +1327,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.EnemiesMaxModifiersNumberScalingValue = Config.Bind(
                 "6. Story Challenge Scaling",
                 "6.3.2.2 Enemies Maximum Modifiers Number Scaling After Deaths",
-                3,
+                1,
                 LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
             _storyConfigs.EnemiesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1434,7 +1434,7 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.IsModifiersEnabled = Config.Bind(
                 "7. Story Challenge Modifiers",
                 "7.1 Enable Modifiers",
-                false,
+                true,
                 LocalizationResolver.Localize("config_modifiers_enabled_description"));
             _storyConfigs.IsModifiersEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
@@ -1472,17 +1472,6 @@ namespace BossChallengeMod.Configuration {
             _storyConfigs.IsSpeedModifierEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
                 config.SpeedModifierEnabled = _storyConfigs.IsSpeedModifierEnabled.Value;
-                StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-            };
-
-            _storyConfigs.IsTimerModifierEnabled = Config.Bind(
-                "7. Story Challenge Modifiers",
-                "7.M Timer Modifier",
-                true,
-                LocalizationResolver.Localize("config_modifiers_timer_enabled_description"));
-            _storyConfigs.IsTimerModifierEnabled.SettingChanged += (_, _) => {
-                var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.TimerModifierEnabled = _storyConfigs.IsTimerModifierEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1618,6 +1607,50 @@ namespace BossChallengeMod.Configuration {
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
+            _storyConfigs.IsQiBombModifierEnabled = Config.Bind(
+                "7. Modifiers",
+                "7.M Bomb: Qi Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"));
+            _storyConfigs.IsQiBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
+                config.QiBombModifierEnabled = _storyConfigs.IsQiBombModifierEnabled.Value;
+                StoryChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            _storyConfigs.IsShieldBreakBombModifierEnabled = Config.Bind(
+                "7. Modifiers",
+                "7.M Bomb: Shield Break Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"));
+            _storyConfigs.IsShieldBreakBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
+                config.ShieldBreakBombModifierEnabled = _storyConfigs.IsShieldBreakBombModifierEnabled.Value;
+                StoryChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            _storyConfigs.IsQiOverloadBombModifierEnabled = Config.Bind(
+                "7. Modifiers",
+                "7.M Bomb: Qi Overload Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"));
+            _storyConfigs.IsQiOverloadBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
+                config.QiOverloadBombModifierEnabled = _storyConfigs.IsQiOverloadBombModifierEnabled.Value;
+                StoryChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            _storyConfigs.IsQiDepletionBombModifierEnabled = Config.Bind(
+                "7. Modifiers",
+                "7.M Bomb: Qi Depletion Bomb modiifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"));
+            _storyConfigs.IsQiDepletionBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
+                config.QiDepletionBombModifierEnabled = _storyConfigs.IsQiDepletionBombModifierEnabled.Value;
+                StoryChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
             #endregion Modifiers
         }
 
@@ -1711,7 +1744,7 @@ namespace BossChallengeMod.Configuration {
             config.ModifiersEnabled = _storyConfigs.IsModifiersEnabled.Value;
             config.AllowRepeatModifiers = _storyConfigs.IsModifiersRepeatingEnabled.Value;
             config.SpeedModifierEnabled = _storyConfigs.IsSpeedModifierEnabled.Value;
-            config.TimerModifierEnabled = _storyConfigs.IsTimerModifierEnabled.Value;
+            config.TimerModifierEnabled = false;
             config.ParryDirectDamageModifierEnabled = _storyConfigs.IsParryDamageModifierEnabled.Value;
             config.DamageBuildupModifierEnabled = _storyConfigs.IsDamageBuildupModifierEnabled.Value;
             config.RegenerationModifierEnabled = _storyConfigs.IsRegenerationModifierEnabled.Value;

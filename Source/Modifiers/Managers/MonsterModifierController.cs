@@ -310,10 +310,8 @@ namespace BossChallengeMod.Modifiers.Managers {
                 foreach (var modifier in Modifiers) {
                     try {
                         if (selectedKeys.Contains(modifier.Key)) {
-                            Log.Warning($"{modifier.name} Activation");
                             modifier.NotifyActivation(iteration);
                         } else {
-                            Log.Warning($"{modifier.name} Deactivation");
                             modifier.NotifyDeactivation(iteration);
                         }
                     } catch (Exception ex) {

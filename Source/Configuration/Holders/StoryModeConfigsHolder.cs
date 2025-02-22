@@ -101,7 +101,6 @@ namespace BossChallengeMod.Configuration.Holders {
         public ConfigEntry<int> ModifiersStartDeathValue { get; set; } = null!;
         public ConfigEntry<bool> IsModifiersRepeatingEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsSpeedModifierEnabled { get; set; } = null!;
-        public ConfigEntry<bool> IsTimerModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsParryDamageModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsDamageBuildupModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsRegenerationModifierEnabled { get; set; } = null!;
@@ -114,5 +113,10 @@ namespace BossChallengeMod.Configuration.Holders {
         public ConfigEntry<bool> IsQiOverloadModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsDistanceShieldModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsYanlaoGunModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsQiBombModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsShieldBreakBombModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsQiOverloadBombModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsQiDepletionBombModifierEnabled { get; set; } = null!;
+
     }
 }

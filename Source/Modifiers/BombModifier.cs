@@ -24,6 +24,18 @@ namespace BossChallengeMod.Modifiers {
             enabled = false;
         }
 
+        protected virtual void Update() {
+            var postureSystem = Monster?.postureSystem ?? null;
+            if (postureSystem != null &&
+                !postureSystem.IsMonsterEmptyPosture &&
+                !IsPaused &&
+                !Player.i.lockMoving &&
+                !Player.i.freeze) {
+
+                BombController?.DeactivateBombs();
+            }
+        }
+
         public override void SetController(Component controllerComponent) {
             if(controllerComponent is MonsterBombController bombController) {
                 BombController = bombController;
