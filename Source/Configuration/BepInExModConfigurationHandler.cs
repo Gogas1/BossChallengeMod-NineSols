@@ -1473,7 +1473,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_repeating_enabled_description"));
             _storyConfigs.IsModifiersRepeatingEnabled.SettingChanged += (_, _) => {
                 var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-                config.ModifiersEnabled = _storyConfigs.IsModifiersRepeatingEnabled.Value;
+                config.AllowRepeatModifiers = _storyConfigs.IsModifiersRepeatingEnabled.Value;
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -1621,7 +1621,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             _storyConfigs.IsQiBombModifierEnabled = Config.Bind(
-                "7. Modifiers",
+                "7. Story Challenge Modifiers",
                 "7.M Bomb: Qi Bomb modiifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"));
@@ -1632,7 +1632,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             _storyConfigs.IsShieldBreakBombModifierEnabled = Config.Bind(
-                "7. Modifiers",
+                "7. Story Challenge Modifiers",
                 "7.M Bomb: Shield Break Bomb modiifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"));
@@ -1643,7 +1643,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             _storyConfigs.IsQiOverloadBombModifierEnabled = Config.Bind(
-                "7. Modifiers",
+                "7. Story Challenge Modifiers",
                 "7.M Bomb: Qi Overload Bomb modiifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"));
@@ -1654,7 +1654,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             _storyConfigs.IsQiDepletionBombModifierEnabled = Config.Bind(
-                "7. Modifiers",
+                "7. Story Challenge Modifiers",
                 "7.M Bomb: Qi Depletion Bomb modiifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"));
@@ -1665,7 +1665,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             _storyConfigs.IsCooldownBombModifierEnabled = Config.Bind(
-                "7. Modifiers",
+                "7. Story Challenge Modifiers",
                 "7.M Bomb: Cooldown Bomb modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_cooldown_bomb_enabled_description"));

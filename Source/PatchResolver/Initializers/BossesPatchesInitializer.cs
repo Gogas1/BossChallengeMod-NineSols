@@ -10,6 +10,7 @@ namespace BossChallengeMod.PatchResolver.Initializers {
         protected CustomMonsterStateValuesResolver monsterStateValuesResolver;
         public MonsterPatchResolver MonsterPatchResolver { get; protected set; }
         protected List<string> doNotPatch = [
+            "AG_LeeEar_S0/Room/李耳教學大禮包 格擋/[FSM] 李耳教學 戰鬥+結束拿能力/FSM Animator/LogicRoot/StealthGameMonster_Boss_Lear",
             "AG_LeeEar_S1/Room/李耳教學大禮包/[FSM] 李耳教學 戰鬥+結束拿能力/FSM Animator/LogicRoot/StealthGameMonster_Boss_Lear",
             "AG_LeeEar_S1/Room/StealthMonster_GiantBlade_FireBlade",
             "AG_LeeEar_S1/StealthGameMonster_TutorialDummy Variant",

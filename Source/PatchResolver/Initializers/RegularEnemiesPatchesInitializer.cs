@@ -26,6 +26,10 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             "A7_S1/Room/Prefab/Simple Binding Tool/StealthGameMonster_Statue_Shield Variant_M",
 
             #region Lear
+            "AG_LeeEar_S0/Room/[自然巡邏框架]/[MonsterBehaviorProvider] LevelDesign_CullingAndResetGroup/[MonsterBehaviorProvider] LevelDesign_Init_Scenario (看守的人)/StealthGameMonster_SpearmanElite 長槍菁英",
+            "AG_LeeEar_S0/Room/Prefab/StealthGameMonster_TutorialDummy Variant",
+            "AG_LeeEar_S0/Room/Prefab/StealthGameMonster_TutorialDummy Variant (1)",
+            "AG_LeeEar_S0/StealthGameMonster_ZombieSlow 天禍 爆炸 (1)",
             "AG_LeeEar_S1/Room/StealthMonster_GiantBlade_FireBlade",
             "AG_LeeEar_S1/StealthGameMonster_TutorialDummy Variant",
             "AG_LeeEar_S1/Room/[自然巡邏框架]/[MonsterBehaviorProvider] LevelDesign_CullingAndResetGroup/[MonsterBehaviorProvider] LevelDesign_Init_Scenario (看守的人)/StealthGameMonster_SpearmanElite 長槍菁英",

@@ -264,7 +264,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             Modifiers.AddRange(MustIncludeModifiers);
         }
 
-        public void OnDestroy() {
+        public void OnDestroing() {
             OnDestroyActions?.Invoke();
             monster.OnDie.RemoveListener(OnDieHandler);
             if (UseCompositeTracking) {

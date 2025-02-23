@@ -5,6 +5,7 @@ using System.Text;
 using BossChallengeMod.BossPatches;
 using BossChallengeMod.Interfaces;
 using BossChallengeMod.Modifiers;
+using BossChallengeMod.Modifiers.Managers;
 using HarmonyLib;
 using NineSolsAPI.Utils;
 
@@ -137,6 +138,15 @@ namespace BossChallengeMod.Patches {
                 foreach (ModifierBase modifier in modifiers) {
                     modifier.MonsterNotify(MonsterNotifyType.OnExplode);
                 }
+            }
+        }
+
+        [HarmonyPatch(nameof(MonsterBase.ExitLevelAndDestroy))]
+        [HarmonyPrefix]
+        private static void OnDestroy_Prefix(MonsterBase __instance) {
+            var modifiersController = __instance.GetComponent<MonsterModifierController>();
+            if (modifiersController != null) {
+                modifiersController.OnDestroing();
             }
         }
     }

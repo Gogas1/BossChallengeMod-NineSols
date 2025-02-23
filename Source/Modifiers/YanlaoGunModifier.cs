@@ -24,14 +24,15 @@ namespace BossChallengeMod.Modifiers {
 
             var postureSystem = Monster?.postureSystem ?? null;
             if (postureSystem != null && 
-                (postureSystem.IsMonsterEmptyPosture || Player.i.lockMoving || Player.i.freeze) && 
+                (postureSystem.IsMonsterEmptyPosture || (!Monster?.enabled ?? true) || Player.i.lockMoving || Player.i.freeze) && 
                 YanlaoGunController.IsRunning) {
                 YanlaoGunController.StopGun();
             }
 
             if(postureSystem != null && 
                 !postureSystem.IsMonsterEmptyPosture && 
-                !YanlaoGunController.IsRunning && 
+                !YanlaoGunController.IsRunning &&
+                (Monster?.enabled ?? false) &&
                 !IsPaused &&
                 !Player.i.lockMoving &&
                 !Player.i.freeze &&
@@ -56,7 +57,22 @@ namespace BossChallengeMod.Modifiers {
         protected IEnumerator StartWithDelay(float delay) {
             isDelaying = true;
             yield return new WaitForSeconds(delay);
-            YanlaoGunController?.StartGun();
+
+            if (YanlaoGunController == null) {
+                YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
+            }
+
+            var postureSystem = Monster?.postureSystem ?? null;
+            if (postureSystem != null &&
+                !postureSystem.IsMonsterEmptyPosture &&
+                !YanlaoGunController.IsRunning &&
+                (Monster?.enabled ?? false) &&
+                !IsPaused &&
+                !Player.i.lockMoving &&
+                !Player.i.freeze &&
+                !isDelaying) {
+                YanlaoGunController.StartGun();
+            }
             isDelaying = false;
         }
 
@@ -67,11 +83,12 @@ namespace BossChallengeMod.Modifiers {
                 YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
             }
 
-            enabled = false;
-
             if (YanlaoGunController?.IsRunning ?? false) {                
                 YanlaoGunController?.StopGun();
             }
+
+            enabled = false;
+
         }
 
         public override void NotifyPause() {
@@ -81,7 +98,7 @@ namespace BossChallengeMod.Modifiers {
                 YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
             }
 
-            if (YanlaoGunController?.isActiveAndEnabled ?? false) {
+            if (YanlaoGunController?.IsRunning ?? false) {
                 YanlaoGunController?.StopGun();
             }
         }
@@ -102,6 +119,12 @@ namespace BossChallengeMod.Modifiers {
             if(controllerComponent is MonsterYanlaoGunController gunController) {
                 YanlaoGunController = gunController;
             }
+        }
+
+        public override void OnDisable() {
+            base.OnDisable();
+            YanlaoGunController?.StopGun();
+
         }
     }
 }

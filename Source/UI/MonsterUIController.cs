@@ -141,7 +141,7 @@ namespace BossChallengeMod.UI {
                             .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
                     }
                     else {
-                        UIController.HideModifiers();
+                        UIController.UpdateModifiers(new());
                     }
 
                     return;
@@ -151,7 +151,7 @@ namespace BossChallengeMod.UI {
                     UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode()), config => config.Key));
                 }
                 else {
-                    UIController.HideModifiers();
+                    UIController.UpdateModifiers(new());
                 }
 
             } catch (Exception e) {
