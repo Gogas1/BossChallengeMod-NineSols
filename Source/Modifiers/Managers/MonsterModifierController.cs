@@ -205,28 +205,34 @@ namespace BossChallengeMod.Modifiers.Managers {
                 return;
             }
 
-            var availablilities = new List<ModifierConfig>(Available);
+            var availabilities = new List<ModifierConfig>(Available);
 
-            CullInaccessible(availablilities, iteration);
+            availabilities.RemoveAll(a => !a.CanBeRolledConditionPredicate?.Invoke(a, iteration) ?? false);
 
             if (!AllowRepeating) {
-                availablilities = availablilities.Except(Selected).ToList();
+                availabilities = availabilities.Except(Selected).ToList();
             }
             Selected.Clear();
 
-            if (availablilities.Any()) {
-                for (int i = 0; i < modifiersNumber && availablilities.Any(); i++) {
+            if (availabilities.Any()) {
+                for (int i = 0; i < modifiersNumber && availabilities.Any(); i++) {
                     try {
-                        var selected = availablilities[BossChallengeMod.Random.Next(0, availablilities.Count)];
+                        var selected = availabilities[BossChallengeMod.Random.Next(0, availabilities.Count)];
 
                         foreach (var cm in selected.CombinationModifiers) {
                             if (CombinationModifiers.TryGetValue(cm, out var combinationModifier)) {
-                                Available.Add(combinationModifier);
+                                availabilities.Add(combinationModifier);
                             }
                         }
 
                         Selected.Add(selected);
-                        availablilities.RemoveAll(am => Selected.SelectMany(s => s.Incompatibles).Select(i => i).Contains(am.Key));
+                        var selectedIncompatibles = new HashSet<string>(Selected.SelectMany(s => s.Incompatibles));
+                        var selectedKeys = new HashSet<string>(Selected.Select(s => s.Key));
+
+                        availabilities.RemoveAll(am =>
+                            selectedIncompatibles.Contains(am.Key) ||
+                            am.Incompatibles.Any(ai => selectedKeys.Contains(ai))
+                        );
 
                     } catch (Exception ex) {
                         Log.Error($"{ex.Message}, {ex.StackTrace}");
@@ -235,34 +241,6 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
 
             OnModifiersRoll?.Invoke();
-        }
-
-        private void CullInaccessible(List<ModifierConfig> modifiers, int iteration) {
-            var player = Player.i;
-
-            if (iteration == 0) {
-                modifiers.RemoveAll(m => m.Key == "timer");
-            }
-
-            if (!player.mainAbilities.ChargedAttackAbility.IsActivated) {
-                modifiers.RemoveAll(m => m.Key.Contains("shield"));
-            }
-
-            if (!ApplicationCore.IsInBossMemoryMode) {
-                modifiers.RemoveAll(m => m.Key == "timer");
-            }
-
-            if (!player.mainAbilities.ArrowAbility.IsActivated) {
-                modifiers.RemoveAll(m => m.Key == "random_arrow");
-            }
-
-            bool blastIsActive = (player.mainAbilities.FooExplodeAllStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAllStyleUpgrade.AbilityData.IsAcquired);
-            bool flowIsActive = (player.mainAbilities.FooExplodeAutoStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAutoStyleUpgrade.AbilityData.IsAcquired);
-            bool fctIsActive = (player.mainAbilities.FooExplodeConsecutiveStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeConsecutiveStyleUpgrade.AbilityData.IsAcquired);
-
-            if((blastIsActive ^ flowIsActive ^ fctIsActive) && !(blastIsActive && fctIsActive && fctIsActive)) {
-                modifiers.RemoveAll(m => m.Key == "random_talisman");
-            }
         }
 
         public void ApplyModifiers(int iteration) {

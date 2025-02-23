@@ -1,6 +1,7 @@
 ﻿using BossChallengeMod.Modifiers.Managers;
 using HarmonyLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,7 @@ namespace BossChallengeMod.Modifiers {
 
         protected MonsterYanlaoGunController? YanlaoGunController;
         public float MaxDistance { get; set; } = 800f;
+        protected bool isDelaying = false;
 
         public override void Awake() {
             base.Awake();
@@ -32,7 +34,8 @@ namespace BossChallengeMod.Modifiers {
                 !YanlaoGunController.IsRunning && 
                 !IsPaused &&
                 !Player.i.lockMoving &&
-                !Player.i.freeze) {
+                !Player.i.freeze &&
+                !isDelaying) {
                 YanlaoGunController.StartGun();
             }
         }
@@ -46,8 +49,15 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
 
             if(!YanlaoGunController.IsRunning && !IsPaused) {
-                YanlaoGunController?.StartGun();
+                StartCoroutine(StartWithDelay(5));
             }
+        }
+
+        protected IEnumerator StartWithDelay(float delay) {
+            isDelaying = true;
+            yield return new WaitForSeconds(delay);
+            YanlaoGunController?.StartGun();
+            isDelaying = false;
         }
 
         public override void NotifyDeactivation(int iteration) {

@@ -49,7 +49,8 @@ namespace BossChallengeMod.Modifiers {
             private List<string> incompatibles = new();
             private List<string> ignoredMonsters = new();
             private List<string> combinationModifiers = new();
-            public Predicate<ModifierConfig>? conditionPredicate = null;
+            private Func<ModifierConfig, bool>? conditionPredicate = null;
+            private Func<ModifierConfig, int, bool>? canBeRolledConditionPredicate = null;
 
             public ModifierConfigBuilder AddKey(string key) {
                 this.key = key;
@@ -99,8 +100,14 @@ namespace BossChallengeMod.Modifiers {
                 return this;
             }
 
-            public ModifierConfigBuilder AddConditionPredicate(Predicate<ModifierConfig> predicate) {
+            public ModifierConfigBuilder AddConditionPredicate(Func<ModifierConfig, bool> predicate) {
                 conditionPredicate = predicate;
+
+                return this;
+            }
+
+            public ModifierConfigBuilder AddCanBeRolledConditionPredicate(Func<ModifierConfig, int, bool> predicate) {
+                this.canBeRolledConditionPredicate = predicate;
 
                 return this;
             }
@@ -122,9 +129,10 @@ namespace BossChallengeMod.Modifiers {
                         objectName: objectName,
                         controllerConfig: modifierControllerConfig,
                         persistent: isPersistent,
-                        conditionPredicate,
-                        combinationModifiers,
-                        isCombination);
+                        conditionPredicate: conditionPredicate,
+                        canBeRolledConditionPredicate: canBeRolledConditionPredicate,
+                        combinationModifiers: combinationModifiers,
+                        isCombinationModifier: isCombination);
 
                 return config;
             }

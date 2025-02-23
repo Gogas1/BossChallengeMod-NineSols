@@ -45,6 +45,7 @@
   "shield_break_bomb": "Shield Break bomb",
   "qi_overload_bomb": "Qi Overload Bomb",
   "qi_depletion_bomb": "Qi Depletion Bomb",
+  "cooldown_bomb": "Cooldown Bomb",
 
   "config_cycling_enabled_description": "Enable Boss Revival.\n The boss will restore health and return to the first phase instead of dying.",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
@@ -97,6 +98,7 @@
   "config_modifiers_shield_break_bomb_enabled_description": "Shield Break Bomb Modifier.\n Two bombs will appear on Yi after the enemy's shield is broken. The enemy can only receive this modifier if they have any shield modifier.",
   "config_modifiers_qi_overload_bomb_enabled_description": "Qi Overload Bomb Modifier.\n One bomb will appear on Yi after reaching the maximum Qi charges.",
   "config_modifiers_qi_depletion_bomb_enabled_description": "Qi Depletion Bomb Modifier.\n Two bombs will appear on Yi after all Qi charges are depleted.",
+  "config_modifiers_cooldown_bomb_enabled_description": "Cooldown Bomb Modifier.\n The bomb will periodically spawn on Yi.",
 
   "config_story_enabled_description": "Enables the mod in normal game mode.",
 

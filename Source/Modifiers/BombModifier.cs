@@ -27,10 +27,10 @@ namespace BossChallengeMod.Modifiers {
         protected virtual void Update() {
             var postureSystem = Monster?.postureSystem ?? null;
             if (postureSystem != null &&
-                !postureSystem.IsMonsterEmptyPosture &&
-                !IsPaused &&
-                !Player.i.lockMoving &&
-                !Player.i.freeze) {
+                postureSystem.IsMonsterEmptyPosture &&
+                IsPaused &&
+                Player.i.lockMoving &&
+                Player.i.freeze) {
 
                 BombController?.DeactivateBombs();
             }

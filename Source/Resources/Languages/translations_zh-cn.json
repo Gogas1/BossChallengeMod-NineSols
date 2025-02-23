@@ -45,6 +45,7 @@
   "shield_break_bomb": "破盾炸弹",
   "qi_overload_bomb": "气过载炸弹",
   "qi_depletion_bomb": "气耗竭炸弹",
+  "cooldown_bomb": "冷却炸弹",
 
   "config_cycling_enabled_description": "启用首领复活。\n首领将恢复生命值并返回第一阶段，而不是死亡。",
   "config_single_recording_enabled_description": "记录战斗结果，而不受配置的影响。默认情况下，每种唯一的配置状态（包括第1、2、3节）都会生成结果，以便每种设置的挑战难度都有自己的结果。启用此设置后，将会记录并使用统一的结果，而不考虑挑战设置。",
@@ -88,5 +89,6 @@
   "config_modifiers_qi_bomb_enabled_description": "气炸弹修改器。\n护符爆炸后，羿身上将出现两个炸弹。",
   "config_modifiers_shield_break_bomb_enabled_description": "破盾炸弹修改器。\n在敌人护盾破裂后，羿身上将出现两个炸弹。敌人只有在拥有任一护盾修改器时才能获得此修改器。",
   "config_modifiers_qi_overload_bomb_enabled_description": "气过载炸弹修改器。\n达到气充能上限后，羿身上将出现一个炸弹。",
-  "config_modifiers_qi_depletion_bomb_enabled_description": "气耗竭炸弹修改器。\n耗尽所有气充能后，羿身上将出现两个炸弹。"
+  "config_modifiers_qi_depletion_bomb_enabled_description": "气耗竭炸弹修改器。\n耗尽所有气充能后，羿身上将出现两个炸弹。",
+  "config_modifiers_cooldown_bomb_enabled_description": "冷却炸弹修正器。\n炸弹会定期生成在羿身上。"
 }

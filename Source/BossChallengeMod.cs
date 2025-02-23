@@ -193,7 +193,8 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<TimerModifier>("timer", "TimerModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.TimerModifierEnabled)
+            .AddConditionPredicate(_ => ConfigurationToUse.TimerModifierEnabled && ApplicationCore.IsInBossMemoryMode)
+            .AddCanBeRolledConditionPredicate((_, iteration) => iteration > 0)
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant (1)",
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
@@ -245,7 +246,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<RandomArrowModifier>("random_arrow", "RandomArrowModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.RandomArrowModifierEnabled)
+            .AddConditionPredicate(_ => ConfigurationToUse.RandomArrowModifierEnabled && Player.i.mainAbilities.ArrowAbility.IsActivated)
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant (1)",
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
@@ -256,9 +257,19 @@ public class BossChallengeMod : BaseUnityPlugin {
                 ])
             .BuildAndAdd();
 
+        var randomTalismanCondition = (bool isEnabled) => {
+            var player = Player.i;
+
+            bool blastIsActive = (player.mainAbilities.FooExplodeAllStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAllStyleUpgrade.AbilityData.IsAcquired);
+            bool flowIsActive = (player.mainAbilities.FooExplodeAutoStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAutoStyleUpgrade.AbilityData.IsAcquired);
+            bool fctIsActive = (player.mainAbilities.FooExplodeConsecutiveStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeConsecutiveStyleUpgrade.AbilityData.IsAcquired);
+
+            return (blastIsActive ^ flowIsActive ^ fctIsActive) && !(blastIsActive && fctIsActive && fctIsActive) && isEnabled;
+        };
+
         modifiersStore
             .CreateModifierBuilder<RandomTaliModifier>("random_talisman", "RandomTalismanModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.RandomTalismanModifierEnabled)
+            .AddConditionPredicate(_ => randomTalismanCondition(ConfigurationToUse.RandomTalismanModifierEnabled))
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant (1)",
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
@@ -274,9 +285,13 @@ public class BossChallengeMod : BaseUnityPlugin {
             .AddConditionPredicate(_ => ConfigurationToUse.EnduranceModifierEnabled)
             .BuildAndAdd();
 
+        var shieldsCondition = (bool isEnabled) => {
+            return Player.i.mainAbilities.ChargedAttackAbility.IsActivated && isEnabled;
+        };
+
         modifiersStore
             .CreateModifierBuilder<QiShieldModifier>("qi_shield", "QiShieldModifer")
-            .AddConditionPredicate(_ => ConfigurationToUse.QiShieldModifierEnabled)
+            .AddConditionPredicate(_ => shieldsCondition(ConfigurationToUse.QiShieldModifierEnabled))
             .AddIncompatibles(["timer_shield", "distance_shield"])
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant",
@@ -293,7 +308,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<TimedShieldModifier>("timer_shield", "CooldownShieldModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.TimedShieldModifierEnabled)
+            .AddConditionPredicate(_ => shieldsCondition(ConfigurationToUse.TimedShieldModifierEnabled))
             .AddIncompatibles(["qi_shield", "distance_shield"])
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant",
@@ -310,7 +325,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<DistanceShieldModifier>("distance_shield", "DistanceShieldModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.DistanceShieldModifierEnabled)
+            .AddConditionPredicate(_ => shieldsCondition(ConfigurationToUse.DistanceShieldModifierEnabled))
             .AddIncompatibles(["timer_shield", "qi_shield"])
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant",
@@ -340,6 +355,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<YanlaoGunModifier>("ya_gun", "YanlaoGunModifier")
+            .AddIncompatibles(["shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb", "cooldown_bomb"])
             .AddConditionPredicate(_ => ConfigurationToUse.YanlaoGunModifierEnabled)
             .AddController(typeof(MonsterYanlaoGunController), true)
             .AddIgnoredMonsters([
@@ -379,6 +395,13 @@ public class BossChallengeMod : BaseUnityPlugin {
             .AddConditionPredicate(_ => ConfigurationToUse.QiDepletionBombModifierEnabled)
             .AddController(typeof(MonsterBombController), true)
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb"])
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<CooldownBombModifier>("cooldown_bomb", "CooldownBomb")
+            .AddConditionPredicate(_ => ConfigurationToUse.CooldownBombModifierEnabled)
+            .AddController(typeof(MonsterBombController), true)
+            .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb"])
             .BuildAndAdd();
     }
 }

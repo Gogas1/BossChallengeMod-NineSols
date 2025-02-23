@@ -135,6 +135,7 @@ namespace BossChallengeMod.Configuration {
         public bool ShieldBreakBombModifierEnabled;
         public bool QiOverloadBombModifierEnabled;
         public bool QiDepletionBombModifierEnabled;
+        public bool CooldownBombModifierEnabled;
         #endregion Modifiers
     }
 }

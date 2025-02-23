@@ -54,6 +54,7 @@ namespace BossChallengeMod.Configuration {
         private ConfigEntry<bool> isShieldBreakBombModifierEnabled = null!;
         private ConfigEntry<bool> isQiOverloadBombModifierEnabled = null!;
         private ConfigEntry<bool> isQiDepletionBombModifierEnabled = null!;
+        private ConfigEntry<bool> isCooldownBombModifierEnabled = null!;
 
         #endregion Challenge configs
 
@@ -383,7 +384,7 @@ namespace BossChallengeMod.Configuration {
 
             isRegenerationModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Regeneration modiifer",
+                "3.M Regeneration modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_regeneration_enabled_description"));
             isRegenerationModifierEnabled.SettingChanged += (_, _) => {
@@ -394,7 +395,7 @@ namespace BossChallengeMod.Configuration {
 
             isKnockbackModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Knockback modiifer",
+                "3.M Knockback modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_knockback_enabled_description"));
             isKnockbackModifierEnabled.SettingChanged += (_, _) => {
@@ -405,7 +406,7 @@ namespace BossChallengeMod.Configuration {
 
             isRandomArrowModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Random arrow modiifer",
+                "3.M Random arrow modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_random_arrow_enabled_description"));
             isRandomArrowModifierEnabled.SettingChanged += (_, _) => {
@@ -416,7 +417,7 @@ namespace BossChallengeMod.Configuration {
 
             isRandomTalismanModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Random talisman modiifer",
+                "3.M Random talisman modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_random_talisman_enabled_description"));
             isRandomTalismanModifierEnabled.SettingChanged += (_, _) => {
@@ -427,7 +428,7 @@ namespace BossChallengeMod.Configuration {
 
             isEnduranceModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Endurance modiifer",
+                "3.M Endurance modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_endurance_enabled_description"));
             isEnduranceModifierEnabled.SettingChanged += (_, _) => {
@@ -438,7 +439,7 @@ namespace BossChallengeMod.Configuration {
 
             isQiShieldModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Shield: Qi Shield modiifer",
+                "3.M Shield: Qi Shield modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
             isQiShieldModifierEnabled.SettingChanged += (_, _) => {
@@ -449,7 +450,7 @@ namespace BossChallengeMod.Configuration {
 
             isTimedShieldModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Shield: Cooldown Shield modiifer",
+                "3.M Shield: Cooldown Shield modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_cooldown_shield_enabled_description"));
             isTimedShieldModifierEnabled.SettingChanged += (_, _) => {
@@ -460,7 +461,7 @@ namespace BossChallengeMod.Configuration {
 
             isQiOverloadModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Qi Overload modiifer",
+                "3.M Qi Overload modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_overload_enabled_description"));
             isQiOverloadModifierEnabled.SettingChanged += (_, _) => {
@@ -471,7 +472,7 @@ namespace BossChallengeMod.Configuration {
 
             isDistanceShieldModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Shield: Distance Shield modiifer",
+                "3.M Shield: Distance Shield modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_distance_shield_enabled_description"));
             isDistanceShieldModifierEnabled.SettingChanged += (_, _) => {
@@ -482,7 +483,7 @@ namespace BossChallengeMod.Configuration {
 
             isYanlaoGunModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Yanlaos Assistance modiifer",
+                "3.M Yanlaos Assistance modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"));
             isYanlaoGunModifierEnabled.SettingChanged += (_, _) => {
@@ -493,7 +494,7 @@ namespace BossChallengeMod.Configuration {
 
             isQiBombModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Bomb: Qi Bomb modiifer",
+                "3.M Bomb: Qi Bomb modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"));
             isQiBombModifierEnabled.SettingChanged += (_, _) => {
@@ -504,7 +505,7 @@ namespace BossChallengeMod.Configuration {
 
             isShieldBreakBombModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Bomb: Shield Break Bomb modiifer",
+                "3.M Bomb: Shield Break Bomb modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"));
             isShieldBreakBombModifierEnabled.SettingChanged += (_, _) => {
@@ -515,7 +516,7 @@ namespace BossChallengeMod.Configuration {
 
             isQiOverloadBombModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Bomb: Qi Overload Bomb modiifer",
+                "3.M Bomb: Qi Overload Bomb modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"));
             isQiOverloadBombModifierEnabled.SettingChanged += (_, _) => {
@@ -526,12 +527,23 @@ namespace BossChallengeMod.Configuration {
 
             isQiDepletionBombModifierEnabled = Config.Bind(
                 "3. Modifiers",
-                "3.M Bomb: Qi Depletion Bomb modiifer",
+                "3.M Bomb: Qi Depletion Bomb modifer",
                 true,
                 LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"));
             isQiDepletionBombModifierEnabled.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.QiDepletionBombModifierEnabled = isQiDepletionBombModifierEnabled.Value;
+                ChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
+            isCooldownBombModifierEnabled = Config.Bind(
+                "3. Modifiers",
+                "3.M Bomb: Cooldown Bomb modifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_cooldown_bomb_enabled_description"));
+            isCooldownBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = ChallengeConfigurationManager.ChallengeConfiguration;
+                config.CooldownBombModifierEnabled = isCooldownBombModifierEnabled.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
         }
@@ -588,6 +600,7 @@ namespace BossChallengeMod.Configuration {
             config.ShieldBreakBombModifierEnabled = isShieldBreakBombModifierEnabled.Value;
             config.QiOverloadBombModifierEnabled = isQiOverloadBombModifierEnabled.Value;
             config.QiDepletionBombModifierEnabled = isQiDepletionBombModifierEnabled.Value;
+            config.CooldownBombModifierEnabled = isCooldownBombModifierEnabled.Value;
 
             config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
 
@@ -1651,6 +1664,17 @@ namespace BossChallengeMod.Configuration {
                 StoryChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
+            _storyConfigs.IsCooldownBombModifierEnabled = Config.Bind(
+                "7. Modifiers",
+                "7.M Bomb: Cooldown Bomb modifer",
+                true,
+                LocalizationResolver.Localize("config_modifiers_cooldown_bomb_enabled_description"));
+            _storyConfigs.IsCooldownBombModifierEnabled.SettingChanged += (_, _) => {
+                var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
+                config.CooldownBombModifierEnabled = _storyConfigs.IsCooldownBombModifierEnabled.Value;
+                StoryChallengeConfigurationManager.ChallengeConfiguration = config;
+            };
+
             #endregion Modifiers
         }
 
@@ -1757,6 +1781,13 @@ namespace BossChallengeMod.Configuration {
             config.QiOverloadModifierEnabled = _storyConfigs.IsQiOverloadModifierEnabled.Value;
             config.DistanceShieldModifierEnabled = _storyConfigs.IsDistanceShieldModifierEnabled.Value;
             config.YanlaoGunModifierEnabled = _storyConfigs.IsYanlaoGunModifierEnabled.Value;
+
+            config.QiBombModifierEnabled = _storyConfigs.IsQiBombModifierEnabled.Value;
+            config.ShieldBreakBombModifierEnabled = _storyConfigs.IsShieldBreakBombModifierEnabled.Value;
+            config.QiOverloadBombModifierEnabled = _storyConfigs.IsQiOverloadBombModifierEnabled.Value;
+            config.QiDepletionBombModifierEnabled = _storyConfigs.IsQiDepletionBombModifierEnabled.Value;
+            config.CooldownBombModifierEnabled = _storyConfigs.IsCooldownBombModifierEnabled.Value;
+
             config.ModifiersStartFromDeath = _storyConfigs.ModifiersStartDeathValue.Value;
 
             StoryChallengeConfigurationManager.ChallengeConfiguration = config;

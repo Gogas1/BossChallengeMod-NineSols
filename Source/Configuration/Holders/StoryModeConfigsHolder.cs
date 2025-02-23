@@ -117,6 +117,7 @@ namespace BossChallengeMod.Configuration.Holders {
         public ConfigEntry<bool> IsShieldBreakBombModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsQiOverloadBombModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsQiDepletionBombModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsCooldownBombModifierEnabled { get; set; } = null!;
 
     }
 }

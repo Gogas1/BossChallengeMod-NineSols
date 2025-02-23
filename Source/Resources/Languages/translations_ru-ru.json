@@ -47,6 +47,7 @@
   "shield_break_bomb": "Бомба поломки щита",
   "qi_overload_bomb": "Бомба перегрузки Ци",
   "qi_depletion_bomb": "Бомба истощения Ци",
+  "cooldown_bomb": "Периодическая бомба",
 
   "config_cycling_enabled_description": "Включить восстановление боссов.\n Босс восстановит здоровье и перейдёт в первую фазу вместо смерти.",
   "config_cycles_number_description": "Количество смертей босса.\n Босс умрёт после указанного количества смертей(учитывая эту по счёту).",
@@ -98,6 +99,7 @@
   "config_modifiers_shield_break_bomb_enabled_description": "Модификатор бомбы поломки щита.\n Две бомбы появятся на И после поломки щита врага. Враг может получить этот модификатор только при наличии любого модификатора щита.",
   "config_modifiers_qi_overload_bomb_enabled_description": "Модификатор бомбы перегрузки Ци.\n Одна бомба появятся на И после достижения максимума зарядов Ци.",
   "config_modifiers_qi_depletion_bomb_enabled_description": "Модификатор бомбы расхода Ци.\n Две бомбы появятся на И после опустошения всех зарядов Ци.",
+  "config_modifiers_cooldown_bomb_enabled_description": "Модификатор периодической бомбы.\n Бомба периодически будет появляться на И.",
 
   "config_story_enabled_description": "Включает работу мода в обычном режиме игры.",
 

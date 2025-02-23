@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BossChallengeMod.Modifiers {
     public class CooldownBombModifier : BombModifier {
-        private float timer = 9f;
+        private float timer = 6.5f;
 
         protected override void Update() {
             base.Update();
@@ -22,11 +22,11 @@ namespace BossChallengeMod.Modifiers {
 
                 if (timer <= 0) {
                     var playerCenterPos = new Vector2(Player.i.transform.position.x, Player.i.transform.position.y + 20f);
-                    playerCenterPos = playerCenterPos + Player.i.Velocity;
+                    var playerPredictPos = playerCenterPos + (Player.i.Velocity * 0.2f);
 
-                    BombController?.PlaceBombAt(playerCenterPos);
+                    BombController?.PlaceBombAt(playerPredictPos);
 
-                    timer = BossChallengeMod.Random.Next(9, 13);
+                    timer = (float)(BossChallengeMod.Random.NextDouble() * (9 - 5.5) + 5.5);
                 }
             }
         }

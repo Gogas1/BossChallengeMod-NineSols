@@ -26,7 +26,8 @@ namespace BossChallengeMod.Modifiers {
         public List<string> Incompatibles { get; } = new List<string>();
         public List<string> IgnoredMonsters { get; } = new List<string>();
         public List<string> CombinationModifiers { get; } = new List<string>();
-        public Predicate<ModifierConfig>? CreateConditionPredicate { get; set; }
+        public Func<ModifierConfig, bool>? CreateConditionPredicate { get; set; }
+        public Func<ModifierConfig, int, bool>? CanBeRolledConditionPredicate { get; set; }
 
         public ModifierConfig() {
             
@@ -38,7 +39,8 @@ namespace BossChallengeMod.Modifiers {
             string objectName = "Modifier",
             ModifierControllerConfig? controllerConfig = null,
             bool persistent = false,
-            Predicate<ModifierConfig>? conditionPredicate = null,
+            Func<ModifierConfig, bool>? conditionPredicate = null,
+            Func<ModifierConfig, int, bool>? canBeRolledConditionPredicate = null,
             IEnumerable<string>? combinationModifiers = null,
             bool isCombinationModifier = false) {
 
@@ -49,6 +51,7 @@ namespace BossChallengeMod.Modifiers {
             IsPersistentModifier = persistent;
             IsCombinationModifier = isCombinationModifier;
             CreateConditionPredicate = conditionPredicate;
+            CanBeRolledConditionPredicate = canBeRolledConditionPredicate;
 
             if (combinationModifiers != null) {
                 CombinationModifiers.AddRange(combinationModifiers);
@@ -62,9 +65,19 @@ namespace BossChallengeMod.Modifiers {
             string objectName = "Modifiers",
             ModifierControllerConfig? controllerConfig = null,
             bool persistent = false,
-            Predicate<ModifierConfig>? conditionPredicate = null,
+            Func<ModifierConfig, bool>? conditionPredicate = null,
+            Func<ModifierConfig, int, bool>? canBeRolledConditionPredicate = null,
             IEnumerable<string>? combinationModifiers = null,
-            bool isCombinationModifier = false) : this(key, modifierType, objectName, controllerConfig, persistent, conditionPredicate, combinationModifiers, isCombinationModifier) {
+            bool isCombinationModifier = false) : this(
+                key,
+                modifierType, 
+                objectName: objectName, 
+                controllerConfig: controllerConfig, 
+                persistent: persistent, 
+                conditionPredicate: conditionPredicate,
+                canBeRolledConditionPredicate: canBeRolledConditionPredicate,
+                combinationModifiers: combinationModifiers, 
+                isCombinationModifier: isCombinationModifier) {
             Incompatibles = incompatibles.ToList();
 
         }
@@ -77,9 +90,20 @@ namespace BossChallengeMod.Modifiers {
             string objectName = "Modifiers",
             ModifierControllerConfig? controllerConfig = null,
             bool persistent = false,
-            Predicate<ModifierConfig>? conditionPredicate = null,
+            Func<ModifierConfig, bool>? conditionPredicate = null,
+            Func<ModifierConfig, int, bool>? canBeRolledConditionPredicate = null,
             IEnumerable<string>? combinationModifiers = null,
-            bool isCombinationModifier = false) : this(key, modifierType, incompatibles, objectName, controllerConfig, persistent, conditionPredicate, combinationModifiers, isCombinationModifier) {
+            bool isCombinationModifier = false) : this(
+                key,
+                modifierType,
+                incompatibles,
+                objectName: objectName,
+                controllerConfig: controllerConfig,
+                persistent: persistent,
+                conditionPredicate: conditionPredicate,
+                canBeRolledConditionPredicate: canBeRolledConditionPredicate,
+                combinationModifiers: combinationModifiers,
+                isCombinationModifier: isCombinationModifier) {
             IgnoredMonsters = ignoredMonsters.ToList();
         }
 
