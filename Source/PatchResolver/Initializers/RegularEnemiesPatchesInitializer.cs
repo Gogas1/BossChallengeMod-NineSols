@@ -296,6 +296,12 @@ namespace BossChallengeMod.PatchResolver.Initializers {
 
             #endregion A5_S4
 
+            #region A6_S3
+
+            "A6_S3/Room/Prefab/寶箱  Chests/LootProvider 快攻玉/Chest Runner SpiderMine Spawner 盜寶哥布林 丟蜘蛛雷",
+
+            #endregion A6_S3
+
             #region A7_S2
 
             "A2_Stage_Remake/Room/Prefab/FallingTeleportTrickBackgroundProvider/Part1/Period Cycle Acitvate Group (2)/FSMs/Period Cycle FSM_Shoot Danger Projectile Variant/FSM Animator/AbstractRoot/StealthGameMonster_DummyMonster_For機關 平行宇宙 Variant",

@@ -20,7 +20,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 var hammerZombie = GameObject.Find(hammerZombiePath).GetComponent<StealthGameMonster>();
 
                 var spearZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
-                var hammerZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
+                var hammerZombieModifiers = InitModifiers(hammerZombie, controller, ConfigurationToUse);
 
                 controller.MustIncludeModifiers.AddRange(spearZombieModifiers);
                 controller.MustIncludeModifiers.AddRange(hammerZombieModifiers);

@@ -116,7 +116,7 @@ namespace BossChallengeMod.KillCounting {
             }
         }
 
-        public void OnDestroy() {
+        public void OnDestroing() {
             OnDestroyActions?.Invoke();
         }
 

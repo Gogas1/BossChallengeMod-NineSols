@@ -56,7 +56,7 @@ namespace BossChallengeMod.PatchResolver.Initializers {
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/Room/Prefab/EventBinder (Boss Fight 相關)/General Boss Fight FSM Object_風氏兄妹/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_伏羲_新", GetFuxiBossPatch());
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/Room/Prefab/EventBinder (Boss Fight 相關)/General Boss Fight FSM Object_風氏兄妹/FSM Animator/LogicRoot/---Boss---/BossShowHealthArea/StealthGameMonster_新女媧 Variant", GetNuwaBossPatch());
             resolver.AddPatch("A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_GouMang Variant", GetGoumangBossPatch());
-            //resolver.AddPatch("A4_S5/MechClaw Game Play/Monster_GiantMechClaw", GetClawBossPatch());
+            resolver.AddPatch("A4_S5/MechClaw Game Play/Monster_GiantMechClaw", GetClawBossPatch());
 
             var butterflyPatch = GetButterflyBossPatch();
             resolver.AddPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant", butterflyPatch);
@@ -187,6 +187,26 @@ namespace BossChallengeMod.PatchResolver.Initializers {
 
             return eigongBossPatch;
         }
+
+        private GeneralBossPatch GetClawBossPatch() {
+            var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
+
+            var clawBossPatch = new RevivalChallengeBossPatch();
+            clawBossPatch.DieStates = [
+                MonsterBase.States.BossAngry,
+            MonsterBase.States.LastHit,
+            MonsterBase.States.Dead
+            ];
+
+            var resetStateConfig = clawBossPatch.ResetStateConfiguration;
+            resetStateConfig.ExitState = MonsterBase.States.Attack7;
+            resetStateConfig.Animations = ["PostureBreak"];
+            resetStateConfig.StateType = bossReviveMonsterState;
+            resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
+
+            return clawBossPatch;
+        }
+
         private GeneralBossPatch GetDefaultBossPatch() {
             var bossReviveMonsterState = monsterStateValuesResolver.GetState("BossRevive");
 

@@ -339,6 +339,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             playerSensor?.gameObject.SetActive(false);
 
             _isDied = false;
+            _isStartRolled = false;
 
             if(UseCompositeTracking || UseProximityShow) {
                 BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
@@ -368,7 +369,10 @@ namespace BossChallengeMod.Modifiers.Managers {
             RollableModifiers.Clear();
             RollableModifiers.AddRange(ModifierConfigs.Where(mc => !mc.IsPersistentModifier && !mc.IsCombinationModifier));
 
-            CombinationModifiers = ModifierConfigs.Where(mc => mc.IsCombinationModifier).ToDictionary(mc => mc.Key, mc => mc);
+            CombinationModifiers.Clear();
+            foreach (var item in ModifierConfigs.Where(mc => mc.IsCombinationModifier)) {
+                CombinationModifiers.TryAdd(item.Key, item);
+            }
         }
 
         private void PauseAll() {

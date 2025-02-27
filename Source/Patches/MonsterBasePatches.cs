@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BossChallengeMod.BossPatches;
 using BossChallengeMod.Interfaces;
+using BossChallengeMod.KillCounting;
 using BossChallengeMod.Modifiers;
 using BossChallengeMod.Modifiers.Managers;
 using HarmonyLib;
@@ -133,11 +134,16 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch("OnExplode")]
         [HarmonyPostfix]
         private static void OnExplode_Postfix(MonsterBase __instance) {
-            var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
-            if (modifiers != null) {
-                foreach (ModifierBase modifier in modifiers) {
-                    modifier.MonsterNotify(MonsterNotifyType.OnExplode);
+            try {
+                var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
+                if (modifiers != null) {
+                    foreach (ModifierBase modifier in modifiers) {
+                        modifier.MonsterNotify(MonsterNotifyType.OnExplode);
+                    }
                 }
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
             }
         }
 
@@ -147,6 +153,11 @@ namespace BossChallengeMod.Patches {
             var modifiersController = __instance.GetComponent<MonsterModifierController>();
             if (modifiersController != null) {
                 modifiersController.OnDestroing();
+            }
+
+            var killCounterController = __instance.GetComponent<MonsterKillCounter>();
+            if (killCounterController != null) {
+                killCounterController.OnDestroing();
             }
         }
     }

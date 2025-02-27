@@ -10,8 +10,13 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch(nameof(PlayerFooExplodeState.AnimationEvent))]
         [HarmonyPostfix]
         private static void AnimationEvent_Postfix() {
-            if (Player.i.mainAbilities.FooExplodeAutoStyle.IsActivated) {
-                Player.i.ChangeState(PlayerStateType.Normal, false);
+            try {
+                if (Player.i.mainAbilities.FooExplodeAutoStyle.IsActivated) {
+                    Player.i.ChangeState(PlayerStateType.Normal, false);
+                }
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
             }
         }
     }

@@ -170,6 +170,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
         UIController.FixUI();
+        GlobalModifiersFlags.ValidateAll();
         if (!isToastsDisplayed) {
             isToastsDisplayed = true;
             StartCoroutine(ShowToasts());
@@ -216,6 +217,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         modifiersStore
             .CreateModifierBuilder<DamageBuildupModifier>("damage_buildup", "DamageBuildupModifier")
             .AddConditionPredicate(_ => ConfigurationToUse.DamageBuildupModifierEnabled)
+            .AddIncompatibles(["parry_damage", "qi_overload"])
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant (1)",
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
@@ -333,6 +335,7 @@ public class BossChallengeMod : BaseUnityPlugin {
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
                 "StealthGameMonster_Boss_ButterFly Variant (3)",
                 "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "BossShowHealthArea/StealthGameMonster_伏羲_新",
                 "StealthGameMonster_SpearHorseMan",
                 "Monster_GiantMechClaw",
                 ])
@@ -343,6 +346,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         modifiersStore
             .CreateModifierBuilder<QiOverloadModifier>("qi_overload", "QiOverloadModifier")
             .AddConditionPredicate(_ => ConfigurationToUse.QiOverloadModifierEnabled)
+            .AddIncompatibles(["damage_buildup"])
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant (1)",
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
@@ -402,6 +406,14 @@ public class BossChallengeMod : BaseUnityPlugin {
             .AddConditionPredicate(_ => ConfigurationToUse.CooldownBombModifierEnabled)
             .AddController(typeof(MonsterBombController), true)
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .BuildAndAdd();
     }
 }

@@ -16,47 +16,71 @@ namespace BossChallengeMod.Modifiers {
 
         protected Coroutine? regenerationCoroutine;
 
+        protected bool canHeal = false;
+        protected bool coroutineRunning = false;
 
         public override void Awake() {
-            base.Awake();
-            Monster?.postureSystem.OnPostureDecrease.AddListener(PauseRegeneration);
+            try {
+                base.Awake();
+                Monster?.postureSystem.OnPostureDecrease.AddListener(PauseRegeneration);
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+            }
         }
 
         public override void NotifyActivation(int iteration) {
-            base.NotifyActivation(iteration);
+            try {
+                base.NotifyActivation(iteration);
 
-            if (regenerationCoroutine != null) {
-                StopCoroutine(regenerationCoroutine);
-            }
-
-            enabled = true;
-
-            if (enabled) {
+                enabled = true;
                 regenerationPool = CalculateTotalHp() / 2;
-                regenerationCoroutine = StartCoroutine(StartRegeneration());
+
+                StartRegenerationCoroutine();
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
             }
         }
 
         public override void NotifyDeactivation(int iteration) {
-            base.NotifyDeactivation();
+            try {
+                base.NotifyDeactivation();
 
-            enabled = false;
+                enabled = false;
+                canHeal = enabled && regenerationPool > 0 && !IsPaused && pausedFor <= 0;
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+            }
         }
 
         public void Update() {
-            if(pausedFor > 0) {
-                pausedFor = Mathf.Max(0, pausedFor - Time.deltaTime);
+            try {
+                if (pausedFor > 0) {
+                    pausedFor = Mathf.Max(0, pausedFor - Time.deltaTime);
+                }
+
+                canHeal = enabled && regenerationPool > 0 && !IsPaused && pausedFor <= 0;
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
             }
         }
 
         private void PauseRegeneration() {
-            pausedFor = pauseTime;
+            try {
+                pausedFor = pauseTime;
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+            }
         }
 
         private IEnumerator StartRegeneration() {
             var postureSystem = Monster?.postureSystem ?? null;
-            while (enabled && regenerationPool > 0 && postureSystem != null) {
-                if ((!postureSystem.IsMonsterEmptyPosture && postureSystem.MaxPostureValue > postureSystem.CurrentHealthValue && pausedFor <= 0f) && !IsPaused) {
+            coroutineRunning = true;
+            while (canHeal && postureSystem != null) {
+                if (!postureSystem.IsMonsterEmptyPosture && postureSystem.MaxPostureValue > postureSystem.CurrentHealthValue) {
 
                     int hpToHeal = Mathf.Min((int)(postureSystem.MaxPostureValue - postureSystem.CurrentHealthValue), heal);
                     postureSystem.GainPosture(hpToHeal);
@@ -65,29 +89,83 @@ namespace BossChallengeMod.Modifiers {
 
                 yield return new WaitForSeconds(delay);
             }
+            coroutineRunning = false;
+        }
+
+        protected void StartRegenerationCoroutine() {
+            if (enabled && gameObject.activeSelf && !IsPaused) {
+                if (regenerationCoroutine != null) {
+                    StopCoroutine(regenerationCoroutine);
+                    coroutineRunning = false;
+                }
+
+                regenerationCoroutine = StartCoroutine(StartRegeneration());
+            }
         }
 
         private int CalculateTotalHp() {
-            int totalHP = default;
-            if(Monster != null) {                 
-                var monsterStat = Monster.monsterStat;
-                totalHP = (int)monsterStat.HealthValue;
+            try {
+                int totalHP = default;
+                if(Monster != null) {                 
+                    var monsterStat = Monster.monsterStat;
+                    totalHP = (int)monsterStat.HealthValue;
 
-                if (monsterStat.PhaseCount > 1) {
-                    totalHP += (int)monsterStat.HealthValue * (int)monsterStat.Phase2HealthRatio;
+                    if (monsterStat.PhaseCount > 1) {
+                        totalHP += (int)monsterStat.HealthValue * (int)monsterStat.Phase2HealthRatio;
+                    }
+
+                    if (monsterStat.PhaseCount > 2) {
+                        totalHP += (int)monsterStat.HealthValue * (int)monsterStat.Phase3HealthRatio;
+                    }
                 }
 
-                if (monsterStat.PhaseCount > 2) {
-                    totalHP += (int)monsterStat.HealthValue * (int)monsterStat.Phase3HealthRatio;
-                }
+                return totalHP;
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+                return 0;
             }
+        }
 
-            return totalHP;
+        public override void OnEnable() {
+            try {
+                base.OnEnable();
+
+                if (!coroutineRunning) {
+                    regenerationPool = CalculateTotalHp() / 2;
+                    StartRegenerationCoroutine();
+                }
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+            }
         }
 
         public void OnDestroy() {
-            enabled = false;
-            Monster?.postureSystem.OnPostureDecrease.RemoveListener(PauseRegeneration);
+            try {
+                enabled = false;
+                Monster?.postureSystem.OnPostureDecrease.RemoveListener(PauseRegeneration);
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+            }
+        }
+
+        public override void NotifyPause() {
+            base.NotifyPause();
+        }
+
+        public override void NotifyResume() {
+            try {
+                base.NotifyResume();
+
+                if (!coroutineRunning) {
+                    StartRegenerationCoroutine();
+                }
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
+            }
         }
     }
 }

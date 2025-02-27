@@ -34,13 +34,17 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch(nameof(PlayerParryState.Parried))]
         [HarmonyPrefix]
         private static void Parried_Prefix(ref ParryParam param, ref DamageDealer bindDamage) {
-            if (bindDamage.Owner == null) return;
-            var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
-            if (modifiers != null) {
-                var knockbackModifier = modifiers.FirstOrDefault(m => m.Key == "knockback");
-                if ((knockbackModifier?.enabled ?? false) && (!knockbackModifier?.IsPaused ?? false)) {
-                    param.knockBackValue = param.knockBackValue * 1.5f;
+            try {
+                if (bindDamage.Owner == null) return;
+                var modifiers = bindDamage.Owner.GetComponentsInChildren<ModifierBase>();
+                if (modifiers != null) {
+                    var knockbackModifier = modifiers.FirstOrDefault(m => m.Key == "knockback");
+                    if ((knockbackModifier?.enabled ?? false) && (!knockbackModifier?.IsPaused ?? false)) {
+                        param.knockBackValue = param.knockBackValue * 1.5f;
+                    }
                 }
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
         }
     }

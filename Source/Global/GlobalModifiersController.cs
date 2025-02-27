@@ -23,5 +23,14 @@ namespace BossChallengeMod.Global {
                 item.NotifySubscriber(playerEnergy);
             }
         }
+
+        public void ValidateAll() {
+            BlockArrowVotes.RemoveWhere(v => v == null);
+            BlockTalismanVotes.RemoveWhere(v => v == null);
+            EnableQiOverloadVotes.RemoveWhere(v => v == null);
+
+            PlayerGainFullQiSubscribers.RemoveWhere(s => s == null);
+            PlayerDepletedQiSubscribers.RemoveWhere(s => s == null);
+        }
     }
 }
