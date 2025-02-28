@@ -60,26 +60,12 @@ namespace BossChallengeMod.BossPatches {
                     resetBossState.AssignChallengeConfig(ConfigurationToUse);
 
                     if (ConfigurationToUse.EnableMod && UseKillCounter) {
-                        var killCounter = InitializeKillCounter(monsterBase);
-                        killCounter.UseRecording = UseRecording;
+                        var mainController = InitializeMainController(monsterBase, resetBossState);
 
-                        Action stateEnterEventActions = () => {
-                            killCounter.IncrementCounter();
-                        };
-
-                        var modifiersController = InitializeModifiers(monsterBase);
-                        modifiersController.Init();
-                        modifiersController.GenerateAvailableMods();
-
-                        stateEnterEventActions += () => {
-                            modifiersController.RollModifiers(killCounter.KillCounter);
-                            modifiersController.ApplyModifiers(killCounter.KillCounter);
-                        };
-
+                        var killCounter = InitializeKillCounter(monsterBase, mainController);
+                        var modifiersController = InitializeModifiers(monsterBase, mainController);
 
                         resetBossState.monsterKillCounter = killCounter;
-
-                        resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
 
                         if(!UseProximityActivation) {
                             BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
@@ -142,16 +128,34 @@ namespace BossChallengeMod.BossPatches {
             }
         }
 
-        protected virtual MonsterKillCounter InitializeKillCounter(MonsterBase monsterBase) {
+        protected virtual ChallengeMonsterController InitializeMainController(MonsterBase monsterBase, ResetBossState resetBossState) {
+            var controller = monsterBase.gameObject.AddComponent<ChallengeMonsterController>();
+            resetBossState.stateEvents.StateEnterEvent.AddListener(() => { controller.ProcessRevivalStateEnter(); });
+            resetBossState.stateEvents.StateExitEvent.AddListener(() => { controller.OnRevivalStateExit?.Invoke(); });
+
+            monsterBase.OnEngageEvent.AddListener(() => { controller.OnEngage?.Invoke(); });
+            monsterBase.OnDisEngageEvent.AddListener(() => { controller.OnDisengage?.Invoke(); });
+            monsterBase.OnDie.AddListener(() => { controller.ProcessDeath(); });
+
+            return controller;
+        }
+
+        protected virtual MonsterKillCounter InitializeKillCounter(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
             var killCounter = monsterBase.gameObject.AddComponent<MonsterKillCounter>();
             killCounter.EnemyType = EnemyType;          
             killCounter.CanBeTracked = UseKillCounterTracking;
             killCounter.UseProximityShow = UseProximityActivation;
+            killCounter.UseRecording = UseRecording;
+
+            monsterController.OnRevivalStateEnter += killCounter.UpdateCounter;
+            monsterController.OnEngage += killCounter.OnEngage;
+            monsterController.OnDisengage += killCounter.OnDisengage;
+            monsterController.OnDie += killCounter.UpdateCounter;
 
             return killCounter;
         }
 
-        protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
+        protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
             var config = ConfigurationToUse;
 
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
@@ -164,6 +168,21 @@ namespace BossChallengeMod.BossPatches {
             modifierController.CanBeTracked = UseModifierControllerTracking;
             modifierController.UseProximityShow = UseProximityActivation;
             modifierController.UseCompositeTracking = UseCompositeTracking;
+
+            monsterController.OnDie += modifierController.OnDie;
+            monsterController.OnEngage += modifierController.OnEngage;
+            monsterController.OnDisengage += modifierController.OnDisengage;
+            monsterController.OnRevivalStateEnter += modifierController.OnRevival;
+
+            modifierController.OnDestroyActions += () => {
+                monsterController.OnDie -= modifierController.OnDie;
+                monsterController.OnEngage -= modifierController.OnEngage;
+                monsterController.OnDisengage -= modifierController.OnDisengage;
+                monsterController.OnRevivalStateEnter -= modifierController.OnRevival;
+            };
+
+            modifierController.Init();
+            modifierController.GenerateAvailableMods();
 
             return modifierController;
         }

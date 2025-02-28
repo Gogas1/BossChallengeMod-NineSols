@@ -11,14 +11,14 @@ namespace BossChallengeMod.Modifiers {
             base.Awake();
         }
 
-        public override void NotifyActivation(int iteration) {
-            base.NotifyActivation(iteration);
+        public override void NotifyActivation() {
+            base.NotifyActivation();
 
             enabled = true;
         }
 
-        public override void NotifyDeactivation(int iteration) {
-            base.NotifyDeactivation(iteration);
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
 
             enabled = false;
         }

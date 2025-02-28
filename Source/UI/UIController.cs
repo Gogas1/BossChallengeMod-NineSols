@@ -100,7 +100,7 @@ namespace BossChallengeMod.UI {
         }
 
         private void CalculateRightPanelPosition(float width, float height, out float coordsX, out float coordsY) {
-            coordsX = width - width / 10f;
+            coordsX = width - width / 9f;
             coordsY = height - height / 4.5f;
         }
 
@@ -197,7 +197,7 @@ namespace BossChallengeMod.UI {
             textComponent.text = text;
 
             RectTransform rectTransform = textComponent.GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(200, 50);
+            rectTransform.sizeDelta = new Vector2(300, 50);
 
             textComponent.transform.localPosition = localPosition;
             textComponent.transform.SetParent(parent.transform, false);

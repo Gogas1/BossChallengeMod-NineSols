@@ -9,6 +9,7 @@ using BossChallengeMod.Modifiers;
 using BossChallengeMod.Modifiers.Managers;
 using HarmonyLib;
 using NineSolsAPI.Utils;
+using UnityEngine.Events;
 
 namespace BossChallengeMod.Patches {
 
@@ -21,7 +22,6 @@ namespace BossChallengeMod.Patches {
             __state = new List<MonsterState>();
 
             try {
-                bool skipped = true;
 
                 if (__instance.tag == "Boss") {
                     GeneralBossPatch? bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
@@ -33,7 +33,6 @@ namespace BossChallengeMod.Patches {
                         bossPatch.ProcessEventHandlers(receivers, senders);
                     }
 
-                    skipped = false;
                 }
 
                 if (__instance.CompareTag("Enemy") || __instance.CompareTag("Untagged")) {
@@ -44,15 +43,7 @@ namespace BossChallengeMod.Patches {
                         var senders = bossPatch.CreateSenders(__instance, __state);
                         var receivers = bossPatch.CreateReceivers(__instance, __state);
                         bossPatch.ProcessEventHandlers(receivers, senders);
-                    } else {
-                        Log.Info($"Prefix Patching. Null patched");
                     }
-
-                    skipped = false;
-                }
-
-                if (skipped) {
-                    Log.Warning($"Prefix Patching. The monster was skipped?");
                 }
             } catch (Exception e) {
                 Log.Error($"Prefix Patching. {e.Message}, {e.StackTrace}");
@@ -64,7 +55,6 @@ namespace BossChallengeMod.Patches {
         private static void CheckInit_Postfix(MonsterBase __instance, IEnumerable<MonsterState> __state) {
 
             try {
-                bool skipped = true;
 
                 if (__instance.tag == "Boss") {
                     GeneralBossPatch? bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch(ObjectUtils.ObjectPath(__instance.gameObject));
@@ -72,11 +62,8 @@ namespace BossChallengeMod.Patches {
                     if (bossPatch != null && bossPatch.CanBeApplied()) {
                         bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
                         bossPatch?.PostfixPatch(__instance);
-                    } else {
-                        Log.Info($"Postfix Patching {ObjectUtils.ObjectPath(__instance.gameObject)}. Null patched");
                     }
 
-                    skipped = false;
                 }
 
                 if (__instance.CompareTag("Enemy") || __instance.CompareTag("Untagged")) {
@@ -85,17 +72,8 @@ namespace BossChallengeMod.Patches {
                     if (bossPatch != null && bossPatch.CanBeApplied()) {
                         bossPatch?.PatchMonsterFsmLookupStates(__instance, __state);
                         bossPatch?.PostfixPatch(__instance);
-                    } else {
-                        Log.Info($"Postfix Patching. Null patched");
-                    }
+                    } 
 
-                    skipped = false;
-                } else {
-                    Log.Info($"Postfix Patching. Null patched");
-                }
-
-                if (skipped) {
-                    Log.Warning($"Postfix Patching. The monster was skipped?");
                 }
             } catch (Exception e) {
                 Log.Error($"Postfix Patching. {e.Message}, {e.StackTrace}");
@@ -158,6 +136,17 @@ namespace BossChallengeMod.Patches {
             var killCounterController = __instance.GetComponent<MonsterKillCounter>();
             if (killCounterController != null) {
                 killCounterController.OnDestroing();
+            }
+        }
+
+        [HarmonyPatch(nameof(MonsterBase.ChangeStateIfValid), new Type[] { typeof(MonsterBase.States) })]
+        [HarmonyPostfix]
+        private static void ChangeStateIfValid_Postfix(MonsterBase __instance, MonsterBase.States targetState) {
+            if(targetState == MonsterBase.States.LastHit) {
+                UnityEvent onDie = __instance.OnDie;
+                if (onDie != null) {
+                    onDie.Invoke();
+                }
             }
         }
     }

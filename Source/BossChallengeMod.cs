@@ -17,6 +17,7 @@ using BossChallengeMod.Modifiers;
 using System.Collections.Generic;
 using static BossChallengeMod.Modifiers.ModifiersStore;
 using BossChallengeMod.Modifiers.Managers;
+using NineSolsAPI.Utils;
 
 namespace BossChallengeMod;
 
@@ -48,10 +49,14 @@ public class BossChallengeMod : BaseUnityPlugin {
     public static BossChallengeMod Instance { get; private set; } = null!;
     public static System.Random Random { get; private set; } = null!;
 
+    private int versionNotificationCounter = 3;
     private bool isToastsDisplayed;
     private bool UnloadRequested;
 
     private Harmony harmony = null!;
+
+    private ModConfig _modConfig = null!;
+    private bool isVersionValid = false;
 
     protected ChallengeConfiguration ConfigurationToUse {
         get {
@@ -71,6 +76,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         Log.Init(Logger);
 
         RCGLifeCycle.DontDestroyForever(gameObject);
+
 
         Random = new System.Random();
         Preloader = new Preloader();
@@ -113,12 +119,25 @@ public class BossChallengeMod : BaseUnityPlugin {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         harmony = Harmony.CreateAndPatchAll(typeof(BossChallengeMod).Assembly);
-
+        
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded1!");
     }
 
     private void Start() {
-        StartCoroutine(Preloader.Preload());
+        ProcessModConfig();
+
+        if(isVersionValid) {
+            StartCoroutine(Preloader.Preload());
+        }
+    }
+
+    private void ProcessModConfig() {
+        _modConfig = AssemblyUtils.GetEmbeddedJson<ModConfig>($"BossChallengeMod.Resources.ModConfig.modconfig.json")!;
+
+        var gameVer = ConfigManager.Instance.Version.Trim();
+        if(gameVer == _modConfig?.ValidVersion) {
+            isVersionValid = true;
+        }
     }
 
     private void AssignPreloadingTargets() {
@@ -174,6 +193,13 @@ public class BossChallengeMod : BaseUnityPlugin {
         if (!isToastsDisplayed) {
             isToastsDisplayed = true;
             StartCoroutine(ShowToasts());
+        }
+
+        if(versionNotificationCounter > 0 && !isVersionValid) {
+            if(SingletonBehaviour<GameCore>.IsAvailable()) {
+                versionNotificationCounter--;
+                SingletonBehaviour<GameCore>.Instance.notificationUI.ShowNotification($"Mod version is built for different game version: {_modConfig.ValidVersion}. Some features were disabled.", null, PlayerInfoPanelType.Undefined, null);
+            }
         }
     }
 
@@ -288,7 +314,7 @@ public class BossChallengeMod : BaseUnityPlugin {
             .BuildAndAdd();
 
         var shieldsCondition = (bool isEnabled) => {
-            return Player.i.mainAbilities.ChargedAttackAbility.IsActivated && isEnabled;
+            return Player.i.mainAbilities.ChargedAttackAbility.IsActivated && isEnabled && isVersionValid;
         };
 
         modifiersStore
@@ -341,7 +367,7 @@ public class BossChallengeMod : BaseUnityPlugin {
                 ])
             .AddCombinationModifiers(["shield_break_bomb"])
             .AddController(typeof(MonsterShieldController), true)
-            .BuildAndAdd();
+            .BuildAndAdd();        
 
         modifiersStore
             .CreateModifierBuilder<QiOverloadModifier>("qi_overload", "QiOverloadModifier")
@@ -360,7 +386,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         modifiersStore
             .CreateModifierBuilder<YanlaoGunModifier>("ya_gun", "YanlaoGunModifier")
             .AddIncompatibles(["shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb", "cooldown_bomb"])
-            .AddConditionPredicate(_ => ConfigurationToUse.YanlaoGunModifierEnabled)
+            .AddConditionPredicate(_ => ConfigurationToUse.YanlaoGunModifierEnabled && isVersionValid)
             .AddController(typeof(MonsterYanlaoGunController), true)
             .AddIgnoredMonsters([
                 "StealthGameMonster_Boss_ButterFly Variant (1)",
@@ -372,16 +398,20 @@ public class BossChallengeMod : BaseUnityPlugin {
                 ])
             .BuildAndAdd();
 
+        var bombCondition = (bool switchValue) => {
+            return switchValue && isVersionValid;
+        };
+
         modifiersStore
             .CreateModifierBuilder<QiBombModifier>("qi_bomb", "QiBombModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.QiBombModifierEnabled)
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.QiBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_overload_bomb", "qi_depletion_bomb"])
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<ShieldBreakBombModifier>("shield_break_bomb", "ShieldBreakBombModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.ShieldBreakBombModifierEnabled)
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.ShieldBreakBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
             .SetIsCombination(true)
             .AddIncompatibles(["qi_bomb", "ya_gun", "qi_overload_bomb", "qi_depletion_bomb"])
@@ -389,21 +419,21 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<QiOverloadBombModifier>("qi_overload_bomb", "QiOverloadBombModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.QiOverloadBombModifierEnabled)
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.QiOverloadBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_depletion_bomb"])
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<QiDepletionBombModifier>("qi_depletion_bomb", "QiDepletionBombModifier")
-            .AddConditionPredicate(_ => ConfigurationToUse.QiDepletionBombModifierEnabled)
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.QiDepletionBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb"])
             .BuildAndAdd();
 
         modifiersStore
             .CreateModifierBuilder<CooldownBombModifier>("cooldown_bomb", "CooldownBomb")
-            .AddConditionPredicate(_ => ConfigurationToUse.CooldownBombModifierEnabled)
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.CooldownBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb"])
             .AddIgnoredMonsters([

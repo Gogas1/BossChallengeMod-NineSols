@@ -29,9 +29,9 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyActivation(int iteration) {
+        public override void NotifyActivation() {
             try {
-                base.NotifyActivation(iteration);
+                base.NotifyActivation();
 
                 enabled = true;
                 regenerationPool = CalculateTotalHp() / 2;
@@ -42,7 +42,7 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyDeactivation(int iteration) {
+        public override void NotifyDeactivation() {
             try {
                 base.NotifyDeactivation();
 

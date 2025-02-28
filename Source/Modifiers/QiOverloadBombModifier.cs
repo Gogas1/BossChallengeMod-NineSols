@@ -8,8 +8,8 @@ namespace BossChallengeMod.Modifiers {
 
         private HashSet<IModifierSubscriber> _subscribers = BossChallengeMod.Instance.GlobalModifiersFlags.PlayerGainFullQiSubscribers;
 
-        public override void NotifyActivation(int iteration) {
-            base.NotifyActivation(iteration);
+        public override void NotifyActivation() {
+            base.NotifyActivation();
 
             enabled = true;
 
@@ -18,8 +18,8 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyDeactivation(int iteration) {
-            base.NotifyDeactivation(iteration);
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
 
             enabled = false;
             _subscribers.Remove(this);

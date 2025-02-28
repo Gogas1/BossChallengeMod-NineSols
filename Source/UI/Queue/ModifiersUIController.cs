@@ -145,7 +145,7 @@ namespace BossChallengeMod.UI.QueueUI {
             rectTransform.pivot = new Vector2(1f, 0.5f);
             rectTransform.anchoredPosition = Vector2.zero;
 
-            line.transform.localPosition = new Vector2(100f, 0f);
+            line.transform.localPosition = new Vector2(150f, 0f);
 
             return rectTransform;
         }

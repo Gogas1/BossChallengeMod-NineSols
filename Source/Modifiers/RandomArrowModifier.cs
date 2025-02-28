@@ -13,8 +13,8 @@ namespace BossChallengeMod.Modifiers {
             base.Awake();
         }
 
-        public override void NotifyActivation(int iteration) {
-            base.NotifyActivation(iteration);
+        public override void NotifyActivation() {
+            base.NotifyActivation();
 
             enabled = true;
             if(!IsPaused) {
@@ -22,7 +22,7 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyDeactivation(int iteration) {
+        public override void NotifyDeactivation() {
             base.NotifyDeactivation();
 
             enabled = false;

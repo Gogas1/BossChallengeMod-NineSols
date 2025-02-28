@@ -44,18 +44,20 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                     }
 
                     if (ConfigurationToUse.EnableMod && UseKillCounter) {
-                        var killCounter = InitializeKillCounter(monsterBase);
+                        var monsterController = InitializeMainController(monsterBase, resetBossState);
+
+                        var killCounter = InitializeKillCounter(monsterBase, monsterController);
                         killCounter.UseRecording = UseRecording;
 
-                        Action stateEnterEventActions = () => killCounter.IncrementCounter();
+                        Action stateEnterEventActions = () => killCounter.UpdateCounter();
 
-                        var modifiersController = InitializeModifiers(monsterBase);
+                        var modifiersController = InitializeModifiers(monsterBase, monsterController);
                         modifiersController.Init();
                         modifiersController.GenerateAvailableMods();
 
                         stateEnterEventActions += () => {
                             modifiersController.RollModifiers(killCounter.KillCounter);
-                            modifiersController.ApplyModifiers(killCounter.KillCounter);
+                            modifiersController.ApplyModifiers();
                         };
 
                         BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
@@ -181,8 +183,8 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             return components;
         }
 
-        protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
-            var controller = base.InitializeModifiers(monsterBase);
+        protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
+            var controller = base.InitializeModifiers(monsterBase, monsterController);
 
             var shieldController = monsterBase.gameObject.GetComponent<MonsterShieldController>();
             if (shieldController != null) {

@@ -14,6 +14,7 @@ namespace BossChallengeMod.KillCounting {
     public class MonsterKillCounter : MonoBehaviour, IResettableComponent {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
         private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+        private ChallengeMonsterController monsterController = null!;
         private MonsterBase monster = null!;
         private ChallengeConfiguration challengeConfiguration;
 
@@ -77,6 +78,7 @@ namespace BossChallengeMod.KillCounting {
         public MonsterKillCounter() {            
             monster = GetComponent<MonsterBase>();
             challengeConfiguration = ConfigurationToUse;
+            monsterController = GetComponent<ChallengeMonsterController>();
         }
 
         private bool PlayerEnterCheck(Collider2D other) {
@@ -91,9 +93,7 @@ namespace BossChallengeMod.KillCounting {
         }
 
         private void Start() {
-            if (UseProximityShow) {
-                playerSensor = InitPlayerSensor();
-            }
+
         }
 
         public void CheckInit() {
@@ -106,8 +106,8 @@ namespace BossChallengeMod.KillCounting {
             CalculateMaxCycles();
         }
 
-        public void IncrementCounter() {
-            KillCounter++;
+        public void UpdateCounter() {
+            KillCounter = monsterController.KillCounter;
             if(KillCounter > BestCount) {
                 BestCount = KillCounter;
             }
@@ -116,8 +116,24 @@ namespace BossChallengeMod.KillCounting {
             }
         }
 
+        public void OnDie() {
+            OnDestroyActions?.Invoke();
+        }
+
         public void OnDestroing() {
             OnDestroyActions?.Invoke();
+        }
+
+        public void OnEngage() {
+            if(CanBeTracked && UseProximityShow) {
+                BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(this);
+            }
+        }
+
+        public void OnDisengage() {
+            if (CanBeTracked && UseProximityShow) {
+                BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(null);
+            }
         }
 
         private void CalculateMaxCycles() {

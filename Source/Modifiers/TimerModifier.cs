@@ -34,26 +34,31 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyActivation(int iteration) {
-            if (Monster != null && iteration != 0) {
-                if (timerCoroutine != null) {
-                    StopCoroutine(timerCoroutine);
-                }
+        public override void NotifyActivation() {
+            try {
+                if (Monster != null && deathNumber != 0) {
+                    if (timerCoroutine != null) {
+                        StopCoroutine(timerCoroutine);
+                    }
 
-                if(iteration > 0) {
-                    attempts.Add(stopwatch);
-                    stopwatch = 0;
-                }
-                start = true;
-                if (start) {
-                    time = (int)CalculateTime(attempts.ToArray(), iteration);
-                    StartCoroutine(StartTimer());
-                }
-            }            
+                    if(deathNumber > 0) {
+                        attempts.Add(stopwatch);
+                        stopwatch = 0;
+                    }
+                    start = true;
+                    if (start) {
+                        time = (int)CalculateTime(attempts.ToArray(), deathNumber);
+                        StartCoroutine(StartTimer());
+                    }
+                }            
+
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
+            }
         }
 
-        public override void NotifyDeactivation(int iteration) {
-            if(iteration > 0) {
+        public override void NotifyDeactivation() {
+            if(deathNumber > 0) {
                 attempts.Add(stopwatch);
                 stopwatch = 0;
             }

@@ -43,13 +43,13 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateEnter() {
-            if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles == monsterKillCounter.KillCounter + 1) {
-                EffectHitData effectHitData = new EffectHitData();
-                effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
-                monster.HittedByPlayerDecreasePosture(effectHitData);
+            //if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles == monsterKillCounter.KillCounter + 1) {
+            //    EffectHitData effectHitData = new EffectHitData();
+            //    effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
+            //    monster.HittedByPlayerDecreasePosture(effectHitData);
 
-                return;
-            }
+            //    return;
+            //}
 
             try {
                 stateLifetimeCancellationTokenSource = new CancellationTokenSource();
@@ -110,14 +110,15 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateExit() {
-            if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles == monsterKillCounter.KillCounter)
-                return;
-
             monster.PhaseIndex = 0;
             monster.animator.SetInteger(ResetBossState.PhaseIndexHash, base.monster.PhaseIndex);
             monster.postureSystem.RestorePosture();
             SwitchDamageReceivers(true);
             monster.monsterCore.EnablePushAway();
+
+            if(monsterKillCounter.KillCounter + 1 == monsterKillCounter.MaxBossCycles) {
+                monster.postureSystem.DieHandleingStates.Remove(StateType);
+            }
             monster.postureSystem.GenerateCurrentDieHandleStacks();
 
             stateLifetimeCancellationTokenSource.Cancel();

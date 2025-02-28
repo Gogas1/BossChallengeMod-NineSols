@@ -15,6 +15,7 @@
       <None Remove="Resources\Languages\translations_ru-ru.json" />
       <None Remove="Resources\Languages\translations_zh-cn.json" />
       <None Remove="Resources\Languages\translations_zh-tw.json" />
+      <None Remove="Resources\ModConfig\modconfig.json" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="Resources\Bundles\items.bundle" />
@@ -22,6 +23,7 @@
       <EmbeddedResource Include="Resources\Languages\translations_ru-ru.json" />
       <EmbeddedResource Include="Resources\Languages\translations_zh-cn.json" />
       <EmbeddedResource Include="Resources\Languages\translations_zh-tw.json" />
+      <EmbeddedResource Include="Resources\ModConfig\modconfig.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -48,6 +50,9 @@
 		</Reference>
 		<Reference Include="barbaro.autoattributes.Runtime.dll">
 			<HintPath>Libs/barbaro.autoattributes.Runtime.dll</HintPath>
+		</Reference>
+		<Reference Include="UniTask">
+			<HintPath>Libs/UniTask.dll</HintPath>
 		</Reference>
 		<!---->
     </ItemGroup>

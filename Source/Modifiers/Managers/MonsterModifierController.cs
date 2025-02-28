@@ -14,6 +14,7 @@ namespace BossChallengeMod.Modifiers.Managers {
     public class MonsterModifierController : MonoBehaviour, IResettableComponent {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
         private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+        private ChallengeMonsterController monsterController = null!;
         private MonsterBase monster = null!;
         private int modifiersNumber = 1;
 
@@ -29,6 +30,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         private bool _isStartRolled = false;
         private bool _isDied = false;
+        private bool _isFirstEngage = true;
 
         private ChallengeConfiguration challengeConfiguration;
         
@@ -61,9 +63,9 @@ namespace BossChallengeMod.Modifiers.Managers {
                     case ChallengeEnemyType.Boss:
                         return ConfigurationToUse.BossesMaxModifiersNumber;
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesMaxModifiersNumber; ;
+                        return ConfigurationToUse.MinibossesMaxModifiersNumber;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesMaxModifiersNumber; ;
+                        return ConfigurationToUse.EnemiesMaxModifiersNumber;
                     default:
                         return 1;
                 }
@@ -142,7 +144,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
         }
 
-        public Action? OnModifiersRoll;
+        public Action? OnModifiersChange;
         public Action? OnDestroyActions;
         public bool AllowRepeating { get; set; }
 
@@ -158,7 +160,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public MonsterModifierController() {
             challengeConfiguration = ConfigurationToUse;
             monster = GetComponent<MonsterBase>();
-            monster.OnDie.AddListener(OnDieHandler);
+            monsterController = GetComponent<ChallengeMonsterController>();
         }
 
         public void Init() {
@@ -171,22 +173,47 @@ namespace BossChallengeMod.Modifiers.Managers {
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
 
-        private void Start() {
-            if (UseProximityShow) {
-                playerSensor = InitPlayerSensor();
+        #region New
 
-            }
-
-            if (challengeConfiguration.ModifiersStartFromDeath == 0 && !_isStartRolled) {
-                try {
-                    RollModifiers(0);
-                    ApplyModifiers(0);
-                    _isStartRolled = true;
-                } catch (Exception ex) {
-                    Log.Error($"{ex.Message}, {ex.StackTrace}");
-                }
+        public void OnRevival() {
+            if (_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+                NotifyModifiersOnDeath();
+                RollModifiers(monsterController.KillCounter);
+                ApplyModifiers();
             }
         }
+
+        public void OnDie() {
+            NotifyModifiersOnDeath();
+            Selected.Clear();
+            ApplyModifiers();
+        }
+
+        public void OnEngage() {
+            if(_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+                RollModifiers(monsterController.KillCounter);
+                ApplyModifiers();
+            }
+
+            if (UseCompositeTracking) {
+                ResumeAll();
+                BossChallengeMod.Instance.MonsterUIController.AddCompositeModifierController(this);
+            } else if (UseProximityShow) {
+                BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(this);
+            }
+        }
+
+        public void OnDisengage() {
+            if (UseCompositeTracking) {
+                PauseAll();
+                BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+            } else if (UseProximityShow) {
+                BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(null);
+            }
+        }
+
+        #endregion New
+
 
         public void GenerateAvailableMods() {
             Available.Clear();
@@ -194,9 +221,11 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void RollModifiers(int iteration) {
+            int modifiersNum = CalculateModifiersNumber(iteration + 1);
+
             if (_isDied) {
                 Selected.Clear();
-                OnModifiersRoll?.Invoke();
+                OnModifiersChange?.Invoke();
                 return;
             }
 
@@ -215,7 +244,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             Selected.Clear();
 
             if (availabilities.Any()) {
-                for (int i = 0; i < modifiersNumber && availabilities.Any(); i++) {
+                for (int i = 0; i < modifiersNum && availabilities.Any(); i++) {
                     try {
                         var selected = availabilities[BossChallengeMod.Random.Next(0, availabilities.Count)];
 
@@ -240,18 +269,17 @@ namespace BossChallengeMod.Modifiers.Managers {
                 }
             }
 
-            OnModifiersRoll?.Invoke();
+            OnModifiersChange?.Invoke();
         }
 
-        public void ApplyModifiers(int iteration) {
+        public void ApplyModifiers() {
             if (_isDied) {
                 return;
             }
 
             try {
 
-                NotifyModifiers(iteration);
-                modifiersNumber = CalculateModifiersNumber(iteration + 1);
+                NotifyModifiers();
 
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
@@ -266,7 +294,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void OnDestroing() {
             OnDestroyActions?.Invoke();
-            monster.OnDie.RemoveListener(OnDieHandler);
+
             if (UseCompositeTracking) {
                 BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
             }
@@ -274,23 +302,26 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         private void OnDieHandler() {
             Selected.Clear();
-            ApplyModifiers(0);
+            ApplyModifiers();
 
-            BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+            if (UseCompositeTracking) {
+                BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+            }
+
             playerSensor.gameObject.SetActive(false);
             _isDied = true;
-            OnModifiersRoll?.Invoke();
+            OnModifiersChange?.Invoke();
         }
 
-        private void NotifyModifiers(int iteration) {
+        private void NotifyModifiers() {
             try {
                 var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
                 foreach (var modifier in Modifiers) {
                     try {
                         if (selectedKeys.Contains(modifier.Key)) {
-                            modifier.NotifyActivation(iteration);
+                            modifier.NotifyActivation();
                         } else {
-                            modifier.NotifyDeactivation(iteration);
+                            modifier.NotifyDeactivation();
                         }
                     } catch (Exception ex) {
                         Log.Error($"Exception occured while applying {modifier.name}: {ex.Message}, {ex.StackTrace}");
@@ -301,15 +332,14 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
         }
 
-        private void PauseModifiers() {
-            foreach (var modifier in Modifiers) {
-                modifier.NotifyPause();
-            }
-        }
-
-        private void ResumeModifiers() {
-            foreach (var modifier in Modifiers) {
-                modifier.NotifyResume();
+        private void NotifyModifiersOnDeath() {
+            try {
+                int death = monsterController.KillCounter;
+                foreach (var item in Modifiers) {
+                    item.NotifyDeath(death);
+                }
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
         }
 
@@ -341,9 +371,9 @@ namespace BossChallengeMod.Modifiers.Managers {
             _isDied = false;
             _isStartRolled = false;
 
-            if(UseCompositeTracking || UseProximityShow) {
-                BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
-            }
+            //if(UseCompositeTracking || UseProximityShow) {
+            //    BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+            //}
 
             challengeConfiguration = ConfigurationToUse;
             FindModifiers();
@@ -356,11 +386,11 @@ namespace BossChallengeMod.Modifiers.Managers {
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
 
-            if (challengeConfiguration.ModifiersStartFromDeath == 0 && !_isStartRolled) {
-                RollModifiers(0);
-                ApplyModifiers(0);
-                _isStartRolled = true;
-            }
+            //if (challengeConfiguration.ModifiersStartFromDeath == 0 && !_isStartRolled) {
+            //    RollModifiers(0);
+            //    ApplyModifiers();
+            //    _isStartRolled = true;
+            //}
 
             playerSensor?.gameObject.SetActive(true);
         }
@@ -390,47 +420,6 @@ namespace BossChallengeMod.Modifiers.Managers {
             foreach (var item in Modifiers) {
                 item.NotifyResume();
             }
-        }
-
-        private PlayerSensor InitPlayerSensor() {
-            CircleCollider2D showTrigger;
-            PlayerSensor sensor;
-
-            var sensorFolder = new GameObject("ChallengePlayerSensorModifiersController");
-            sensorFolder.transform.SetParent(transform, false);
-
-            showTrigger = sensorFolder.AddComponent<CircleCollider2D>();
-            showTrigger.isTrigger = true;
-            showTrigger.radius = ShowDistance;
-
-            sensor = sensorFolder.AddComponent<PlayerSensor>();
-            sensor.PlayerEnterEvent = new UnityEngine.Events.UnityEvent();
-            sensor.PlayerExitEvent = new UnityEngine.Events.UnityEvent();
-            sensor.PlayerStayEvent = new UnityEngine.Events.UnityEvent();
-
-            AutoAttributeManager.AutoReference(sensorFolder);
-            sensor.Awake();
-            sensor.EnterLevelReset();
-
-            sensor.PlayerEnterEvent.AddListener(() => {
-                if(UseCompositeTracking) {
-                    ResumeAll();
-                    BossChallengeMod.Instance.MonsterUIController.AddCompositeModifierController(this);
-                }
-                else if(UseProximityShow) {
-                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(this);
-                }
-            });
-            sensor.PlayerExitEvent.AddListener(() => {
-                if (UseCompositeTracking) {
-                    PauseAll();
-                    BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
-                } else if(UseProximityShow) {
-                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(null);
-                }
-            });
-
-            return sensor;
         }
 
         public int GetPriority() {

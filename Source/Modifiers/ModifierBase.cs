@@ -14,6 +14,8 @@ namespace BossChallengeMod.Modifiers {
         public ChallengeConfiguration challengeConfiguration;
         public ChallengeEnemyType EnemyType { get; set; }
 
+        protected int deathNumber;
+
         public ModifierBase() {
             DisableComponent();
         }
@@ -34,12 +36,16 @@ namespace BossChallengeMod.Modifiers {
             enabled = false;
         }
 
-        public virtual void NotifyActivation(int iteration) {
+        public virtual void NotifyActivation() {
 
         }
 
-        public virtual void NotifyDeactivation(int iteration = 0) {
+        public virtual void NotifyDeactivation() {
 
+        }
+
+        public virtual void NotifyDeath(int deathNumber = 0) {
+            this.deathNumber = deathNumber;
         }
 
         public virtual void NotifyPause() {

@@ -8,8 +8,8 @@ using UnityEngine;
 namespace BossChallengeMod.BossPatches.TargetPatches {
     public class GoumangBossPatch : RevivalChallengeBossPatch {
 
-        protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
-            var controller = base.InitializeModifiers(monsterBase);
+        protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
+            var controller = base.InitializeModifiers(monsterBase, monsterController);
 
             if (ConfigurationToUse.EnableMod && ConfigurationToUse.ModifiersEnabled) {
 

@@ -102,13 +102,14 @@ namespace BossChallengeMod.Configuration {
         }
 
         public void InitChallengeConfiguration() {
-            Config.Bind("0. INFO: Challenge settings are applied at the beginning of the battle or when loading the location (so at the moment of enemy initialization). To apply the changed settings in the middle of the battle, start the battle again (death, reloading the location, re-entering from the lobby)",
-                "0. Yes",
-                false);
+            Config.Bind("0. INFO: Challenge settings are applied at the beginning of the battle or when loading the location (so at the moment of enemy initialization). To apply the settings changed in the middle of the battle, start the battle again (death, reloading the location, re-entering from the lobby)",
+                "0. Hover me",
+                false,
+                LocalizationResolver.Localize("config_top_description"));
 
             isCyclingEnabled = Config.Bind(
             "1. General",
-            "1.1 Enable Boss Revival",
+            "1.1 Enable Mod",
             true,
             LocalizationResolver.Localize("config_cycling_enabled_description"));
             isCyclingEnabled.SettingChanged += (_, _) => {
@@ -201,7 +202,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
             maxModifiersNumber.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxModifiersNumber = maxModifiersNumber.Value;
+                config.BossesMaxModifiersNumber = config.MinibossesMaxModifiersNumber = config.EnemiesMaxModifiersNumber = maxModifiersNumber.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 

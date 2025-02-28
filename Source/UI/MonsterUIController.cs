@@ -70,14 +70,14 @@ namespace BossChallengeMod.UI {
             }
 
             if (trackedModifiersController != null) {
-                trackedModifiersController.OnModifiersRoll -= UpdateModifierUI;
+                trackedModifiersController.OnModifiersChange -= UpdateModifierUI;
                 trackedModifiersController.OnDestroyActions -= ResetModifierController;
             }
 
             trackedModifiersController = monsterModifierController;
 
             if (trackedModifiersController != null) {
-                trackedModifiersController.OnModifiersRoll += UpdateModifierUI;
+                trackedModifiersController.OnModifiersChange += UpdateModifierUI;
                 trackedModifiersController.OnDestroyActions += ResetModifierController;
             }
 
@@ -91,7 +91,7 @@ namespace BossChallengeMod.UI {
 
             compositeModifierControllers.Add(monsterModifierController);
 
-            monsterModifierController.OnModifiersRoll += UpdateModifierUI;
+            monsterModifierController.OnModifiersChange += UpdateModifierUI;
 
             UpdateModifierUI();
         }
@@ -99,7 +99,7 @@ namespace BossChallengeMod.UI {
         public void RemoveCompositeModifierController(MonsterModifierController monsterModifierController) {
             compositeModifierControllers.Remove(monsterModifierController);
 
-            monsterModifierController.OnModifiersRoll -= UpdateModifierUI;
+            monsterModifierController.OnModifiersChange -= UpdateModifierUI;
 
             UpdateModifierUI();
         }

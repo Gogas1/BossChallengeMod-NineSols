@@ -41,8 +41,8 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyActivation(int iteration) {
-            base.NotifyActivation(iteration);
+        public override void NotifyActivation() {
+            base.NotifyActivation();
             if (YanlaoGunController == null) {
                 YanlaoGunController = GetComponentInParent<MonsterYanlaoGunController>();
             }
@@ -76,7 +76,7 @@ namespace BossChallengeMod.Modifiers {
             isDelaying = false;
         }
 
-        public override void NotifyDeactivation(int iteration) {
+        public override void NotifyDeactivation() {
             base.NotifyDeactivation();
 
             if (YanlaoGunController == null) {
