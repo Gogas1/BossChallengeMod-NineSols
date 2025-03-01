@@ -10,7 +10,7 @@ namespace BossChallengeMod.Modifiers {
             BombCount = 2;
         }
 
-        public override void MonsterNotify(object message) {
+        public override void CustomNotify(object message) {
             if (message is not MonsterNotifyType notifyType) {
                 return;
             }

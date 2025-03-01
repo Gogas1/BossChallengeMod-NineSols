@@ -10,17 +10,17 @@
   "config_ui_counter_custom_y_description": "Y position of kill counter and modifier list",
   "config_ui_counter_scale_description": "Scale of kill counter and modifier list",
 
-  "config_ui_timer_enabled_description": "Enable display of timer",
-  "config_ui_timer_custom_description": "Enable custom placement of timer",
-  "config_ui_timer_custom_x_description": "X position of timer",
-  "config_ui_timer_custom_y_description": "Y position of timer",
-  "config_ui_timer_scale_description": "Scale of timer",
+  "config_ui_timer_enabled_description": "Enable display of the timer",
+  "config_ui_timer_custom_description": "Enable custom placement of the timer",
+  "config_ui_timer_custom_x_description": "X position of the timer",
+  "config_ui_timer_custom_y_description": "Y position of the timer",
+  "config_ui_timer_scale_description": "Scale of the timer",
 
-  "config_ui_talisman_mode_enabled_description": "Enable display of current talisman indicator",
-  "config_ui_talisman_mode_custom_description": "Enable custom placement of current talisman indicator",
-  "config_ui_talisman_mode_custom_x_description": "X position of current talisman indicator",
-  "config_ui_talisman_mode_custom_y_description": "Y position of current talisman indicator",
-  "config_ui_talisman_mode_scale_description": "Scale of current talisman indicator",
+  "config_ui_talisman_mode_enabled_description": "Enable display of the current talisman indicator",
+  "config_ui_talisman_mode_custom_description": "Enable custom placement of the current talisman indicator",
+  "config_ui_talisman_mode_custom_x_description": "X position of the current talisman indicator",
+  "config_ui_talisman_mode_custom_y_description": "Y position of the current talisman indicator",
+  "config_ui_talisman_mode_scale_description": "Scale of the current talisman indicator",
 
   "kill_counter": "Killed:",
   "kill_counter_hs": "Maximum:",
@@ -52,13 +52,13 @@
   "config_cycling_enabled_description": "Enable Mod.\n Enables the mod in the Memories of Battle game mode",
   "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
 
-  "config_single_recording_enabled_description": "Record fight results regardless of the configuration. By default, results are created for each unique configuration state (sections 1, 2, 3 are considered), so each configured challenge difficulty has its own results. Enabling this setting will record and use a single result regardless of the challenge settings.",
+  "config_single_recording_enabled_description": "Record fight results regardless of the configuration. By default, fight results records are created for each unique configuration state (sections 1, 2, 3 are considered), so each configured challenge difficulty has its own results. Enabling this setting will record and use a single result regardless of the challenge settings.",
 
   "config_boss_deaths_randomized_enabled_description": "Enable randomized boss death number. The maximum number of boss deaths will be randomly determined at the start of the battle.",
   "config_boss_deaths_randomized_min_description": "Minimum Deaths: The lowest possible value for the randomized boss death count.",
   "config_boss_deaths_randomized_max_description": "Maximum Deaths: The highest possible value for the randomized boss death count.",
 
-  "config_scaling_enabled_description": "Enable Speed Scaling.\nBosses will gain linear speed scaling with each death. Stacks combined multiplicatively with the random speed scaling.",
+  "config_scaling_enabled_description": "Enable Speed Scaling.\nBosses will gain linear speed scaling with each death. Stacked multiplicatively with the random speed scaling and modifiers.",
   "config_scaling_minspeed_description": "Scaling: Initial Speed.\nThe starting value for speed scaling.",
   "config_scaling_maxspeed_description": "Scaling: Maximum Speed.\nThe maximum value for speed scaling.",
   "config_scaling_scaling_cycle_description": "Maximum Speed Scaling After Deaths.\nSpeed scaling will reach its maximum after this amount of deaths.",
@@ -107,9 +107,9 @@
   "config_story_miniboss_cycles_number_description": "Number of miniboss deaths.\n The miniboss will die after the specified number of deaths (including this one).",
   "config_story_enemy_cycles_number_description": "Number of regular enemy deaths.\n The regular enemy will die after the specified number of deaths (including this one).",
 
-  "config_story_affect_bosses_description": "Boss enhancement. Bosses will reviwe, gain modifiers and boosts.",
-  "config_story_affect_minibosses_description": "Miniboss enhancement. Minibosses will reviwe, gain modifiers and boosts.",
-  "config_story_affect_enemies_description": "Regular enemy enhancement. Regular enemies will reviwe, gain modifiers and boosts.",
+  "config_story_affect_bosses_description": "Boss enhancement. Bosses will revive, gain modifiers and boosts.",
+  "config_story_affect_minibosses_description": "Miniboss enhancement. Minibosses will revive, gain modifiers and boosts.",
+  "config_story_affect_enemies_description": "Regular enemy enhancement. Regular enemies will revive, gain modifiers and boosts.",
 
   "config_story_miniboss_deaths_randomized_description": "Enable random miniboss death count.\n The maximum number of miniboss deaths will be randomly determined upon entering a location.",
   "config_story_miniboss_deaths_randomized_min_description": "Minimum deaths.\n The minimum value for the miniboss death count.",

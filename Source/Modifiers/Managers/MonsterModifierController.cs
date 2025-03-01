@@ -236,7 +236,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void CustomNotify(object message) {
             foreach (var item in Modifiers) {
-                item.MonsterNotify(message);
+                item.CustomNotify(message);
             }
         }
 

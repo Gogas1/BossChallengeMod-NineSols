@@ -10,8 +10,8 @@ namespace BossChallengeMod.Modifiers {
     public class ModifierBase : MonoBehaviour {
         public bool IsPaused { get; protected set; }
         public string Key { get; set; } = string.Empty;
-        public MonsterBase? Monster;
-        public ChallengeConfiguration challengeConfiguration;
+        public MonsterBase? Monster { get; protected set; }
+        public ChallengeConfiguration challengeConfiguration { get;  set; }
         public ChallengeEnemyType EnemyType { get; set; }
 
         protected int deathNumber;
@@ -56,7 +56,7 @@ namespace BossChallengeMod.Modifiers {
             IsPaused = false;
         }
 
-        public virtual void MonsterNotify(object message) {
+        public virtual void CustomNotify(object message) {
 
         }
 

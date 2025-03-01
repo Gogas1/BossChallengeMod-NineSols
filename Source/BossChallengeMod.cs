@@ -15,7 +15,6 @@ using BossChallengeMod.PatchResolver;
 using BossChallengeMod.PatchResolver.Initializers;
 using BossChallengeMod.Modifiers;
 using System.Collections.Generic;
-using static BossChallengeMod.Modifiers.ModifiersStore;
 using BossChallengeMod.Modifiers.Managers;
 using NineSolsAPI.Utils;
 
@@ -48,6 +47,8 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     public static BossChallengeMod Instance { get; private set; } = null!;
     public static System.Random Random { get; private set; } = null!;
+
+    public const string PluginGUID = PluginInfo.PLUGIN_GUID;
 
     private int versionNotificationCounter = 3;
     private bool isToastsDisplayed;
@@ -368,7 +369,7 @@ public class BossChallengeMod : BaseUnityPlugin {
                 "StealthGameMonster_Boss_ButterFly Variant (2)",
                 "StealthGameMonster_Boss_ButterFly Variant (3)",
                 "StealthGameMonster_Boss_ButterFly Variant (4)",
-                "BossShowHealthArea/StealthGameMonster_伏羲_新",
+                "StealthGameMonster_伏羲_新",
                 "StealthGameMonster_SpearHorseMan",
                 "Monster_GiantMechClaw",
                 ])

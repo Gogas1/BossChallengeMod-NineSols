@@ -12,11 +12,12 @@ namespace BossChallengeMod.Global {
         private static Dictionary<string, string> translationDictionary = new();
         
         private static Dictionary<string, List<Dictionary<string, string>>> outerTranslations = new();
-
+        private static string _currentLanguage;
 
         internal static void LoadLanguage(string language = "en-us") {
             translationDictionary.Clear();
             translationDictionary.AddRange(LoadLanguageEmbedded(language));
+            _currentLanguage = language;
         }
 
         private static Dictionary<string, string> LoadLanguageFile(string language) {
@@ -53,6 +54,11 @@ namespace BossChallengeMod.Global {
                 languageOuterTranslations.Add(translations);
             }
 
+            if(_currentLanguage == language) {
+                foreach (var item in translations) {
+                    translations.TryAdd(item.Key, item.Value);
+                }
+            }
         }
 
         public static string Localize(string key) {

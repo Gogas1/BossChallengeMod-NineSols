@@ -119,7 +119,6 @@ namespace BossChallengeMod.CustomMonsterStates {
             SwitchDamageReceivers(true);
             monster.monsterCore.EnablePushAway();
 
-            Log.Info($"{monsterKillCounter.KillCounter}, {monsterKillCounter.KillCounter + 1}, {monsterKillCounter.MaxBossCycles}");
             if(monsterKillCounter.KillCounter + 1 == monsterKillCounter.MaxBossCycles) {
                 monster.postureSystem.DieHandleingStates.Remove(StateType);
             }
