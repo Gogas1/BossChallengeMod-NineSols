@@ -56,7 +56,7 @@ namespace BossChallengeMod.Modifiers {
             IsPaused = false;
         }
 
-        public virtual void MonsterNotify(MonsterNotifyType notifyType) {
+        public virtual void MonsterNotify(object message) {
 
         }
 

@@ -12,12 +12,11 @@ namespace BossChallengeMod.Modifiers {
 
         public float pauseTime = 1f;
         public int heal = 1;
-        public float delay = 0.04f;
+        public float delay = 0.03f;
 
-        protected Coroutine? regenerationCoroutine;
+        protected float healReadyTimer = 0f;
 
-        protected bool canHeal = false;
-        protected bool coroutineRunning = false;
+        protected bool canHeal;
 
         public override void Awake() {
             try {
@@ -36,7 +35,6 @@ namespace BossChallengeMod.Modifiers {
                 enabled = true;
                 regenerationPool = CalculateTotalHp() / 2;
 
-                StartRegenerationCoroutine();
             } catch (Exception e) {
                 Log.Error($"{e.Message}, {e.StackTrace}");
             }
@@ -47,7 +45,6 @@ namespace BossChallengeMod.Modifiers {
                 base.NotifyDeactivation();
 
                 enabled = false;
-                canHeal = enabled && regenerationPool > 0 && !IsPaused && pausedFor <= 0;
 
             } catch (Exception e) {
                 Log.Error($"{e.Message}, {e.StackTrace}");
@@ -60,7 +57,27 @@ namespace BossChallengeMod.Modifiers {
                     pausedFor = Mathf.Max(0, pausedFor - Time.deltaTime);
                 }
 
-                canHeal = enabled && regenerationPool > 0 && !IsPaused && pausedFor <= 0;
+                var postureSystem = Monster?.postureSystem ?? null;
+                canHeal = enabled &&
+                    regenerationPool > 0 &&
+                    !IsPaused &&
+                    pausedFor <= 0 &&
+                    postureSystem != null &&
+                    !postureSystem.IsMonsterEmptyPosture &&
+                    postureSystem.MaxPostureValue > postureSystem.CurrentHealthValue;
+
+                if (canHeal) {
+                    healReadyTimer += Time.deltaTime;
+                    var healsNumber = (int)(healReadyTimer / delay);
+
+                    if (healsNumber > 0) {
+                        healReadyTimer = 0;
+
+                        int hpToHeal = Mathf.Min((int)(postureSystem!.MaxPostureValue - postureSystem.CurrentHealthValue), heal * healsNumber);
+                        postureSystem.GainPosture(hpToHeal);
+                        regenerationPool -= hpToHeal;
+                    }
+                }
 
             } catch (Exception e) {
                 Log.Error($"{e.Message}, {e.StackTrace}");
@@ -78,7 +95,6 @@ namespace BossChallengeMod.Modifiers {
 
         private IEnumerator StartRegeneration() {
             var postureSystem = Monster?.postureSystem ?? null;
-            coroutineRunning = true;
             while (canHeal && postureSystem != null) {
                 if (!postureSystem.IsMonsterEmptyPosture && postureSystem.MaxPostureValue > postureSystem.CurrentHealthValue) {
 
@@ -88,18 +104,6 @@ namespace BossChallengeMod.Modifiers {
                 }
 
                 yield return new WaitForSeconds(delay);
-            }
-            coroutineRunning = false;
-        }
-
-        protected void StartRegenerationCoroutine() {
-            if (enabled && gameObject.activeSelf && !IsPaused) {
-                if (regenerationCoroutine != null) {
-                    StopCoroutine(regenerationCoroutine);
-                    coroutineRunning = false;
-                }
-
-                regenerationCoroutine = StartCoroutine(StartRegeneration());
             }
         }
 
@@ -127,41 +131,10 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void OnEnable() {
-            try {
-                base.OnEnable();
-
-                if (!coroutineRunning) {
-                    regenerationPool = CalculateTotalHp() / 2;
-                    StartRegenerationCoroutine();
-                }
-
-            } catch (Exception e) {
-                Log.Error($"{e.Message}, {e.StackTrace}");
-            }
-        }
-
         public void OnDestroy() {
             try {
                 enabled = false;
                 Monster?.postureSystem.OnPostureDecrease.RemoveListener(PauseRegeneration);
-
-            } catch (Exception e) {
-                Log.Error($"{e.Message}, {e.StackTrace}");
-            }
-        }
-
-        public override void NotifyPause() {
-            base.NotifyPause();
-        }
-
-        public override void NotifyResume() {
-            try {
-                base.NotifyResume();
-
-                if (!coroutineRunning) {
-                    StartRegenerationCoroutine();
-                }
 
             } catch (Exception e) {
                 Log.Error($"{e.Message}, {e.StackTrace}");

@@ -1,4 +1,5 @@
 ﻿using BossChallengeMod.Modifiers;
+using BossChallengeMod.Modifiers.Managers;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,9 @@ namespace BossChallengeMod.Patches {
         [HarmonyPatch("BreakShield")]
         [HarmonyPostfix]
         private static void BreakShield_Postfix(MonsterShield __instance) {
-            var modifiers = __instance.gameObject.GetComponentInParent<MonsterBase>()?.GetComponentsInChildren<ModifierBase>() ?? null;
-
-            if (modifiers != null) {
-                foreach (ModifierBase modifier in modifiers) {
-                    modifier.MonsterNotify(MonsterNotifyType.OnShieldBroken);
-                }
+            var modifiersController = __instance.gameObject.GetComponentInParent<MonsterBase>().GetComponent<MonsterModifierController>();
+            if (modifiersController != null) {
+                modifiersController.CustomNotify(MonsterNotifyType.OnShieldBroken);
             }
         }
     }

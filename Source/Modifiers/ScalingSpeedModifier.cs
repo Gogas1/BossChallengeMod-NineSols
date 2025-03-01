@@ -130,14 +130,9 @@ namespace BossChallengeMod.Modifiers {
             enabled = true;
         }
 
-        public override void NotifyActivation() {
-            modifier = CalculateModifier(deathNumber);
-            if (Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling)) {
-                Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
-            }
-        }
+        public override void NotifyDeath(int deathNumber = 0) {
+            base.NotifyDeath(deathNumber);
 
-        public override void NotifyDeactivation() {
             modifier = CalculateModifier(deathNumber);
             if (Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling)) {
                 Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);

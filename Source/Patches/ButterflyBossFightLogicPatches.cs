@@ -1,5 +1,6 @@
 ﻿using BossChallengeMod.BossPatches;
 using BossChallengeMod.Configuration;
+using BossChallengeMod.KillCounting;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,14 @@ namespace BossChallengeMod.Patches {
 
                 if(ConfigurationToUse.EnableMod) {
                     var targetMonster = __instance.allMonsters[0];
-                    targetMonster.postureSystem.DieHandleingStates.Clear();
-                    targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
-                    targetMonster.postureSystem.GenerateCurrentDieHandleStacks();
+                    var killCountingController = targetMonster.GetComponent<MonsterKillCounter>();
+
+                    if (killCountingController != null && killCountingController.KillCounter + 1 < killCountingController.MaxBossCycles) {
+
+                        targetMonster.postureSystem.DieHandleingStates.Clear();
+                        targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
+                        targetMonster.postureSystem.GenerateCurrentDieHandleStacks();
+                    }
                 }
             }
         }

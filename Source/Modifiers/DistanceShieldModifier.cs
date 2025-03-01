@@ -21,9 +21,5 @@ namespace BossChallengeMod.Modifiers {
                 }
             }
         }
-
-        public override void MonsterNotify(MonsterNotifyType notifyType) {
-            
-        }
     }
 }

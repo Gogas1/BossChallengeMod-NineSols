@@ -151,6 +151,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public bool CanBeTracked { get; set; }
         public bool UseCompositeTracking { get; set; }
         public bool UseProximityShow { get; set; }
+        public bool RollOnStart { get; set; }
         private float showDistance = 400f;
         public float ShowDistance {
             get => showDistance;
@@ -173,10 +174,14 @@ namespace BossChallengeMod.Modifiers.Managers {
             AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
         }
 
-        #region New
+        private void Start() {
+            if(RollOnStart) {
+                ForceRollBeforeEngage();
+            }
+        }
 
         public void OnRevival() {
-            if (_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+            if (ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
                 NotifyModifiersOnDeath();
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
@@ -189,10 +194,21 @@ namespace BossChallengeMod.Modifiers.Managers {
             ApplyModifiers();
         }
 
+        public void ForceRollBeforeEngage() {
+            if (_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+                RollModifiers(monsterController.KillCounter);
+                ApplyModifiers();
+
+                _isFirstEngage = false;
+            }
+        }
+
         public void OnEngage() {
             if(_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
+
+                _isFirstEngage = false;
             }
 
             if (UseCompositeTracking) {
@@ -212,16 +228,20 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
         }
 
-        #endregion New
-
 
         public void GenerateAvailableMods() {
             Available.Clear();
             Available.AddRange(RollableModifiers);
         }
 
+        public void CustomNotify(object message) {
+            foreach (var item in Modifiers) {
+                item.MonsterNotify(message);
+            }
+        }
+
         public void RollModifiers(int iteration) {
-            int modifiersNum = CalculateModifiersNumber(iteration + 1);
+            int modifiersNum = CalculateModifiersNumber(iteration);
 
             if (_isDied) {
                 Selected.Clear();

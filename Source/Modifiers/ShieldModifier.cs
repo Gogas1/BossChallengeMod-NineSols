@@ -60,8 +60,12 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void MonsterNotify(MonsterNotifyType notifyType) {
-            base.MonsterNotify(notifyType);
+        public override void MonsterNotify(object message) {
+            base.MonsterNotify(message);
+
+            if (message is not MonsterNotifyType notifyType) {
+                return;
+            }
 
             if (MonsterShieldController == null) {
                 MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();

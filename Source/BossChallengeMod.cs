@@ -310,6 +310,13 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         modifiersStore
             .CreateModifierBuilder<EnduranceModifier>("endurance", "EnduranceModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                ])
             .AddConditionPredicate(_ => ConfigurationToUse.EnduranceModifierEnabled)
             .BuildAndAdd();
 

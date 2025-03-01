@@ -130,8 +130,9 @@ namespace BossChallengeMod.BossPatches {
 
         protected virtual ChallengeMonsterController InitializeMainController(MonsterBase monsterBase, ResetBossState resetBossState) {
             var controller = monsterBase.gameObject.AddComponent<ChallengeMonsterController>();
-            resetBossState.stateEvents.StateEnterEvent.AddListener(() => { controller.ProcessRevivalStateEnter(); });
+            resetBossState.OnStateEnterInvoke += () => { controller.ProcessRevivalStateEnter(); };
             resetBossState.stateEvents.StateExitEvent.AddListener(() => { controller.OnRevivalStateExit?.Invoke(); });
+            
 
             monsterBase.OnEngageEvent.AddListener(() => { controller.OnEngage?.Invoke(); });
             monsterBase.OnDisEngageEvent.AddListener(() => { controller.OnDisengage?.Invoke(); });

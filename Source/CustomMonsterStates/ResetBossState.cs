@@ -29,6 +29,8 @@ namespace BossChallengeMod.CustomMonsterStates {
 
         protected CancellationTokenSource stateLifetimeCancellationTokenSource = null!;
 
+        public Action? OnStateEnterInvoke;
+
         public ResetBossState() {
 
             TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
@@ -43,6 +45,7 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateEnter() {
+            OnStateEnterInvoke?.Invoke();
             //if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles == monsterKillCounter.KillCounter + 1) {
             //    EffectHitData effectHitData = new EffectHitData();
             //    effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
@@ -116,6 +119,7 @@ namespace BossChallengeMod.CustomMonsterStates {
             SwitchDamageReceivers(true);
             monster.monsterCore.EnablePushAway();
 
+            Log.Info($"{monsterKillCounter.KillCounter}, {monsterKillCounter.KillCounter + 1}, {monsterKillCounter.MaxBossCycles}");
             if(monsterKillCounter.KillCounter + 1 == monsterKillCounter.MaxBossCycles) {
                 monster.postureSystem.DieHandleingStates.Remove(StateType);
             }

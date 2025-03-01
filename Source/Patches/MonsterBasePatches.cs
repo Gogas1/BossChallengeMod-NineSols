@@ -98,10 +98,9 @@ namespace BossChallengeMod.Patches {
                 return true;
             }
 
-            var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
-            if (modifiers != null) {
-                var enduranceMod = modifiers.FirstOrDefault(m => m.Key == "endurance");
-                if ((enduranceMod?.enabled ?? false) && (!enduranceMod?.IsPaused ?? false)) {
+            var enduranceModifier = __instance.GetComponentInChildren<EnduranceModifier>();
+            if (enduranceModifier != null) {
+                if (enduranceModifier.enabled && !enduranceModifier.IsPaused) {
                     return false;
                 }
             }
@@ -113,11 +112,9 @@ namespace BossChallengeMod.Patches {
         [HarmonyPostfix]
         private static void OnExplode_Postfix(MonsterBase __instance) {
             try {
-                var modifiers = __instance.GetComponentsInChildren<ModifierBase>();
-                if (modifiers != null) {
-                    foreach (ModifierBase modifier in modifiers) {
-                        modifier.MonsterNotify(MonsterNotifyType.OnExplode);
-                    }
+                var modifiersController = __instance.GetComponent<MonsterModifierController>();
+                if (modifiersController != null) {
+                    modifiersController.CustomNotify(MonsterNotifyType.OnExplode);
                 }
 
             } catch (Exception e) {

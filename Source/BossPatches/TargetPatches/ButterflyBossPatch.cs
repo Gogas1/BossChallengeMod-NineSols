@@ -12,6 +12,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 using BossChallengeMod.Modifiers.Managers;
+using BossChallengeMod.UI;
 
 namespace BossChallengeMod.BossPatches.TargetPatches {
     public class ButterflyBossPatch : RevivalChallengeBossPatch {
@@ -47,29 +48,18 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                         var monsterController = InitializeMainController(monsterBase, resetBossState);
 
                         var killCounter = InitializeKillCounter(monsterBase, monsterController);
-                        killCounter.UseRecording = UseRecording;
-
-                        Action stateEnterEventActions = () => killCounter.UpdateCounter();
 
                         var modifiersController = InitializeModifiers(monsterBase, monsterController);
-                        modifiersController.Init();
-                        modifiersController.GenerateAvailableMods();
-
-                        stateEnterEventActions += () => {
-                            modifiersController.RollModifiers(killCounter.KillCounter);
-                            modifiersController.ApplyModifiers();
-                        };
 
                         BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
 
                         resetBossState.monsterKillCounter = killCounter;
 
-                        resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
                         BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
 
                         foreach (var cloneState in cloneResetBossStates) {
                             cloneState.monsterKillCounter = killCounter;
-                            cloneState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
+                            cloneState.OnStateEnterInvoke += () => { monsterController.ProcessRevivalStateEnter(); };
                         }
 
                         killCounter.CheckInit();

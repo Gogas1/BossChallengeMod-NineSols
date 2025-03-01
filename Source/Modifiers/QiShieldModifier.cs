@@ -10,8 +10,12 @@ namespace BossChallengeMod.Modifiers {
             base.Awake();
         }
 
-        public override void MonsterNotify(MonsterNotifyType notifyType) {
-            if(notifyType == MonsterNotifyType.OnExplode) {
+        public override void MonsterNotify(object message) {
+            if (message is not MonsterNotifyType notifyType) {
+                return;
+            }
+
+            if (notifyType == MonsterNotifyType.OnExplode) {
                 base.MonsterNotify(notifyType);
             }
         }
