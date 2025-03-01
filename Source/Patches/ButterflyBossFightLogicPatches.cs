@@ -28,7 +28,7 @@ namespace BossChallengeMod.Patches {
                     var targetMonster = __instance.allMonsters[0];
                     var killCountingController = targetMonster.GetComponent<MonsterKillCounter>();
 
-                    if (killCountingController != null && killCountingController.KillCounter + 1 < killCountingController.MaxBossCycles) {
+                    if (killCountingController != null && (killCountingController.KillCounter + 1 < killCountingController.MaxBossCycles || killCountingController.MaxBossCycles == -1)) {
 
                         targetMonster.postureSystem.DieHandleingStates.Clear();
                         targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
