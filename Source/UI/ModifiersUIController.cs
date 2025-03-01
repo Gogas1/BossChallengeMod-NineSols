@@ -17,8 +17,6 @@ namespace BossChallengeMod.UI {
         private List<string> modifiers = new List<string>();
         private List<TMP_Text> items = new List<TMP_Text>();
 
-        private LocalizationResolver localizer = BossChallengeMod.Instance.LocalizationResolver;
-
         public float lineDefaultLength = 200f;
         public float lineUnfoldAnimationDuration = 0.75f;
         public float lineFoldAnimationDuration = 0.75f;
@@ -32,7 +30,7 @@ namespace BossChallengeMod.UI {
         private float modifiersRaisingAnimationDuration = 1f;
         private float modifiersLoweringAnimationDuration = 1f;
 
-        private bool forceHide;
+        private bool forceHide;    
 
         public UIControllerAnimationState UIControllerAnimationState;
 
@@ -180,7 +178,7 @@ namespace BossChallengeMod.UI {
 
                 while (modifiersQueue.Any() && CurrentState == ModifiersUIState.UnfoldingModifiers) {
                     var modifier = modifiersQueue.Dequeue();
-                    var newText = UIController.InitializeText(new Vector2(0, -31 * counter), gameObject, localizer.Localize(modifier), true, 21);
+                    var newText = UIController.InitializeText(new Vector2(0, -31 * counter), gameObject, LocalizationResolver.Localize(modifier), true, 21);
                     counter++;
                     newText.alpha = 0f;
                     items.Add(newText);

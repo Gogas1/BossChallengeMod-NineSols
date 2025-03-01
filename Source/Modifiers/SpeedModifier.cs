@@ -8,11 +8,14 @@ namespace BossChallengeMod.Modifiers {
 
         public override void Awake() {
             base.Awake();
-            Key = "speed_temp";
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            enabled = keys.Contains(Key);
+        public override void NotifyActivation() {
+            enabled = true;
+        }
+
+        public override void NotifyDeactivation() {
+            enabled = false;
         }
 
         public override void OnEnable() {
@@ -20,7 +23,7 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void Update() {
-            if (Monster != null) {
+            if (Monster != null && !IsPaused) {
                 Monster.animator.speed = Monster.animator.speed * 1.2f;
             }
         }

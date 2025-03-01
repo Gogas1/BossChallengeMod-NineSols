@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BossChallengeMod.Interfaces;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Text;
 using UnityEngine;
 
 namespace BossChallengeMod.Modifiers.Managers {
-    public class MonsterYanlaoGunController : MonoBehaviour {
+    public class MonsterYanlaoGunController : MonoBehaviour, IResettableComponent {
         protected GameObject? GunObject { get; private set; }
 
         protected GeneralState? StatePaused;
@@ -65,6 +66,14 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             gunMaxSpeedFieldRef.SetValue(gunComponent, 300f);
             gunComponent.NormalLerpingSpeed = 2f;
+        }
+
+        public int GetPriority() {
+            return 1;
+        }
+
+        public void ResetComponent() {
+            StopGun();
         }
     }
 }

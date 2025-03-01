@@ -1,25 +1,15 @@
-﻿using HarmonyLib;
-using NineSolsAPI;
+﻿using NineSolsAPI;
 using RCGMaker.Core;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRule;
-using UnityEngine.Experimental.GlobalIllumination;
-using UnityEngine.UI;
-using ClipperLibClone;
-using System.Collections;
-using BossChallengeMod.Helpers;
-using UnityEngine.SceneManagement;
 using BossChallengeMod.Configuration;
 
 namespace BossChallengeMod.UI {
     public class UIController {
         private KillCounterController bossCounterTextController;
-        private ModifiersUIController modifiersController;
+        private QueueUI.ModifiersUIController modifiersController;
         private TimerController timerController;
         private CurrentTalismanUIContoller talismanUIController;
 
@@ -110,7 +100,7 @@ namespace BossChallengeMod.UI {
         }
 
         private void CalculateRightPanelPosition(float width, float height, out float coordsX, out float coordsY) {
-            coordsX = width - width / 10f;
+            coordsX = width - width / 9f;
             coordsY = height - height / 4.5f;
         }
 
@@ -179,8 +169,8 @@ namespace BossChallengeMod.UI {
             coordsY = height / 4.15f;
         }
 
-        private ModifiersUIController CreateModifiersControllerGUI() {
-            var modifiers = rightPanel.gameObject.AddChildrenComponent<ModifiersUIController>("ModifiersUI");
+        private QueueUI.ModifiersUIController CreateModifiersControllerGUI() {
+            var modifiers = rightPanel.gameObject.AddChildrenComponent<QueueUI.ModifiersUIController>("ModifiersUI");
             modifiers.transform.localPosition = new Vector3(0, -21f);
             return modifiers;
         }
@@ -207,7 +197,7 @@ namespace BossChallengeMod.UI {
             textComponent.text = text;
 
             RectTransform rectTransform = textComponent.GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(200, 50);
+            rectTransform.sizeDelta = new Vector2(300, 50);
 
             textComponent.transform.localPosition = localPosition;
             textComponent.transform.SetParent(parent.transform, false);
@@ -232,9 +222,15 @@ namespace BossChallengeMod.UI {
             ShowText();
         }
 
-        public void UpdateModifiers(IEnumerable<string> modifiers) {
+        //public void UpdateModifiers(IEnumerable<string> modifiers) {
+        //    modifiersController.SetModifiers(modifiers);
+        //}
+
+        public void UpdateModifiers(Dictionary<int, string> modifiers) {
             modifiersController.SetModifiers(modifiers);
-            modifiersController.Show();
+        }
+        public void HideModifiers() {
+            modifiersController.Reset();
         }
 
         public void ShowText() {
@@ -245,9 +241,6 @@ namespace BossChallengeMod.UI {
             bossCounterTextController.Hide(callback);
         }
 
-        public void HideModifiers() {
-            modifiersController.Reset();
-        }
 
         public void ShowExpandedKillNumbersText() {
             modifiersController.LowerModifiers(() => {

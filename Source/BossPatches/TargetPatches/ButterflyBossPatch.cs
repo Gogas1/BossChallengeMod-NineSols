@@ -12,68 +12,65 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 using BossChallengeMod.Modifiers.Managers;
+using BossChallengeMod.UI;
 
 namespace BossChallengeMod.BossPatches.TargetPatches {
     public class ButterflyBossPatch : RevivalChallengeBossPatch {
-
-        public ChallengeConfiguration ChallengeConfiguration { get; set; }
 
         protected string resetBossStateExitEventType = "RestoreBoss_exit";
 
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = new List<MonsterState>();
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
-                var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
-                var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                resetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
-                resetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
-                monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
-                result.Add(resetBossState);
+            try {
+                if (ConfigurationToUse.EnableMod) {
+                    var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
+                    var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                    resetBossState.AssignChallengeConfig(ConfigurationToUse);
+                    resetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
+                    monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
+                    result.Add(resetBossState);
 
-                var clones = GetClones(monsterBase);
-                var cloneResetBossStates = new List<ResetBossState>();
-                foreach (var clone in clones) {
-                    var cloneMonsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(clone);
-                    var cloneResetBossState = (ResetBossState)InstantiateStateObject(clone.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                    cloneResetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
-                    cloneResetBossStates.Add(cloneResetBossState);
-                    monsterStatesFieldRef.SetValue(clone, cloneMonsterStatesRefs.Append(cloneResetBossState).ToArray());
-                    cloneResetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
-                    result.Add(cloneResetBossState);
-                }
+                    var clones = GetClones(monsterBase);
+                    var cloneResetBossStates = new List<ResetBossState>();
 
-                if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration && UseKillCounter) {
-                    var killCounter = InitializeKillCounter(monsterBase);
-                    killCounter.UseRecording = UseRecording;
-
-                    Action stateEnterEventActions = () => killCounter.IncrementCounter();
-
-                    var modifiersController = InitializeModifiers(monsterBase);
-
-                    stateEnterEventActions += () => {
-                        modifiersController.RollModifiers(killCounter.KillCounter);
-                        modifiersController.ApplyModifiers(killCounter.KillCounter);
-                    };
-
-                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
-
-                    resetBossState.monsterKillCounter = killCounter;
-
-                    resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
-                    BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
-
-                    foreach (var cloneState in cloneResetBossStates) {
-                        cloneState.monsterKillCounter = killCounter;
-                        cloneState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
+                    foreach (var clone in clones) {
+                        var cloneMonsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(clone);
+                        var cloneResetBossState = (ResetBossState)InstantiateStateObject(clone.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                        cloneResetBossState.AssignChallengeConfig(ConfigurationToUse);
+                        cloneResetBossStates.Add(cloneResetBossState);
+                        monsterStatesFieldRef.SetValue(clone, cloneMonsterStatesRefs.Append(cloneResetBossState).ToArray());
+                        cloneResetBossState.stateEvents.StateExitEvent.AddListener(ChangeBG);
+                        result.Add(cloneResetBossState);
                     }
 
-                    killCounter.CheckLoad();
-                }
+                    if (ConfigurationToUse.EnableMod && UseKillCounter) {
+                        var monsterController = InitializeMainController(monsterBase, resetBossState);
 
+                        var killCounter = InitializeKillCounter(monsterBase, monsterController);
+
+                        var modifiersController = InitializeModifiers(monsterBase, monsterController);
+
+                        BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+
+                        resetBossState.monsterKillCounter = killCounter;
+
+                        BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+
+                        foreach (var cloneState in cloneResetBossStates) {
+                            cloneState.monsterKillCounter = killCounter;
+                            cloneState.OnStateEnterInvoke += () => { monsterController.ProcessRevivalStateEnter(); };
+                        }
+
+                        killCounter.CheckInit();
+                    }
+
+                    PatchGroundBreaking(monsterBase);
+                }
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
 
-            PatchGroundBreaking(monsterBase);
 
             return result;
         }
@@ -84,7 +81,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+                        if (ConfigurationToUse.EnableMod) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
                             result.Add(resStateEnterSender);
@@ -176,63 +173,25 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             return components;
         }
 
-        protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
-            var controller = base.InitializeModifiers(monsterBase);
+        protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
+            var controller = base.InitializeModifiers(monsterBase, monsterController);
 
             var shieldController = monsterBase.gameObject.GetComponent<MonsterShieldController>();
             if (shieldController != null) {
                 GameObject.Destroy(shieldController);
             }
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration &&
-                challengeConfigurationManager.ChallengeConfiguration.ModifiersEnabled) {
+            if (ConfigurationToUse.EnableMod && ConfigurationToUse.ModifiersEnabled) {
 
                 var clones = GetClones(monsterBase);
 
                 foreach (var clone in clones) {
-                    var cloneModifiers = CreateCloneModifiers(clone);
-                    controller.Modifiers.AddRange(cloneModifiers);
+                    var cloneModifiers = InitModifiers(clone, controller, ConfigurationToUse);
+                    controller.MustIncludeModifiers.AddRange(cloneModifiers);
                 }
             }
 
             return controller;
-        }
-
-        protected IEnumerable<ModifierBase> CreateCloneModifiers(MonsterBase monsterBase) {
-            var result = new List<ModifierBase>();
-            var modifiersFolder = new GameObject("Modifiers");
-            modifiersFolder.transform.SetParent(monsterBase.transform, false);
-
-            var speedModifier = modifiersFolder.AddChildrenComponent<SpeedModifier>("SpeedModifier");
-            result.Add(speedModifier);
-
-            var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
-            scalingSpeedModifier.challengeConfiguration = challengeConfigurationManager.ChallengeConfiguration;
-            result.Add(scalingSpeedModifier);
-
-            var parryDamageModifier = modifiersFolder.AddChildrenComponent<ParryDirectDamageModifier>("ParryDamageModifier");
-            result.Add(parryDamageModifier);
-
-            var damageBuildupModifier = modifiersFolder.AddChildrenComponent<DamageBuildupModifier>("DamageBuildupModifier");
-            result.Add(parryDamageModifier);
-
-            var knockbackModifier = modifiersFolder.AddChildrenComponent<KnockbackModifier>("KnockbackModifier");
-            result.Add(knockbackModifier);
-
-            //var knockoutModifier = modifiersFolder.AddChildrenComponent<KnockoutModifier>("KnockoutModifier");
-            //result.Add(knockoutModifier);
-
-
-            var enduranceModifier = modifiersFolder.AddChildrenComponent<EnduranceModifier>("EnduranceModifier");
-            result.Add(enduranceModifier);
-
-            return result;
-        }
-
-        protected override void PopulateModifierController(MonsterModifierController modifierController, ChallengeConfiguration config) {
-            base.PopulateModifierController(modifierController, config);
-
-            modifierController.ModifierConfigs.RemoveAll(m => m.Key.Contains("shield"));
         }
     }
 }

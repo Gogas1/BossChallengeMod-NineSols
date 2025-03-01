@@ -13,7 +13,17 @@ using UnityEngine.Rendering.VirtualTexturing;
 namespace BossChallengeMod.BossPatches {
     public class RevivalChallengeBossPatch : GeneralBossPatch {
         public ResetBossStateConfiguration ResetStateConfiguration = new ResetBossStateConfiguration();
+
         protected ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
+        protected StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+
+        protected ChallengeConfiguration ConfigurationToUse {
+            get {
+                if(ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
+                else return storyChallengeConfigurationManager.ChallengeConfiguration;
+            }
+        }
+
 
         private MonsterBase.States bossReviveMonsterState = BossChallengeMod.Instance.MonsterStateValuesResolver.GetState("BossRevive");
         protected string resetBossStateEventType = "RestoreBoss_enter";
@@ -21,50 +31,58 @@ namespace BossChallengeMod.BossPatches {
         public bool UseKillCounter { get; set; } = true;
         public bool UseModifiers { get; set; } = true;
         public bool UseRecording { get; set; } = true;
+        public bool UseKillCounterTracking { get; set; } = true;
+        public bool UseModifierControllerTracking { get; set; } = true;
+        public bool UseProximityActivation { get; set; } = false;
+        public bool UseCompositeTracking { get; set; } = false;
+
+        public MonsterBase.States InsertPlaceState { get; set; } = MonsterBase.States.LastHit;
+        public ChallengeEnemyType EnemyType { get; set; } = ChallengeEnemyType.Boss;
 
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
-            if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
-                int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(MonsterBase.States.LastHit);
-                monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
+            if (ConfigurationToUse.EnableMod) {
+                int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
+                if (insertIndex >= 0) {
+                    monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
+                }
             }
         }
 
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = base.PatchMonsterStates(monsterBase).ToList();
             
-            if(challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
-                var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
-                var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                resetBossState.AssignChallengeConfig(challengeConfigurationManager.ChallengeConfiguration);
+            try {
+                if(ConfigurationToUse.EnableMod) {
+                    var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
+                    var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                    resetBossState.AssignChallengeConfig(ConfigurationToUse);
 
-                if (challengeConfigurationManager.ChallengeConfiguration.EnableRestoration && UseKillCounter) {
-                    var killCounter = InitializeKillCounter(monsterBase);
-                    killCounter.UseRecording = UseRecording;
+                    if (ConfigurationToUse.EnableMod && UseKillCounter) {
+                        var mainController = InitializeMainController(monsterBase, resetBossState);
 
-                    Action stateEnterEventActions = () => killCounter.IncrementCounter();
+                        var killCounter = InitializeKillCounter(monsterBase, mainController);
+                        var modifiersController = InitializeModifiers(monsterBase, mainController);
 
-                    var modifiersController = InitializeModifiers(monsterBase);
+                        resetBossState.monsterKillCounter = killCounter;
 
-                    stateEnterEventActions += () => {
-                        modifiersController.RollModifiers(killCounter.KillCounter);
-                        modifiersController.ApplyModifiers(killCounter.KillCounter);
-                    };
+                        if(!UseProximityActivation) {
+                            BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+                            BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+                        }
 
-                    BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
+                        killCounter.CheckInit();
+                    }
 
-                    resetBossState.monsterKillCounter = killCounter;
 
-                    resetBossState.stateEvents.StateEnterEvent.AddListener(() => stateEnterEventActions.Invoke());
-                    BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
-
-                    killCounter.CheckLoad();
+                    monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
+                    result.Add(resetBossState);
                 }
 
-
-                monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
-                result.Add(resetBossState);
+            }
+            catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
 
             return result;
@@ -76,7 +94,7 @@ namespace BossChallengeMod.BossPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if(challengeConfigurationManager.ChallengeConfiguration.EnableRestoration) {
+                        if(ConfigurationToUse.EnableMod) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateEnterEvent);
                             result.Add(resStateEnterSender);
@@ -92,214 +110,166 @@ namespace BossChallengeMod.BossPatches {
         }
 
         public override void PostfixPatch(MonsterBase monster) {
-            base.PostfixPatch(monster);
+            if(ConfigurationToUse.EnableMod) {
+                base.PostfixPatch(monster);
+            }
         }
 
-        protected virtual MonsterKillCounter InitializeKillCounter(MonsterBase monsterBase) {
+        public override bool CanBeApplied() {
+            switch (EnemyType) {
+                case ChallengeEnemyType.Boss:
+                    return ConfigurationToUse.AffectBosses;
+                case ChallengeEnemyType.Miniboss:
+                    return ConfigurationToUse.AffectMiniBosses;
+                case ChallengeEnemyType.Regular:
+                    return ConfigurationToUse.AffectRegularEnemies;
+                default:
+                    return true;
+            }
+        }
+
+        protected virtual ChallengeMonsterController InitializeMainController(MonsterBase monsterBase, ResetBossState resetBossState) {
+            var controller = monsterBase.gameObject.AddComponent<ChallengeMonsterController>();
+            resetBossState.OnStateEnterInvoke += () => { controller.ProcessRevivalStateEnter(); };
+            resetBossState.stateEvents.StateExitEvent.AddListener(() => { controller.OnRevivalStateExit?.Invoke(); });
+            
+
+            monsterBase.OnEngageEvent.AddListener(() => { controller.OnEngage?.Invoke(); });
+            monsterBase.OnDisEngageEvent.AddListener(() => { controller.OnDisengage?.Invoke(); });
+            monsterBase.OnDie.AddListener(() => { controller.ProcessDeath(); });
+
+            return controller;
+        }
+
+        protected virtual MonsterKillCounter InitializeKillCounter(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
             var killCounter = monsterBase.gameObject.AddComponent<MonsterKillCounter>();
+            killCounter.EnemyType = EnemyType;          
+            killCounter.CanBeTracked = UseKillCounterTracking;
+            killCounter.UseProximityShow = UseProximityActivation;
+            killCounter.UseRecording = UseRecording;
+
+            monsterController.OnRevivalStateEnter += killCounter.UpdateCounter;
+            monsterController.OnEngage += killCounter.OnEngage;
+            monsterController.OnDisengage += killCounter.OnDisengage;
+            monsterController.OnDie += killCounter.UpdateCounter;
 
             return killCounter;
         }
 
-        protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase) {
-            var config = challengeConfigurationManager.ChallengeConfiguration;
+        protected virtual MonsterModifierController InitializeModifiers(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
+            var config = ConfigurationToUse;
 
-            var modifiers = CreateModifiers(monsterBase);
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
-            var shieldController = monsterBase.gameObject.AddComponent<MonsterShieldController>();
-            var yanlaoGunController = monsterBase.gameObject.AddComponent<MonsterYanlaoGunController>();
 
             if (config.ModifiersEnabled && UseModifiers) {
-                PopulateModifierController(modifierController, config);
+                InitModifiers(monsterBase, modifierController, config);
             }
 
+            modifierController.EnemyType = EnemyType;
+            modifierController.CanBeTracked = UseModifierControllerTracking;
+            modifierController.UseProximityShow = UseProximityActivation;
+            modifierController.UseCompositeTracking = UseCompositeTracking;
+
+            monsterController.OnDie += modifierController.OnDie;
+            monsterController.OnEngage += modifierController.OnEngage;
+            monsterController.OnDisengage += modifierController.OnDisengage;
+            monsterController.OnRevivalStateEnter += modifierController.OnRevival;
+
+            modifierController.OnDestroyActions += () => {
+                monsterController.OnDie -= modifierController.OnDie;
+                monsterController.OnEngage -= modifierController.OnEngage;
+                monsterController.OnDisengage -= modifierController.OnDisengage;
+                monsterController.OnRevivalStateEnter -= modifierController.OnRevival;
+            };
+
+            modifierController.Init();
             modifierController.GenerateAvailableMods();
 
             return modifierController;
         }
 
-        protected virtual void PopulateModifierController(MonsterModifierController modifierController, ChallengeConfiguration config) {
-            if (config.SpeedModifierEnabled) {
-                var speedModifier = new Modifiers.ModifierConfig() {
-                    Key = "speed_temp",
-                };
-                speedModifier.Incompatibles.Add(speedModifier.Key);
-                modifierController.ModifierConfigs.Add(speedModifier);
-            }
-
-            if (config.TimerModifierEnabled) {
-                var timerModifier = new Modifiers.ModifierConfig() {
-                    Key = "timer",
-                };
-                timerModifier.Incompatibles.Add(timerModifier.Key);
-                timerModifier.Incompatibles.Add("regeneration");
-                modifierController.ModifierConfigs.Add(timerModifier);
-            }
-
-            if (config.ParryDirectDamageModifierEnabled) {
-                var parryDamageModifier = new Modifiers.ModifierConfig() {
-                    Key = "parry_damage",
-                };
-                parryDamageModifier.Incompatibles.Add(parryDamageModifier.Key);
-                modifierController.ModifierConfigs.Add(parryDamageModifier);
-            }
-
-            if (config.DamageBuildupModifierEnabled) {
-                var damageBuildupModifier = new Modifiers.ModifierConfig() {
-                    Key = "damage_buildup",
-                };
-                damageBuildupModifier.Incompatibles.Add(damageBuildupModifier.Key);
-                modifierController.ModifierConfigs.Add(damageBuildupModifier);
-            }
-
-            if (config.RegenerationModifierEnabled) {
-                var regenerationModifier = new Modifiers.ModifierConfig() {
-                    Key = "regeneration",
-                };
-                regenerationModifier.Incompatibles.Add(regenerationModifier.Key);
-                regenerationModifier.Incompatibles.AddRange(["timer"]);
-                modifierController.ModifierConfigs.Add(regenerationModifier);
-            }
-
-            if (config.KnockbackModifierEnabled) {
-                var knockbackModifier = new ModifierConfig() {
-                    Key = "knockback"
-                };
-                knockbackModifier.Incompatibles.Add(knockbackModifier.Key);
-                modifierController.ModifierConfigs.Add(knockbackModifier);
-            }
-
-            //if (config.KnockoutModifierEnabled) {
-            //    var knockoutModifier = new ModifierConfig() {
-            //        Key = "knockout"
-            //    };
-            //    knockoutModifier.Incompatibles.Add(knockoutModifier.Key);
-            //    modifierController.ModifierConfigs.Add(knockoutModifier);
-            //}
-
-            if (config.RandomArrowModifierEnabled) {
-                var arrowModifier = new ModifierConfig() {
-                    Key = "random_arrow"
-                };
-                arrowModifier.Incompatibles.Add(arrowModifier.Key);
-                modifierController.ModifierConfigs.Add(arrowModifier);
-            }
-
-            if (config.RandomTalismanModifierEnabled) {
-                var talismanModifier = new ModifierConfig() {
-                    Key = "random_talisman"
-                };
-                talismanModifier.Incompatibles.Add(talismanModifier.Key);
-                modifierController.ModifierConfigs.Add(talismanModifier);
-            }
-
-            if (config.EnduranceModifierEnabled) {
-                var enduranceModifier = new ModifierConfig() {
-                    Key = "endurance"
-                };
-                enduranceModifier.Incompatibles.Add(enduranceModifier.Key);
-                modifierController.ModifierConfigs.Add(enduranceModifier);
-            }
-
-            if (config.QiShieldModifierEnabled) {
-                var qiShieldModifier = new ModifierConfig() {
-                    Key = "qi_shield"
-                };
-                qiShieldModifier.Incompatibles.Add(qiShieldModifier.Key);
-                qiShieldModifier.Incompatibles.AddRange(["timer_shield", "distance_shield"]);
-                modifierController.ModifierConfigs.Add(qiShieldModifier);
-            }
-
-            if (config.TimedShieldModifierEnabled) {
-                var impactShieldModifier = new ModifierConfig() {
-                    Key = "timer_shield"
-                };
-                impactShieldModifier.Incompatibles.Add(impactShieldModifier.Key);
-                impactShieldModifier.Incompatibles.AddRange(["qi_shield", "distance_shield"]);
-                modifierController.ModifierConfigs.Add(impactShieldModifier);
-            }
-
-            if (config.QiOverloadModifierEnabled) {
-                var qiOverloadModifier = new ModifierConfig() {
-                    Key = "qi_overload"
-                };
-                qiOverloadModifier.Incompatibles.Add(qiOverloadModifier.Key);
-                modifierController.ModifierConfigs.Add(qiOverloadModifier);
-            }
-
-            if (config.DistanceShieldModifierEnabled) {
-                var distanceShieldModifier = new ModifierConfig() {
-                    Key = "distance_shield"
-                };
-                distanceShieldModifier.Incompatibles.Add(distanceShieldModifier.Key);
-                distanceShieldModifier.Incompatibles.AddRange(["qi_shield", "timer_shield"]);
-                modifierController.ModifierConfigs.Add(distanceShieldModifier);
-            }
-
-            if(config.YanlaoGunModifierEnabled) {
-                var yanlaoModifier = new ModifierConfig() {
-                    Key = "ya_gun"
-                };
-                yanlaoModifier.Incompatibles.Add(yanlaoModifier.Key);
-                modifierController.ModifierConfigs.Add(yanlaoModifier);
-            }
-        }
-
-        protected virtual IEnumerable<ModifierBase> CreateModifiers(MonsterBase monsterBase) {
+        protected virtual IEnumerable<ModifierBase> InitModifiers(
+            MonsterBase monsterBase,
+            MonsterModifierController modifierController,
+            ChallengeConfiguration config) {
             var result = new List<ModifierBase>();
             var modifiersFolder = new GameObject("Modifiers");
             modifiersFolder.transform.SetParent(monsterBase.transform, false);
 
-            var speedModifier = modifiersFolder.AddChildrenComponent<SpeedModifier>("SpeedModifier");
-            result.Add(speedModifier);
+            var modifiersConfigs = BossChallengeMod.Modifiers.Modifiers
+                .Where(mc => !mc.IgnoredMonsters.Contains(monsterBase.name))
+                .ToList();
 
-            var scalingSpeedModifier = modifiersFolder.AddChildrenComponent<ScalingSpeedModifier>("SpeedScalingModifier");
-            scalingSpeedModifier.challengeConfiguration = challengeConfigurationManager.ChallengeConfiguration;
-            result.Add(scalingSpeedModifier);
+            var sharedControllers = new Dictionary<Type, Component>();
 
-            var timerModifier = modifiersFolder.AddChildrenComponent<TimerModifier>("TimerModifier");
-            result.Add(timerModifier);
+            foreach (var modifierConfig in modifiersConfigs) {
+                if(!modifierConfig.CreateConditionPredicate?.Invoke(modifierConfig) ?? false) {
+                    continue;
+                }
 
-            var parryDamageModifier = modifiersFolder.AddChildrenComponent<ParryDirectDamageModifier>("ParryDamageModifier");
-            result.Add(parryDamageModifier);
+                if (modifierConfig.IgnoredMonsters.Contains(monsterBase.gameObject.name)) {
+                    continue;
+                }
 
-            var damageBuildupModifier = modifiersFolder.AddChildrenComponent<DamageBuildupModifier>("DamageBuildupModifier");
-            result.Add(parryDamageModifier);
+                var controllerComponent = GetOrCreateControllerComponent(monsterBase, modifierConfig, sharedControllers);
 
-            var regenModifier = modifiersFolder.AddChildrenComponent<RegenerationModifier>("RegenerationModifier");
-            result.Add(regenModifier);
+                var modifierObject = modifiersFolder.AddChildrenComponent(modifierConfig.ModifierType, modifierConfig.ObjectName);
+                if (modifierObject is not ModifierBase createdModifier) {
+                    GameObject.Destroy(modifierObject);
 
-            var knockbackModifier = modifiersFolder.AddChildrenComponent<KnockbackModifier>("KnockbackModifier");
-            result.Add(knockbackModifier);
+                    if (modifierConfig.ControllerConfig != null && controllerComponent != null && !modifierConfig.ControllerConfig.IsShared) {
+                        GameObject.Destroy(controllerComponent);
+                    }
 
-            //var knockoutModifier = modifiersFolder.AddChildrenComponent<KnockoutModifier>("KnockoutModifier");
-            //result.Add(knockoutModifier);
+                    Log.Error("Created modifier is not ModifierBase");
+                    continue;
+                }
 
-            var arrowModifier = modifiersFolder.AddChildrenComponent<RandomArrowModifier>("RandomArrowModifier");
-            result.Add(arrowModifier);
+                InitializeModifier(createdModifier, modifierConfig, controllerComponent);
 
-            var talismanModifier = modifiersFolder.AddChildrenComponent<RandomTaliModifier>("RandomTalismanModifier");
-            result.Add(talismanModifier);
+                result.Add(createdModifier);
 
-            var enduranceModifier = modifiersFolder.AddChildrenComponent<EnduranceModifier>("EnduranceModifier");
-            result.Add(enduranceModifier);
-
-            var qiShieldModifier = modifiersFolder.AddChildrenComponent<QiShieldModifier>("QiShieldModifer");
-            result.Add(qiShieldModifier);
-
-            var impactShieldModifier = modifiersFolder.AddChildrenComponent<TimedShieldModifier>("ImpactShieldModifier");
-            result.Add(impactShieldModifier);
-
-            var qiOverloadModifier = modifiersFolder.AddChildrenComponent<QiOverloadModifier>("QiOverloadModifier");
-            result.Add(qiOverloadModifier);
-
-            var distanceShieldModifier = modifiersFolder.AddChildrenComponent<DistanceShieldModifier>("DistanceShieldModifier");
-            result.Add(distanceShieldModifier);
-
-            var yanlaoGunModifier = modifiersFolder.AddChildrenComponent<YanlaoGunModifier>("YanlaoGunModifier");
-            result.Add(yanlaoGunModifier);
+                modifierController.ModifierConfigs.Add(modifierConfig);            
+            }
 
             return result;
         }
+
+        protected Component? GetOrCreateControllerComponent(
+            MonsterBase monsterBase,
+            ModifierConfig modifierConfig,
+            Dictionary<Type, Component> sharedControllers) {
+            if (modifierConfig.ControllerConfig is not { } controllerConfig) return null;
+
+            if (!controllerConfig.IsShared ||
+                !sharedControllers.TryGetValue(controllerConfig.ControllerType, out var controllerComponent)) {
+                controllerComponent = monsterBase.gameObject.AddComponent(controllerConfig.ControllerType);
+            }
+
+            if (controllerConfig.IsShared) {
+                sharedControllers.TryAdd(controllerConfig.ControllerType, controllerComponent);
+            }
+
+            return controllerComponent;
+        }
+
+        protected void InitializeModifier(
+            ModifierBase modifier,
+            ModifierConfig modifierConfig,
+            Component? controllerComponent) {
+            modifier.Key = modifierConfig.Key;
+            modifier.EnemyType = EnemyType;
+            modifier.challengeConfiguration = ConfigurationToUse;
+
+            if (controllerComponent != null) {
+                modifier.SetController(controllerComponent);
+            }
+        }
+    }
+
+    public enum ChallengeEnemyType {
+        Boss,
+        Miniboss,
+        Regular
     }
 }

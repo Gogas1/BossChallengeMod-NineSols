@@ -1,4 +1,5 @@
 ﻿using BossChallengeMod.Modifiers.Managers;
+using BossChallengeMod.Patches;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,8 @@ namespace BossChallengeMod.Modifiers {
     public class ShieldModifier : ModifierBase {
 
         protected MonsterShieldController MonsterShieldController = null!;
-
         public override void Awake() {
             base.Awake();
-            Key = "shield";
-
-            MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
         }
 
         public void AssignShieldController(MonsterShieldController monsterShieldController) {
@@ -24,8 +21,8 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation() {
+            base.NotifyActivation();
 
             if (MonsterShieldController == null) {
                 MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
@@ -33,21 +30,49 @@ namespace BossChallengeMod.Modifiers {
 
             if(MonsterShieldController == null) return;
 
-            enabled = keys.Contains(Key);
-            if(!enabled && MonsterShieldController.IsShieldEnabled) {
+            enabled = true;
+            
+        }
+
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
+
+            enabled = false;
+
+            if (MonsterShieldController == null) {
+                MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+            }
+
+            if (MonsterShieldController?.IsShieldEnabled ?? false) {
                 MonsterShieldController?.Deactivate();
             }
         }
 
-        public override void MonsterNotify(MonsterNotifyType notifyType) {
-            base.MonsterNotify(notifyType);
+        public override void NotifyPause() {
+            base.NotifyPause();
 
-            ActivateCheck();
+            if (MonsterShieldController == null) {
+                MonsterShieldController = gameObject.GetComponentInParent<MonsterShieldController>();
+            }
+
+            if (MonsterShieldController?.IsShieldEnabled ?? false) {
+                MonsterShieldController?.Deactivate();
+            }
+        }
+
+        public override void CustomNotify(object message) {
+            base.CustomNotify(message);
         }
 
         protected void ActivateCheck() {
-            if (enabled) {
+            if (enabled && !IsPaused) {
                 MonsterShieldController?.Activate();
+            }
+        }
+
+        public override void SetController(Component controllerComponent) {
+            if (controllerComponent is MonsterShieldController monsterShieldController) {
+                MonsterShieldController = monsterShieldController;
             }
         }
     }

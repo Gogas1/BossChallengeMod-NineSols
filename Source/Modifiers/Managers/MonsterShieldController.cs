@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BossChallengeMod.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
 namespace BossChallengeMod.Modifiers.Managers {
-    public class MonsterShieldController : MonoBehaviour {
+    public class MonsterShieldController : MonoBehaviour, IResettableComponent {
         protected GameObject? shieldObject;
         protected MonsterShield? shieldComponent;
 
@@ -13,7 +14,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         private bool adjustingNeeded = false;
         private bool initNeeded = true;
-
+        private bool isOriginalShield = false;
         public bool IsShieldEnabled {
             get => shieldComponent?.isActiveAndEnabled ?? false;
         }
@@ -29,9 +30,11 @@ namespace BossChallengeMod.Modifiers.Managers {
                 adjustingNeeded = true;
             } else {
                 shieldObject = shieldComponent.gameObject;
+                shieldComponent = shieldObject?.GetComponent<MonsterShield>() ?? null;
+                isOriginalShield = true;
             }
 
-            if (shieldObject != null && shieldComponent != null && Monster != null) {
+            if (shieldObject != null && shieldComponent != null && Monster != null && adjustingNeeded) {
                 var buffPosObject = Monster?.monsterCore.buffPos ?? null;
 
                 if (buffPosObject != null) {
@@ -64,7 +67,17 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void Deactivate() {
-            shieldComponent?.RemoveShield();
+            if (IsShieldEnabled && !isOriginalShield) {
+                shieldComponent?.RemoveShield();
+            }
+        }
+
+        public void ResetComponent() {
+            Deactivate();
+        }
+
+        public int GetPriority() {
+            return 1;
         }
     }
 }

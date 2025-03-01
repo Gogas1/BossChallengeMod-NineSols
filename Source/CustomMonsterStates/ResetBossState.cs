@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
+using System.Threading;
 
 namespace BossChallengeMod.CustomMonsterStates {
     public class ResetBossState : MonsterState {
@@ -21,6 +23,13 @@ namespace BossChallengeMod.CustomMonsterStates {
         public string[] Animations { get; set; }
         public string[] TargetDamageReceivers { get; set; }
         public MonsterBase.States StateType { get; set; }
+        public float PauseTime { get; set; } = 0f;
+        public bool UseFlashing { get; set; } = false;
+        public float FlashingDelay { get; set; } = 0.33f;
+
+        protected CancellationTokenSource stateLifetimeCancellationTokenSource = null!;
+
+        public Action? OnStateEnterInvoke;
 
         public ResetBossState() {
 
@@ -36,52 +45,86 @@ namespace BossChallengeMod.CustomMonsterStates {
         }
 
         public override void OnStateEnter() {
-            if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter + 1) {
-                EffectHitData effectHitData = new EffectHitData();
-                effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
-                monster.HittedByPlayerDecreasePosture(effectHitData);
+            OnStateEnterInvoke?.Invoke();
+            //if (monsterKillCounter != null && monsterKillCounter.MaxBossCycles == monsterKillCounter.KillCounter + 1) {
+            //    EffectHitData effectHitData = new EffectHitData();
+            //    effectHitData.Override(Player.i.normalAttackDealer, monster.postureSystem.decreasePostureReceiver, null);
+            //    monster.HittedByPlayerDecreasePosture(effectHitData);
 
-                return;
-            }
+            //    return;
+            //}
 
-            ResetAnimationQueue();
-            monster.UnFreeze();
-            monster.HurtClearHintFxs();
-            monster.monsterCore.DisablePushAway();
-            SwitchDamageReceivers(false);
-            for (int i = 0; i < base.monster.attackSensors.Length; i++) {
-                if (base.monster.attackSensors[i] != null) {
-                    base.monster.attackSensors[i].ClearQueue();
+            try {
+                stateLifetimeCancellationTokenSource = new CancellationTokenSource();
+
+                ResetAnimationQueue();
+                monster.UnFreeze();
+                monster.HurtClearHintFxs();
+                monster.monsterCore.DisablePushAway();
+
+                if(monster.monsterCore.fooAttachable.bindingFoo != null) {
+                    monster.monsterCore.fooAttachable.bindingFoo.FooExpired();
                 }
-            }
-            base.monster.VelX = 0f;
-            if (AnimationsQueue.Any()) {
-                PlayAnimation(AnimationsQueue.Dequeue(), false);
-            } else {
-                End();
-            }
 
-            ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
-            ResetMustEnqAttacks(monster);
-            ResetSequenceManagersAttacks(monster);
+                if (UseFlashing) {
+                    StartCoroutine(FlashingTask());
+                }
+
+                SwitchDamageReceivers(false);
+                for (int i = 0; i < base.monster.attackSensors.Length; i++) {
+                    if (base.monster.attackSensors[i] != null) {
+                        base.monster.attackSensors[i].ClearQueue();
+                    }
+                }
+                base.monster.VelX = 0f;
+                if (AnimationsQueue.Any()) {
+                    PlayAnimation(AnimationsQueue.Dequeue(), false);
+                } else if(PauseTime <= 0) {
+                    End();
+                } else {
+                    monster.FreezeFor(PauseTime);
+                    StartCoroutine(DelayAction(() => End(), PauseTime));
+                }
+
+                ResetInitialAttacks(monster.monsterCore.attackSequenceMoodule);
+                ResetMustEnqAttacks(monster);
+                ResetSequenceManagersAttacks(monster);
+            } catch (Exception ex) {
+                Log.Error($"{ex.Message}, {ex.StackTrace}");
+            }
         }
 
-        private void End() {
+        protected void End() {
             if (monster.fsm.HasState(exitState)) {
                 monster.ChangeStateIfValid(exitState);
             }
         }
 
-        public override void OnStateExit() {
-            if (monsterKillCounter != null && challengeConfig.MaxCycles == monsterKillCounter.KillCounter)
-                return;
+        protected IEnumerator DelayAction(Action action, float delay) {
+            yield return new WaitForSeconds(delay);
+            action.Invoke();
+        }
 
+        protected IEnumerator FlashingTask() {
+            while(!stateLifetimeCancellationTokenSource.Token.IsCancellationRequested) {
+                monster.monsterCore.FlashSprite();
+                yield return new WaitForSeconds(FlashingDelay);
+            }
+        }
+
+        public override void OnStateExit() {
             monster.PhaseIndex = 0;
             monster.animator.SetInteger(ResetBossState.PhaseIndexHash, base.monster.PhaseIndex);
             monster.postureSystem.RestorePosture();
             SwitchDamageReceivers(true);
             monster.monsterCore.EnablePushAway();
+
+            if(monsterKillCounter.KillCounter + 1 == monsterKillCounter.MaxBossCycles) {
+                monster.postureSystem.DieHandleingStates.Remove(StateType);
+            }
             monster.postureSystem.GenerateCurrentDieHandleStacks();
+
+            stateLifetimeCancellationTokenSource.Cancel();
         }
 
         public override void AnimationEvent(AnimationEvents.AnimationEvent e) {
@@ -124,23 +167,39 @@ namespace BossChallengeMod.CustomMonsterStates {
             }
 
             foreach (var item in phasesAttacks) {
-                item.EnterLevelReset();
+                try {
+                    item.EnterLevelReset();
+                } catch (Exception ex) {
+                    Log.Warning($"Couldn't reset phase a attack of the attack sequence module due to internal exception");
+                }
             }
         }
 
         private void ResetMustEnqAttacks(MonsterBase monsterBase) {
             foreach (var attackSensor in monsterBase.attackSensors) {
                 foreach (var item in attackSensor.AttackWeightPhaseList) {
-                    item.EnterLevelReset();
+                    try {
+                        item.EnterLevelReset();
+                    } catch (Exception ex) {
+                        Log.Warning($"Couldn't reset must enq attacks of {monsterBase.gameObject} due to internal exception");
+                    }
                 }
             }
         }
 
         private void ResetSequenceManagersAttacks(MonsterBase monsterBase) {
-            Transform parent = monsterBase.transform.parent;
-            var sequenceManagers = parent.gameObject.GetComponentsInChildren<EventSequenceManager>(true);
-            foreach (var item in sequenceManagers) {
-                item.setting.EnterLevelReset();
+            try {
+                Transform parent = monsterBase.transform.parent;
+                var sequenceManagers = parent.gameObject.GetComponentsInChildren<EventSequenceManager>(true);
+                foreach (var item in sequenceManagers) {
+                    try {
+                        item.setting.EnterLevelReset();
+                    } catch (Exception ex) {
+                        Log.Warning($"Couldn't reset sequence menager of {monsterBase.gameObject} due to internal exception");
+                    }
+                }
+            } catch (Exception ex) {
+                Log.Warning($"Couldn't reset sequence menagers attacks of {monsterBase.gameObject} due to internal exception");
             }
         }
 
@@ -165,6 +224,8 @@ namespace BossChallengeMod.CustomMonsterStates {
             }
         }
 
-        private static readonly int PhaseIndexHash = Animator.StringToHash("PhaseIndex");
+        private static readonly int PhaseIndexHash = Animator.StringToHash("PhaseIndex");        
     }
+
+    
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BossChallengeMod.Patches;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -6,12 +7,10 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers {
     public class DistanceShieldModifier : ShieldModifier {
 
-        protected float distanceTreshhold = 275;
+        protected float distanceTreshhold = 225f;
 
         public override void Awake() {
             base.Awake();
-
-            Key = "distance_shield";            
         }
 
         private void Update() {
@@ -21,10 +20,6 @@ namespace BossChallengeMod.Modifiers {
                     ActivateCheck();
                 }
             }
-        }
-
-        public override void MonsterNotify(MonsterNotifyType notifyType) {
-            
         }
     }
 }

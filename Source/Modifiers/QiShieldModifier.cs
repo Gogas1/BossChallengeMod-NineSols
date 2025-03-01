@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BossChallengeMod.Patches;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,13 +8,17 @@ namespace BossChallengeMod.Modifiers {
 
         public override void Awake() {
             base.Awake();
-
-            Key = "qi_shield";
         }
 
-        public override void MonsterNotify(MonsterNotifyType notifyType) {
-            if(notifyType == MonsterNotifyType.OnExplode) {
-                base.MonsterNotify(notifyType);
+        public override void CustomNotify(object message) {
+            if (message is not MonsterNotifyType notifyType) {
+                return;
+            }
+
+            if (notifyType == MonsterNotifyType.OnExplode) {
+                base.CustomNotify(notifyType);
+
+                ActivateCheck();
             }
         }
     }

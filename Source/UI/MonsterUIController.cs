@@ -9,7 +9,9 @@ using UnityEngine.SceneManagement;
 namespace BossChallengeMod.UI {
     public class MonsterUIController {
         private MonsterKillCounter? trackedKillCounter = null;
+
         private MonsterModifierController? trackedModifiersController = null;
+        private readonly List<MonsterModifierController> compositeModifierControllers = new();
 
         private UIController UIController = BossChallengeMod.Instance.UIController;
 
@@ -43,6 +45,10 @@ namespace BossChallengeMod.UI {
         }
 
         public void ChangeKillCounter(MonsterKillCounter? monsterKillCounter) {
+            if(monsterKillCounter != null && !monsterKillCounter.CanBeTracked) {
+                return;
+            }
+
             if(trackedKillCounter != null) {
                 trackedKillCounter.OnUpdate -= UpdateKillCounterUI;
                 trackedKillCounter.OnDestroyActions -= ResetKillCounter;
@@ -59,17 +65,41 @@ namespace BossChallengeMod.UI {
         }
 
         public void ChangeModifiersController(MonsterModifierController? monsterModifierController) {
+            if(monsterModifierController != null && !monsterModifierController.CanBeTracked) {
+                return;
+            }
+
             if (trackedModifiersController != null) {
-                trackedModifiersController.OnModifiersRoll -= UpdateModifierUI;
+                trackedModifiersController.OnModifiersChange -= UpdateModifierUI;
                 trackedModifiersController.OnDestroyActions -= ResetModifierController;
             }
 
             trackedModifiersController = monsterModifierController;
 
             if (trackedModifiersController != null) {
-                trackedModifiersController.OnModifiersRoll += UpdateModifierUI;
+                trackedModifiersController.OnModifiersChange += UpdateModifierUI;
                 trackedModifiersController.OnDestroyActions += ResetModifierController;
             }
+
+            UpdateModifierUI();
+        }
+
+        public void AddCompositeModifierController(MonsterModifierController monsterModifierController) {
+            if (!monsterModifierController.UseCompositeTracking) {
+                return;
+            }
+
+            compositeModifierControllers.Add(monsterModifierController);
+
+            monsterModifierController.OnModifiersChange += UpdateModifierUI;
+
+            UpdateModifierUI();
+        }
+
+        public void RemoveCompositeModifierController(MonsterModifierController monsterModifierController) {
+            compositeModifierControllers.Remove(monsterModifierController);
+
+            monsterModifierController.OnModifiersChange -= UpdateModifierUI;
 
             UpdateModifierUI();
         }
@@ -98,16 +128,34 @@ namespace BossChallengeMod.UI {
         }
 
         private void UpdateModifierUI() {
-            if (trackedModifiersController == null) {
-                UIController.HideModifiers();
-                return;
-            }
+            try {
+                if (trackedModifiersController == null) {
 
-            if (trackedModifiersController.Selected.Any()) {
-                UIController.UpdateModifiers(trackedModifiersController.Selected.Select(m => m.Key));
-            }
-            else {
-                UIController.HideModifiers();
+                    compositeModifierControllers.RemoveAllNull();
+                    if(compositeModifierControllers.Any()) {
+                        UIController.UpdateModifiers(compositeModifierControllers
+                            .SelectMany(controller => controller.Selected, (controller, config) => new {
+                                CombinedKey = HashCode.Combine(controller.GetHashCode(), config.GetHashCode()),
+                                ConfigKey = config.Key
+                            })
+                            .ToDictionary(x => x.CombinedKey, x => x.ConfigKey));
+                    }
+                    else {
+                        UIController.UpdateModifiers(new());
+                    }
+
+                    return;
+                }
+
+                if (trackedModifiersController.Selected.Any()) {
+                    UIController.UpdateModifiers(trackedModifiersController.Selected.ToDictionary(config => HashCode.Combine(trackedModifiersController.GetHashCode(), config.GetHashCode()), config => config.Key));
+                }
+                else {
+                    UIController.UpdateModifiers(new());
+                }
+
+            } catch (Exception e) {
+                Log.Error($"{e.Message}, {e.StackTrace}");
             }
         }
 
@@ -120,8 +168,8 @@ namespace BossChallengeMod.UI {
         }
 
         public void ValidateOnSceneUnload(Scene scene) {
-            UpdateKillCounterUI();
-            UpdateModifierUI();
+            //UpdateKillCounterUI();
+            //UpdateModifierUI();
         }
 
         public void Unload() {

@@ -10,39 +10,16 @@ using UnityEngine;
 namespace BossChallengeMod.BossPatches.TargetPatches {
     public class EigongBossPatch : RevivalChallengeBossPatch {
 
-        public override IEnumerable<RCGEventReceiver> CreateReceivers(MonsterBase monster, IEnumerable<MonsterState> monsterStates) {
-            var result = base.CreateReceivers(monster, monsterStates).ToList();
+        public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
+            base.PatchMonsterPostureSystem(monsterBase);
 
-            var phaseOneTransition = CreatePhaseOneTransition();
-            result.Add(phaseOneTransition.eventReceiver);
-
-            return result;
-        }
-
-        protected TransitionWrapper CreatePhaseOneTransition() {
-            string fromPath = "GameLevel/Room/Prefab/EventBinder/General Boss Fight FSM Object Variant/--[States]/FSM/[State] BossFighting_Phase3";
-            string toPath = "GameLevel/Room/Prefab/EventBinder/General Boss Fight FSM Object Variant/--[States]/FSM/[State] BossFighting_Phase1";
-
-            var parentStateComponent = GameObject.Find(fromPath).GetComponent<GeneralState>();
-            var targetStateComponent = GameObject.Find(toPath).GetComponent<GeneralState>();
-
-            var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
-
-            var transitionComponent = CreateTransition(
-                parentStateComponent.gameObject,
-                parentStateComponent,
-                targetStateComponent,
-                "[Patch transition] ToPhaseOne");
-
-            var transitionReceiver = CreateEventReceiverAsComponent(transitionComponent.gameObject, eventType, [transitionComponent]);
-            var receivers = transitionComponent.GetComponents<RCGEventReceiver>();
-            foreach (var receiver in receivers) {
-                if (receiver.eventType == default) {
-                    UnityEngine.Object.Destroy(receiver);
+            var flag = SaveManager.Instance.allFlags.FlagDict["e78958a13315eb9418325caf25da9d4dScriptableDataBool"];
+            if (flag != null && flag is ScriptableDataBool boolFlag) {
+                if(!boolFlag.CurrentValue && !ApplicationCore.IsInBossMemoryMode) {
+                    var postureSystem = monsterBase.postureSystem;
+                    postureSystem.DieHandleingStates.Remove(MonsterBase.States.FooStunEnter);
                 }
             }
-
-            return new TransitionWrapper(transitionComponent, transitionReceiver);
         }
     }
 }

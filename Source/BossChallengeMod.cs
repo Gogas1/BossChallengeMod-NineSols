@@ -1,25 +1,22 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
 using HarmonyLib;
 using I2.Loc;
 using NineSolsAPI;
-using BossChallengeMod.BossPatches;
 using BossChallengeMod.Configuration;
 using BossChallengeMod.Configuration.Repositories;
 using BossChallengeMod.Global;
 using BossChallengeMod.UI;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BossChallengeMod.ObjectProviders;
-using System.IO;
 using BossChallengeMod.Preloading;
-using BossChallengeMod.BossPatches.TargetPatches;
+using BossChallengeMod.PatchResolver;
+using BossChallengeMod.PatchResolver.Initializers;
+using BossChallengeMod.Modifiers;
+using System.Collections.Generic;
+using BossChallengeMod.Modifiers.Managers;
+using NineSolsAPI.Utils;
 
 namespace BossChallengeMod;
 
@@ -29,85 +26,45 @@ public class BossChallengeMod : BaseUnityPlugin {
     public CustomMonsterStateValuesResolver MonsterStateValuesResolver { get; private set; }
     public EventTypesResolver EventTypesResolver { get; private set; }
 
-    public Dictionary<string, GeneralBossPatch> BossPatches { get; private set; } = new Dictionary<string, GeneralBossPatch>();
-
-    private ConfigEntry<bool> isCyclingEnabled = null!;
-    private ConfigEntry<bool> useSingleRecordsKey = null!;
-    private ConfigEntry<int> maxCycles = null!;
-
-    private ConfigEntry<bool> isSpeedScalingEnabled = null!;
-    private ConfigEntry<float> minSpeedScalingValue = null!;
-    private ConfigEntry<float> maxSpeedScalingValue = null!;
-    private ConfigEntry<int> maxSpeedScalingCycleValue = null!;
-
-    private ConfigEntry<bool> isModifiersScalingEnabled = null!;
-    private ConfigEntry<int> maxModifiersNumber = null!;
-    private ConfigEntry<int> maxModifiersNumberScalingValue = null!;
-
-    private ConfigEntry<bool> IsRandomSpeedScalingEnabled { get; set; } = null!;
-    private ConfigEntry<int> StartRandomSpeedScalingDeath { get; set; } = null!;
-    private ConfigEntry<float> MinRandomSpeedScalingValue { get; set; } = null!;
-    private ConfigEntry<float> MaxRandomSpeedScalingValue { get; set; } = null!;
-
-    private ConfigEntry<bool> IsRandomModifiersScalingEnabled { get; set; } = null!;
-    private ConfigEntry<int> StartRandomModifiersScalingDeath { get; set; } = null!;
-    private ConfigEntry<int> MinRandomModifiersScalingValue { get; set; } = null!;
-    private ConfigEntry<int> MaxRandomModifiersScalingValue { get; set; } = null!;
-
-    private ConfigEntry<bool> isModifiersEnabled = null!;
-    private ConfigEntry<int> modifiersStartDeathValue = null!;
-    private ConfigEntry<bool> isModifiersRepeatingEnabled = null!;
-    private ConfigEntry<bool> isSpeedModifierEnabled = null!;
-    private ConfigEntry<bool> isTimerModifierEnabled = null!;
-    private ConfigEntry<bool> isParryDamageModifierEnabled = null!;
-    private ConfigEntry<bool> isDamageBuildupModifierEnabled = null!;
-    private ConfigEntry<bool> isRegenerationModifierEnabled = null!;
-    private ConfigEntry<bool> isKnockbackModifierEnabled = null!;
-    private ConfigEntry<bool> isRandomArrowModifierEnabled = null!;
-    private ConfigEntry<bool> isRandomTalismanModifierEnabled = null!;
-    private ConfigEntry<bool> isEnduranceModifierEnabled = null!;
-    private ConfigEntry<bool> isQiShieldModifierEnabled = null!;
-    private ConfigEntry<bool> isTimedShieldModifierEnabled = null!;
-    private ConfigEntry<bool> isQiOverloadModifierEnabled = null!;
-    private ConfigEntry<bool> isDistanceShieldModifierEnabled = null!;
-    private ConfigEntry<bool> isYanlaoGunModifierEnabled = null!;
-
-    private ConfigEntry<bool> isCounterUIEnabled = null!;
-    private ConfigEntry<bool> useCustomCounterPosition = null!;
-    private ConfigEntry<float> counterCustomXPosition = null!;
-    private ConfigEntry<float> counterCustomYPosition = null!;
-    private ConfigEntry<float> counterScale = null!;
-
-    private ConfigEntry<bool> isTimerUIEnabled = null!;
-    private ConfigEntry<bool> useCustomTimerPosition = null!;
-    private ConfigEntry<float> timerCustomXPosition = null!;
-    private ConfigEntry<float> timerCustomYPosition = null!;
-    private ConfigEntry<float> timerScale = null!;
-
-    private ConfigEntry<bool> isTalismanModeUIEnabled = null!;
-    private ConfigEntry<bool> useCustomTalismanModePosition = null!;
-    private ConfigEntry<float> talismanModeCustomXPosition = null!;
-    private ConfigEntry<float> talismanModeCustomYPosition = null!;
-    private ConfigEntry<float> talismanModeScale = null!;
+    public MonsterPatchResolver RegularMonstersPatchResolver { get; private set; } = null!;
+    public MonsterPatchResolver BossesPatchResolver { get; private set; } = null!;
 
     public UIController UIController { get; private set; } = null!;
     public MonsterUIController MonsterUIController { get; private set; } = null!;
-    public LocalizationResolver LocalizationResolver { get; private set; } = null!;
     public ChallengeConfigurationManager ChallengeConfigurationManager { get; private set; } = null!;
+    public StoryChallengeConfigurationManager StoryChallengeConfigurationManager { get; private set; } = null!;
     public GlobalModifiersController GlobalModifiersFlags { get; private set; } = null!;
     public UIConfiguration UIConfiguration { get; private set; } = null!;
 
     private Preloader Preloader { get; set; } = null!;
+    private BepInExModConfigurationHandler BepInExModConfigurationHandler { get; set; } = null!;
 
     public ShieldProvider ShieldProvider { get; private set; } = null!;
     public YanlaoGunProvider YanlaoGunProvider { get; private set; } = null!;
+    public BombProvider BombShooterProvider { get; private set; } = null!;
+
+    public static ModifiersStore Modifiers { get; private set; } = null!;
 
     public static BossChallengeMod Instance { get; private set; } = null!;
+    public static System.Random Random { get; private set; } = null!;
 
+    public const string PluginGUID = PluginInfo.PLUGIN_GUID;
+
+    private int versionNotificationCounter = 3;
     private bool isToastsDisplayed;
     private bool UnloadRequested;
 
     private Harmony harmony = null!;
+
+    private ModConfig _modConfig = null!;
+    private bool isVersionValid = false;
+
+    protected ChallengeConfiguration ConfigurationToUse {
+        get {
+            if (ApplicationCore.IsInBossMemoryMode) return ChallengeConfigurationManager.ChallengeConfiguration;
+            else return StoryChallengeConfigurationManager.ChallengeConfiguration;
+        }
+    }
 
     public BossChallengeMod() {
         MonsterStateValuesResolver = new CustomMonsterStateValuesResolver();
@@ -121,41 +78,67 @@ public class BossChallengeMod : BaseUnityPlugin {
 
         RCGLifeCycle.DontDestroyForever(gameObject);
 
+
+        Random = new System.Random();
         Preloader = new Preloader();
         ShieldProvider = new ShieldProvider();
         YanlaoGunProvider = new YanlaoGunProvider();
+        BombShooterProvider = new BombProvider();
+
+        Modifiers = new ModifiersStore();
 
         AssignPreloadingTargets();
+        SetupModifiers(Modifiers);
 
-        LocalizationResolver = new LocalizationResolver();
         LocalizationResolver.LoadLanguage(GetLanguageCode());
 
         IRecordsRepository recordsRepo = new JsonRecordsRepository();
         ChallengeConfigurationManager = new ChallengeConfigurationManager(recordsRepo);
+        StoryChallengeConfigurationManager = new StoryChallengeConfigurationManager();
+        UIConfiguration = new UIConfiguration();
         GlobalModifiersFlags = new GlobalModifiersController();
-        InitializeChallengeConfiguration();
-        HandleConfigurationValues();
-
 
         LocalizationManager.OnLocalizeEvent += OnLocalizationChange;
         
-        InitializeUIConfiguration();
+        BepInExModConfigurationHandler = new BepInExModConfigurationHandler(Config, ChallengeConfigurationManager, UIConfiguration, StoryChallengeConfigurationManager);
+
+        BepInExModConfigurationHandler.InitChallengeConfiguration();
+        BepInExModConfigurationHandler.HandleConfigurationValues();
+
+        BepInExModConfigurationHandler.InitStoryChallengeConfiguration();
+        BepInExModConfigurationHandler.HandleStoryChallengeConfigurationValues();
+
+        BepInExModConfigurationHandler.InitializeUIConfiguration();
         UIController = new UIController(UIConfiguration);
-        HandleUIConfigurationValues();
+        BepInExModConfigurationHandler.HandleUIConfigurationValues();
         
         MonsterUIController = new MonsterUIController();
 
-        InitializePatches();
+        RegularMonstersPatchResolver = new RegularEnemiesPatchesInitializer(MonsterStateValuesResolver).MonsterPatchResolver;
+        BossesPatchResolver = new BossesPatchesInitializer(MonsterStateValuesResolver).MonsterPatchResolver;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         harmony = Harmony.CreateAndPatchAll(typeof(BossChallengeMod).Assembly);
-
+        
         Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded1!");
     }
 
     private void Start() {
-        StartCoroutine(Preloader.Preload());
+        ProcessModConfig();
+
+        if(isVersionValid) {
+            StartCoroutine(Preloader.Preload());
+        }
+    }
+
+    private void ProcessModConfig() {
+        _modConfig = AssemblyUtils.GetEmbeddedJson<ModConfig>($"BossChallengeMod.Resources.ModConfig.modconfig.json")!;
+
+        var gameVer = ConfigManager.Instance.Version.Trim();
+        if(gameVer == _modConfig?.ValidVersion) {
+            isVersionValid = true;
+        }
     }
 
     private void AssignPreloadingTargets() {
@@ -168,6 +151,11 @@ public class BossChallengeMod : BaseUnityPlugin {
         string gunName = "ZGun FSM Object Variant";
 
         Preloader.AddPreload(gunScene, gunName, YanlaoGunProvider);
+
+        string bomdShooterScene = "A1_S3_InnerHumanDisposal_Final";
+        string bombShooterName = "Shooter_GrenadeUp";
+
+        Preloader.AddPreload(bomdShooterScene, bombShooterName, BombShooterProvider);
     }
 
     private string GetLanguageCode() {
@@ -189,7 +177,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     private void OnLocalizationChange() {
         LocalizationResolver.LoadLanguage(GetLanguageCode());
-        InitializeChallengeConfiguration();
+        //InitializeChallengeConfiguration();
     }
 
     private void OnDestroy() {
@@ -200,627 +188,19 @@ public class BossChallengeMod : BaseUnityPlugin {
         harmony.UnpatchSelf();
     }
 
-    private void InitializePatches() {
-        BossPatches.Add("StealthGameMonster_SpearHorseMan", GetHorseBossPatch());
-        BossPatches.Add("StealthGameMonster_伏羲_新", GetFuxiBossPatch());
-        BossPatches.Add("StealthGameMonster_新女媧 Variant", GetNuwaBossPatch());
-        BossPatches.Add("StealthGameMonster_GouMang Variant", GetGoumangBossPatch());
-        BossPatches.Add("Monster_GiantMechClaw", GetClawBossPatch());
-
-        var butterflyPatch = GetButterflyBossPatch();
-        BossPatches.Add("StealthGameMonster_Boss_ButterFly Variant", butterflyPatch);
-        BossPatches.Add("StealthGameMonster_Boss_ButterFly Variant (1)", new RevivalChallengeBossClonePatch());
-        BossPatches.Add("StealthGameMonster_Boss_ButterFly Variant (2)", new RevivalChallengeBossClonePatch());
-        BossPatches.Add("StealthGameMonster_Boss_ButterFly Variant (3)", new RevivalChallengeBossClonePatch());
-        BossPatches.Add("StealthGameMonster_Boss_ButterFly Variant (4)", new RevivalChallengeBossClonePatch());
-        BossPatches.Add("Boss_Yi Gung", GetEigongBossPatch());
-        BossPatches.Add("Default", GetDefaultBossPatch());
-    }
-
-    private FuxiBossPatch GetFuxiBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var fuxiBossPatch = new FuxiBossPatch();
-        fuxiBossPatch.DieStates = [
-            MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = fuxiBossPatch.ResetStateConfiguration;
-        resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.Animations = ["PostureBreak"];
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return fuxiBossPatch;
-    }
-    private GeneralBossPatch GetNuwaBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var nuwaBossPatch = new RevivalChallengeBossPatch();
-        nuwaBossPatch.DieStates = [
-            MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-        nuwaBossPatch.UseKillCounter = false;
-        nuwaBossPatch.UseModifiers = false;
-        nuwaBossPatch.UseRecording = false;
-
-        var resetStateConfig = nuwaBossPatch.ResetStateConfiguration;
-        resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return nuwaBossPatch;
-    }
-    private GeneralBossPatch GetGoumangBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var goumangBossPatch = new GoumangBossPatch();
-        goumangBossPatch.DieStates = [
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = goumangBossPatch.ResetStateConfiguration;
-        resetStateConfig.ExitState = MonsterBase.States.Attack2;
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return goumangBossPatch;
-    }
-    private GeneralBossPatch GetClawBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var clawBossPatch = new ClawBossPatch();
-        clawBossPatch.DieStates = [
-            MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = clawBossPatch.ResetStateConfiguration;
-        resetStateConfig.Animations = ["PostureBreak"];
-        resetStateConfig.ExitState = MonsterBase.States.Attack7;
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return clawBossPatch;
-    }
-    private ButterflyBossPatch GetButterflyBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var butterBossPatch = new ButterflyBossPatch();
-        butterBossPatch.DieStates = [
-            bossReviveMonsterState,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = butterBossPatch.ResetStateConfiguration;
-        resetStateConfig.Animations = ["Hurt"];
-        resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return butterBossPatch;
-    }
-    private GeneralBossPatch GetEigongBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var eigongBossPatch = new RevivalChallengeBossPatch();
-        eigongBossPatch.DieStates = [
-            MonsterBase.States.BossAngry,
-            MonsterBase.States.FooStunEnter,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = eigongBossPatch.ResetStateConfiguration;
-        resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.Animations = ["BossAngry"];
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return eigongBossPatch;
-    }
-    private GeneralBossPatch GetHorseBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var defaultBossPatch = new HorseBossPatch();
-        defaultBossPatch.DieStates = [
-            MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
-        resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.Animations = ["PostureBreak"];
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return defaultBossPatch;
-    }
-    private GeneralBossPatch GetDefaultBossPatch() {
-        var bossReviveMonsterState = MonsterStateValuesResolver.GetState("BossRevive");
-
-        var defaultBossPatch = new RevivalChallengeBossPatch();
-        defaultBossPatch.DieStates = [
-            MonsterBase.States.BossAngry,
-            MonsterBase.States.LastHit,
-            MonsterBase.States.Dead
-        ];
-
-        var resetStateConfig = defaultBossPatch.ResetStateConfiguration;
-        resetStateConfig.ExitState = MonsterBase.States.Engaging;
-        resetStateConfig.Animations = ["PostureBreak"];
-        resetStateConfig.StateType = bossReviveMonsterState;
-        resetStateConfig.TargetDamageReceivers = ["Attack", "Foo", "JumpKick"];
-
-        return defaultBossPatch;
-    }
-
-    
-
-    private void InitializeChallengeConfiguration() {
-
-        isCyclingEnabled = Config.Bind(
-            "1. General",
-            "1.1 Enable Boss Revival",
-            true,
-            LocalizationResolver.Localize("config_cycling_enabled_description"));
-        isCyclingEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.EnableRestoration = isCyclingEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        useSingleRecordsKey = Config.Bind(
-            "1. General",
-            "1.2 Record regardless of configuration",
-            false,
-            LocalizationResolver.Localize("config_single_recording_enabled_description"));
-        useSingleRecordsKey.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.UseSingleRecordKey = useSingleRecordsKey.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        maxCycles = Config.Bind(
-            "1. General",
-            "1.3 Boss deaths number",
-            -1,
-            LocalizationResolver.Localize("config_cycles_number_description"));
-        maxCycles.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxCycles = maxCycles.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isSpeedScalingEnabled = Config.Bind(
-            "2. Scaling",
-            "2.1 Enable Speed Scaling",
-            false,
-            LocalizationResolver.Localize("config_scaling_enabled_description"));
-        isSpeedScalingEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        minSpeedScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.1.1 Scaling: Initial Speed",
-            1.0f,
-            LocalizationResolver.Localize("config_scaling_minspeed_description"));
-        minSpeedScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MinSpeedScalingValue = minSpeedScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        maxSpeedScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.1.2 Scaling: Maximum Speed",
-            1.35f,
-            LocalizationResolver.Localize("config_scaling_maxspeed_description"));
-        maxSpeedScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxSpeedScalingValue = maxSpeedScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        maxSpeedScalingCycleValue = Config.Bind(
-            "2. Scaling",
-            "2.1.3 Maximum Speed Scaling After Deaths",
-            5,
-            LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
-        maxSpeedScalingCycleValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isModifiersScalingEnabled = Config.Bind(
-            "2. Scaling",
-            "2.2 Enable Modifiers Scaling",
-            false,
-            LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
-        isModifiersScalingEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.EnableModifiersScaling = isModifiersScalingEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        maxModifiersNumber = Config.Bind(
-            "2. Scaling",
-            "2.2.1 Scaling: Maximum Modifiers Number",
-            3,
-            LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
-        maxModifiersNumber.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxModifiersNumber = maxModifiersNumber.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        maxModifiersNumberScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.2.2 Maximum Modifiers Number Scaling After Deaths",
-            3,
-            LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
-        maxModifiersNumberScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        IsRandomSpeedScalingEnabled = Config.Bind(
-                "2. Scaling",
-                "2.3 Enable Random Speed Scaling",
-                false,
-                LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
-        IsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        StartRandomSpeedScalingDeath = Config.Bind(
-            "2. Scaling",
-            "2.3.1 Random Speed Scaling After Deaths",
-            1,
-            LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
-        StartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        MinRandomSpeedScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.3.2 Random Scaling: Minimal Speed",
-            1.0f,
-            LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
-        MinRandomSpeedScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        MaxRandomSpeedScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.3.3 Random Scaling: Maximum Speed",
-            1.5f,
-            LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
-        MaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        //Random modifiers scaling
-        IsRandomModifiersScalingEnabled = Config.Bind(
-            "2. Scaling",
-            "2.4 Enable Random Modifiers Scaling",
-            false,
-            LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
-        IsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        StartRandomModifiersScalingDeath = Config.Bind(
-            "2. Scaling",
-            "2.4.1 Random Modifiers Scaling After Deaths",
-            1,
-            LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
-        StartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        MinRandomModifiersScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.4.2 Random Scaling: Min Modifiers Number",
-            1,
-            LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
-        MinRandomModifiersScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        MaxRandomModifiersScalingValue = Config.Bind(
-            "2. Scaling",
-            "2.4.3 Random Scaling: Max Modifiers Number",
-            4,
-            LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
-        MaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isModifiersEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.1 Enable Modifiers",
-            false,
-            LocalizationResolver.Localize("config_modifiers_enabled_description"));
-        isModifiersEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.ModifiersEnabled = isModifiersEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        modifiersStartDeathValue = Config.Bind(
-            "3. Modifiers",
-            "3.2 Modifiers Start Death",
-            1,
-            LocalizationResolver.Localize("config_modifiers_start_death_description"));
-        modifiersStartDeathValue.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isModifiersRepeatingEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.3 Enable Modifiers Repeating",
-            false,
-            LocalizationResolver.Localize("config_repeating_enabled_description"));
-        isModifiersRepeatingEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.ModifiersEnabled = isModifiersRepeatingEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isSpeedModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Speed Modifier",
-            true,
-            LocalizationResolver.Localize("config_modifiers_speed_enabled_description"));
-        isSpeedModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.SpeedModifierEnabled = isSpeedModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isTimerModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Timer Modifier",
-            true,
-            LocalizationResolver.Localize("config_modifiers_timer_enabled_description"));
-        isTimerModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.TimerModifierEnabled = isTimerModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isParryDamageModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Precice parry only modifier",
-            true,
-            LocalizationResolver.Localize("config_modifiers_parry_damage_enabled_description"));
-        isParryDamageModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.ParryDirectDamageModifierEnabled = isParryDamageModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isDamageBuildupModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Internal damage buildup modifier",
-            true,
-            LocalizationResolver.Localize("config_modifiers_internal_damage_enabled_description"));
-        isDamageBuildupModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.DamageBuildupModifierEnabled = isDamageBuildupModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isRegenerationModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Regeneration modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_regeneration_enabled_description"));
-        isRegenerationModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.RegenerationModifierEnabled = isRegenerationModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isKnockbackModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Knockback modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_knockback_enabled_description"));
-        isKnockbackModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.KnockbackModifierEnabled = isKnockbackModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        //isKnockoutModifierEnabled = Config.Bind(
-        //    "3. Modifiers",
-        //    "3.M Knockout modiifer",
-        //    true,
-        //    LocalizationResolver.Localize("config_modifiers_knockout_enabled_description"));
-        //isKnockoutModifierEnabled.SettingChanged += (_, _) => {
-        //    var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //    config.KnockoutModifierEnabled = isKnockoutModifierEnabled.Value;
-        //    ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //};
-
-        isRandomArrowModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Random arrow modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_random_arrow_enabled_description"));
-        isRandomArrowModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.RandomArrowModifierEnabled = isRandomArrowModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isRandomTalismanModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Random talisman modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_random_talisman_enabled_description"));
-        isRandomTalismanModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isEnduranceModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Endurance modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_endurance_enabled_description"));
-        isEnduranceModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isQiShieldModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Shield: Qi Shield modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
-        isQiShieldModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isTimedShieldModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Shield: Cooldown Shield modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_cooldown_shield_enabled_description"));
-        isTimedShieldModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isQiOverloadModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Qi Overload modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_qi_overload_enabled_description"));
-        isQiOverloadModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isDistanceShieldModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Shield: Distance Shield modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_distance_shield_enabled_description"));
-        isDistanceShieldModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-
-        isYanlaoGunModifierEnabled = Config.Bind(
-            "3. Modifiers",
-            "3.M Yanlago Gun modiifer",
-            true,
-            LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"));
-        isYanlaoGunModifierEnabled.SettingChanged += (_, _) => {
-            var config = ChallengeConfigurationManager.ChallengeConfiguration;
-            config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
-            ChallengeConfigurationManager.ChallengeConfiguration = config;
-        };
-    }
-
-    private void IsCyclingEnabled_SettingChanged(object sender, EventArgs e) {
-        throw new NotImplementedException();
-    }
-
-    private void HandleConfigurationValues() {
-        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        config.EnableRestoration = isCyclingEnabled.Value;
-        config.UseSingleRecordKey = useSingleRecordsKey.Value;
-        config.MaxCycles = maxCycles.Value;
-
-        config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
-        config.MinSpeedScalingValue = minSpeedScalingValue.Value;
-        config.MaxSpeedScalingValue = maxSpeedScalingValue.Value;
-        config.MaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
-
-        config.EnableModifiersScaling = isModifiersScalingEnabled.Value;
-        config.MaxModifiersNumber = maxModifiersNumber.Value;
-        config.MaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
-
-        config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
-        config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
-        config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-        config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
-
-        config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
-        config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
-        config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
-        config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
-
-        config.ModifiersEnabled = isModifiersEnabled.Value;
-        config.AllowRepeatModifiers = isModifiersRepeatingEnabled.Value;
-        config.SpeedModifierEnabled = isSpeedModifierEnabled.Value;
-        config.TimerModifierEnabled = isTimerModifierEnabled.Value;
-        config.ParryDirectDamageModifierEnabled = isParryDamageModifierEnabled.Value;
-        config.DamageBuildupModifierEnabled = isDamageBuildupModifierEnabled.Value;
-        config.RegenerationModifierEnabled = isRegenerationModifierEnabled.Value;
-        config.KnockbackModifierEnabled = isKnockbackModifierEnabled.Value;
-        //config.KnockoutModifierEnabled = isKnockoutModifierEnabled.Value;
-        config.RandomArrowModifierEnabled = isRandomArrowModifierEnabled.Value;
-        config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
-        config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
-        config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
-        config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
-        config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
-        config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
-        config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
-        config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
-
-        ChallengeConfigurationManager.ChallengeConfiguration = config;
-    }
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
         UIController.FixUI();
+        GlobalModifiersFlags.ValidateAll();
         if (!isToastsDisplayed) {
             isToastsDisplayed = true;
             StartCoroutine(ShowToasts());
+        }
+
+        if(versionNotificationCounter > 0 && !isVersionValid) {
+            if(SingletonBehaviour<GameCore>.IsAvailable()) {
+                versionNotificationCounter--;
+                SingletonBehaviour<GameCore>.Instance.notificationUI.ShowNotification($"Mod version is built for different game version: {_modConfig.ValidVersion}. Some features were disabled.", null, PlayerInfoPanelType.Undefined, null);
+            }
         }
     }
 
@@ -832,134 +212,246 @@ public class BossChallengeMod : BaseUnityPlugin {
         }
     }
 
-    private void InitializeUIConfiguration() {
-        UIConfiguration = new UIConfiguration();
+    private void SetupModifiers(ModifiersStore modifiersStore) {        
 
-        isCounterUIEnabled = Config.Bind(
-            "4. UI",
-            "4.1.1 Right panel(killer counter and modifiers list) UI enabled",
-            true,
-            LocalizationResolver.Localize("config_ui_counter_enabled_description"));
-        isCounterUIEnabled.SettingChanged += (_, _) => { UIConfiguration.CounterUIEnabled = isCounterUIEnabled.Value; };
+        modifiersStore
+            .CreateModifierBuilder<SpeedModifier>("speed_temp", "SpeedModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.SpeedModifierEnabled)
+            .BuildAndAdd();
 
-        useCustomCounterPosition = Config.Bind(
-            "4. UI",
-            "4.1.2 Use custom right panel position",
-            false,
-            LocalizationResolver.Localize("config_ui_counter_custom_description"));
-        useCustomCounterPosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomCounterPosition = useCustomCounterPosition.Value; };
+        modifiersStore
+            .CreateModifierBuilder<TimerModifier>("timer", "TimerModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.TimerModifierEnabled && ApplicationCore.IsInBossMemoryMode)
+            .AddCanBeRolledConditionPredicate((_, iteration) => iteration > 0)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                ])
+            .BuildAndAdd();
 
-        counterCustomXPosition = Config.Bind(
-            "4. UI",
-            "4.1.3 Custom right panel X position",
-            0f,
-            LocalizationResolver.Localize("config_ui_counter_custom_x_description"));
-        counterCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.CounterXPos = counterCustomXPosition.Value; };
+        modifiersStore
+            .CreateModifierBuilder<ScalingSpeedModifier>("speed_perm", "SpeedScalingModifier")
+            .SetPersistance(true)
+            .BuildAndAdd();
 
-        counterCustomYPosition = Config.Bind(
-            "4. UI",
-            "4.1.4 Custom right panel Y position",
-            0f,
-            LocalizationResolver.Localize("config_ui_counter_custom_y_description"));
-        counterCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.CounterYPos = counterCustomYPosition.Value; };
+        modifiersStore
+            .CreateModifierBuilder<ParryDirectDamageModifier>("parry_damage", "ParryDamageModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.ParryDirectDamageModifierEnabled)
+            .BuildAndAdd();
 
-        counterScale = Config.Bind(
-            "4. UI",
-            "4.1.5 Right panel UI scale",
-            1f,
-            LocalizationResolver.Localize("config_ui_counter_scale_description"));
-        counterScale.SettingChanged += (_, _) => { UIConfiguration.CounterUIScale = counterScale.Value; };
+        modifiersStore
+            .CreateModifierBuilder<DamageBuildupModifier>("damage_buildup", "DamageBuildupModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.DamageBuildupModifierEnabled)
+            .AddIncompatibles(["parry_damage", "qi_overload"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
 
+        modifiersStore
+            .CreateModifierBuilder<RegenerationModifier>("regeneration", "RegenerationModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.RegenerationModifierEnabled)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
 
-        isTimerUIEnabled = Config.Bind(
-            "4. UI",
-            "4.2.1 Timer UI enabled",
-            true,
-            LocalizationResolver.Localize("config_ui_timer_enabled_description"));
-        isTimerUIEnabled.SettingChanged += (_, _) => { UIConfiguration.TimerUIEnabled = isTimerUIEnabled.Value; };
+        modifiersStore
+            .CreateModifierBuilder<KnockbackModifier>("knockback", "KnockbackModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.KnockbackModifierEnabled)
+            .BuildAndAdd();
 
-        useCustomTimerPosition = Config.Bind(
-            "4. UI",
-            "4.2.2 Use custom timer position",
-            false,
-            LocalizationResolver.Localize("config_ui_timer_custom_description"));
-        useCustomTimerPosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomTimerPosition = useCustomTimerPosition.Value; };
+        modifiersStore
+            .CreateModifierBuilder<RandomArrowModifier>("random_arrow", "RandomArrowModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.RandomArrowModifierEnabled && Player.i.mainAbilities.ArrowAbility.IsActivated)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
 
-        timerCustomXPosition = Config.Bind(
-            "4. UI",
-            "4.2.3 Custom timer X position",
-            0f,
-            LocalizationResolver.Localize("config_ui_timer_custom_x_description"));
-        timerCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.TimerXPos = timerCustomXPosition.Value; };
+        var randomTalismanCondition = (bool isEnabled) => {
+            var player = Player.i;
 
-        timerCustomYPosition = Config.Bind(
-            "4. UI",
-            "4.2.4 Custom timer Y position",
-            0f,
-            LocalizationResolver.Localize("config_ui_timer_custom_y_description"));
-        timerCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.TimerYPos = timerCustomYPosition.Value; };
+            bool blastIsActive = (player.mainAbilities.FooExplodeAllStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAllStyleUpgrade.AbilityData.IsAcquired);
+            bool flowIsActive = (player.mainAbilities.FooExplodeAutoStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeAutoStyleUpgrade.AbilityData.IsAcquired);
+            bool fctIsActive = (player.mainAbilities.FooExplodeConsecutiveStyle.AbilityData.IsAcquired || player.mainAbilities.FooExplodeConsecutiveStyleUpgrade.AbilityData.IsAcquired);
 
-        timerScale = Config.Bind(
-            "4. UI",
-            "4.2.5 Timer UI scale",
-            1f,
-            LocalizationResolver.Localize("config_ui_timer_scale_description"));
-        timerScale.SettingChanged += (_, _) => { UIConfiguration.TimerUIScale = timerScale.Value; };
+            return !((blastIsActive ^ flowIsActive ^ fctIsActive) && !(blastIsActive && fctIsActive && fctIsActive)) && isEnabled;
+        };
 
+        modifiersStore
+            .CreateModifierBuilder<RandomTaliModifier>("random_talisman", "RandomTalismanModifier")
+            .AddConditionPredicate(_ => randomTalismanCondition(ConfigurationToUse.RandomTalismanModifierEnabled))
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
 
-        isTalismanModeUIEnabled = Config.Bind(
-            "4. UI",
-            "4.3.1 Talisman Mode UI enabled",
-            true,
-            LocalizationResolver.Localize("config_ui_talisman_mode_enabled_description"));
-        isTalismanModeUIEnabled.SettingChanged += (_, _) => { UIConfiguration.TalismanModeUIEnabled = isTalismanModeUIEnabled.Value; };
+        modifiersStore
+            .CreateModifierBuilder<EnduranceModifier>("endurance", "EnduranceModifier")
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                ])
+            .AddConditionPredicate(_ => ConfigurationToUse.EnduranceModifierEnabled)
+            .BuildAndAdd();
 
-        useCustomTalismanModePosition = Config.Bind(
-            "4. UI",
-            "4.3.2 Use custom talisman mode position",
-            false,
-            LocalizationResolver.Localize("config_ui_talisman_mode_custom_description"));
-        useCustomTalismanModePosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomTalismanModePosition = useCustomTalismanModePosition.Value; };
+        var shieldsCondition = (bool isEnabled) => {
+            return Player.i.mainAbilities.ChargedAttackAbility.IsActivated && isEnabled && isVersionValid;
+        };
 
-        talismanModeCustomXPosition = Config.Bind(
-            "4. UI",
-            "4.3.3 Custom talisman mode X position",
-            0f,
-            LocalizationResolver.Localize("config_ui_talisman_mode_custom_x_description"));
-        talismanModeCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value; };
+        modifiersStore
+            .CreateModifierBuilder<QiShieldModifier>("qi_shield", "QiShieldModifer")
+            .AddConditionPredicate(_ => shieldsCondition(ConfigurationToUse.QiShieldModifierEnabled))
+            .AddIncompatibles(["timer_shield", "distance_shield"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_SpearHorseMan",
+                "Monster_GiantMechClaw",
+                ])
+            .AddCombinationModifiers(["shield_break_bomb"])
+            .AddController(typeof(MonsterShieldController), true)
+            .BuildAndAdd();
 
-        talismanModeCustomYPosition = Config.Bind(
-            "4. UI",
-            "4.3.4 Custom talisman mode Y position",
-            0f,
-            LocalizationResolver.Localize("config_ui_talisman_mode_custom_y_description"));
-        talismanModeCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value; };
+        modifiersStore
+            .CreateModifierBuilder<TimedShieldModifier>("timer_shield", "CooldownShieldModifier")
+            .AddConditionPredicate(_ => shieldsCondition(ConfigurationToUse.TimedShieldModifierEnabled))
+            .AddIncompatibles(["qi_shield", "distance_shield"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_SpearHorseMan",
+                "Monster_GiantMechClaw",
+                ])
+            .AddCombinationModifiers(["shield_break_bomb"])
+            .AddController(typeof(MonsterShieldController), true)
+            .BuildAndAdd();
 
-        talismanModeScale = Config.Bind(
-            "4. UI",
-            "4.3.5 Talisman mode UI scale",
-            1f,
-            LocalizationResolver.Localize("config_ui_talisman_mode_scale_description"));
-        talismanModeScale.SettingChanged += (_, _) => { UIConfiguration.TalismanUIScale = talismanModeScale.Value; };
-    }
+        modifiersStore
+            .CreateModifierBuilder<DistanceShieldModifier>("distance_shield", "DistanceShieldModifier")
+            .AddConditionPredicate(_ => shieldsCondition(ConfigurationToUse.DistanceShieldModifierEnabled))
+            .AddIncompatibles(["timer_shield", "qi_shield"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant",
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_伏羲_新",
+                "StealthGameMonster_SpearHorseMan",
+                "Monster_GiantMechClaw",
+                ])
+            .AddCombinationModifiers(["shield_break_bomb"])
+            .AddController(typeof(MonsterShieldController), true)
+            .BuildAndAdd();        
 
-    private void HandleUIConfigurationValues() {
-        UIConfiguration.CounterUIEnabled = isCounterUIEnabled.Value;
-        UIConfiguration.UseCustomCounterPosition = useCustomCounterPosition.Value;
-        UIConfiguration.CounterXPos = counterCustomXPosition.Value;
-        UIConfiguration.CounterYPos = counterCustomYPosition.Value;
-        UIConfiguration.CounterUIScale = counterScale.Value;
+        modifiersStore
+            .CreateModifierBuilder<QiOverloadModifier>("qi_overload", "QiOverloadModifier")
+            .AddConditionPredicate(_ => ConfigurationToUse.QiOverloadModifierEnabled)
+            .AddIncompatibles(["damage_buildup"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
 
-        UIConfiguration.TimerUIEnabled = isTimerUIEnabled.Value;
-        UIConfiguration.UseCustomTimerPosition = useCustomTimerPosition.Value;
-        UIConfiguration.TimerXPos = timerCustomXPosition.Value;
-        UIConfiguration.TimerYPos = timerCustomYPosition.Value;
-        UIConfiguration.TimerUIScale = timerScale.Value;
+        modifiersStore
+            .CreateModifierBuilder<YanlaoGunModifier>("ya_gun", "YanlaoGunModifier")
+            .AddIncompatibles(["shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb", "cooldown_bomb"])
+            .AddConditionPredicate(_ => ConfigurationToUse.YanlaoGunModifierEnabled && isVersionValid)
+            .AddController(typeof(MonsterYanlaoGunController), true)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
 
-        UIConfiguration.TalismanModeUIEnabled = isTalismanModeUIEnabled.Value;
-        UIConfiguration.UseCustomTalismanModePosition = useCustomTalismanModePosition.Value;
-        UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value;
-        UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value;
-        UIConfiguration.TalismanUIScale = talismanModeScale.Value;
+        var bombCondition = (bool switchValue) => {
+            return switchValue && isVersionValid;
+        };
+
+        modifiersStore
+            .CreateModifierBuilder<QiBombModifier>("qi_bomb", "QiBombModifier")
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.QiBombModifierEnabled))
+            .AddController(typeof(MonsterBombController), true)
+            .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_overload_bomb", "qi_depletion_bomb"])
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<ShieldBreakBombModifier>("shield_break_bomb", "ShieldBreakBombModifier")
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.ShieldBreakBombModifierEnabled))
+            .AddController(typeof(MonsterBombController), true)
+            .SetIsCombination(true)
+            .AddIncompatibles(["qi_bomb", "ya_gun", "qi_overload_bomb", "qi_depletion_bomb"])
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<QiOverloadBombModifier>("qi_overload_bomb", "QiOverloadBombModifier")
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.QiOverloadBombModifierEnabled))
+            .AddController(typeof(MonsterBombController), true)
+            .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_depletion_bomb"])
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<QiDepletionBombModifier>("qi_depletion_bomb", "QiDepletionBombModifier")
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.QiDepletionBombModifierEnabled))
+            .AddController(typeof(MonsterBombController), true)
+            .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb"])
+            .BuildAndAdd();
+
+        modifiersStore
+            .CreateModifierBuilder<CooldownBombModifier>("cooldown_bomb", "CooldownBomb")
+            .AddConditionPredicate(_ => bombCondition(ConfigurationToUse.CooldownBombModifierEnabled))
+            .AddController(typeof(MonsterBombController), true)
+            .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb", "qi_depletion_bomb"])
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
+            .BuildAndAdd();
     }
 }

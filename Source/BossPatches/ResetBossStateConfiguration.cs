@@ -10,6 +10,8 @@ namespace BossChallengeMod.BossPatches {
     public class ResetBossStateConfiguration : StateConfiguration {
         public List<string> Animations { get; set; } = new();
         public List<string> TargetDamageReceivers { get; set; } = new();
+        public float PauseTime { get; set; } = 0f;
+        public bool UseFlashing { get; set; } = false;
         public MonsterBase.States ExitState;
         public MonsterBase.States StateType;
 
@@ -35,6 +37,9 @@ namespace BossChallengeMod.BossPatches {
 
                 if (StateExitEvents != null)
                     state.stateEvents.StateExitEvent.AddListener(() => StateExitEvents.Invoke());
+
+                state.PauseTime = PauseTime;
+                state.UseFlashing = UseFlashing;
             }
         }
     }

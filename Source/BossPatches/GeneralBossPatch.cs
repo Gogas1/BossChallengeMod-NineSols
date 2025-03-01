@@ -84,10 +84,13 @@ namespace BossChallengeMod.BossPatches {
             }
         }
 
-
         public virtual void PostfixPatch(MonsterBase monster) {
 
-        }       
+        }
+        
+        public virtual bool CanBeApplied() {
+            return true;
+        }
 
         protected MonsterState InstantiateStateObject(GameObject monsteGameObject, Type type, string name, StateConfiguration stateConfiguration) {
             GameObject parent = monsteGameObject.transform.Find("States").gameObject;
@@ -106,16 +109,24 @@ namespace BossChallengeMod.BossPatches {
         protected void ResolveStateMappingEvents(StateMapping<MonsterBase.States> stateMapping, MonsterState state) {
             stateMapping.hasEnterRoutine = false;
             stateMapping.EnterCall = () => {
-                state.ResolveProxy().OnStateEnter();
-                if (state.ResolveProxy().stateEvents.StateEnterEvent != null) {
-                    state.ResolveProxy().stateEvents.StateEnterEvent.Invoke();
+                try {
+                    state.ResolveProxy().OnStateEnter();
+                    if (state.ResolveProxy().stateEvents.StateEnterEvent != null) {
+                        state.ResolveProxy().stateEvents.StateEnterEvent.Invoke();
+                    }
+                } catch (Exception e) {
+                    Log.Error($"{e.Message}, {e.StackTrace}");
                 }
             };
             stateMapping.hasExitRoutine = false;
             stateMapping.ExitCall = () => {
-                state.ResolveProxy().OnStateExit();
-                if (state.ResolveProxy().stateEvents.StateExitEvent != null) {
-                    state.ResolveProxy().stateEvents.StateExitEvent.Invoke();
+                try {
+                    state.ResolveProxy().OnStateExit();
+                    if (state.ResolveProxy().stateEvents.StateExitEvent != null) {
+                        state.ResolveProxy().stateEvents.StateExitEvent.Invoke();
+                    }
+                } catch (Exception e) {
+                    Log.Error($"{e.Message}, {e.StackTrace}");
                 }
             };
             stateMapping.Finally = () => {

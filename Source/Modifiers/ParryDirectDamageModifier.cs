@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NineSolsAPI.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,18 @@ namespace BossChallengeMod.Modifiers {
 
         public override void Awake() {
             base.Awake();
-            Key = "parry_damage";
         }
 
-        public override void NotifyActivation(IEnumerable<string> keys, int iteration) {
-            base.NotifyActivation(keys, iteration);
+        public override void NotifyActivation() {
+            base.NotifyActivation();
 
-            enabled = keys.Contains(Key);
+            enabled = true;
+        }
+
+        public override void NotifyDeactivation() {
+            base.NotifyDeactivation();
+
+            enabled = false;
         }
     }
 }
