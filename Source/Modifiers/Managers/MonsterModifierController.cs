@@ -390,6 +390,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
             _isDied = false;
             _isStartRolled = false;
+            _isFirstEngage = true;
 
             //if(UseCompositeTracking || UseProximityShow) {
             //    BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
@@ -413,6 +414,10 @@ namespace BossChallengeMod.Modifiers.Managers {
             //}
 
             playerSensor?.gameObject.SetActive(true);
+
+            Selected.Clear();
+            ApplyModifiers();
+            OnDie();
         }
 
         private void SetupModifiersLists() {

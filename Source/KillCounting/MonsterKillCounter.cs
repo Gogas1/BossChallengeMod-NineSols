@@ -97,6 +97,7 @@ namespace BossChallengeMod.KillCounting {
         }
 
         public void CheckInit() {
+            KillCounter = monsterController.KillCounter;
             if (CanRecord) {
                 var bossEntry = Task.Run<BossEntry>(() => challengeConfigurationManager.GetRecordForBoss(monster, challengeConfiguration)).GetAwaiter().GetResult();
                 BestCount = bossEntry.BestValue;

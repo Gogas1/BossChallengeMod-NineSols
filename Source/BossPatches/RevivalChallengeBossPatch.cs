@@ -39,13 +39,21 @@ namespace BossChallengeMod.BossPatches {
         public MonsterBase.States InsertPlaceState { get; set; } = MonsterBase.States.LastHit;
         public ChallengeEnemyType EnemyType { get; set; } = ChallengeEnemyType.Boss;
 
+        protected List<MonsterBase.States> ModifiedDieStates = new List<MonsterBase.States>();
+
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
+
+
             if (ConfigurationToUse.EnableMod) {
+                ModifiedDieStates.Clear();
+                ModifiedDieStates.AddRange(DieStates);
+
                 int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
                 if (insertIndex >= 0) {
                     monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
+                    ModifiedDieStates.Insert(insertIndex, bossReviveMonsterState);
                 }
             }
         }
@@ -130,6 +138,8 @@ namespace BossChallengeMod.BossPatches {
 
         protected virtual ChallengeMonsterController InitializeMainController(MonsterBase monsterBase, ResetBossState resetBossState) {
             var controller = monsterBase.gameObject.AddComponent<ChallengeMonsterController>();
+            controller.DieHandelingStates.AddRange(ModifiedDieStates);
+
             resetBossState.OnStateEnterInvoke += () => { controller.ProcessRevivalStateEnter(); };
             resetBossState.stateEvents.StateExitEvent.AddListener(() => { controller.OnRevivalStateExit?.Invoke(); });
             
