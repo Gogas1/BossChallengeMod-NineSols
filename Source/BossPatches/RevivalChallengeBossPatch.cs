@@ -41,6 +41,21 @@ namespace BossChallengeMod.BossPatches {
 
         protected List<MonsterBase.States> ModifiedDieStates = new List<MonsterBase.States>();
 
+        protected int MaxEnemyCycles {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.MaxBossCycles;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MaxMinibossCycles;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.MaxEnemyCycles;
+                    default:
+                        return 1;
+                }
+            }
+        }
+
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
@@ -51,7 +66,7 @@ namespace BossChallengeMod.BossPatches {
                 ModifiedDieStates.AddRange(DieStates);
 
                 int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
-                if (insertIndex >= 0) {
+                if (insertIndex >= 0 && (MaxEnemyCycles > 1 || MaxEnemyCycles <= 0)) {
                     monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
                     ModifiedDieStates.Insert(insertIndex, bossReviveMonsterState);
                 }

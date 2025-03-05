@@ -140,10 +140,8 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void Update() {
-            if(Monster != null && 
-                (EnableSpeedScaling || EnableRandomSpeedScaling) && 
-                Monster.animator.speed < Monster.animator.speed * modifier) {
-                Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
+            if(Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling)) {
+                Monster.animator.speed = Monster.animator.speed * modifier;
             }
         }
 
