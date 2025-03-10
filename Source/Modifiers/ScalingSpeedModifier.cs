@@ -134,13 +134,13 @@ namespace BossChallengeMod.Modifiers {
             base.NotifyDeath(deathNumber);
 
             modifier = CalculateModifier(deathNumber);
-            if (Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling)) {
-                Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
-            }
+            //if (Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling)) {
+            //    Monster.animator.SetFloat("AnimationSpeed", Monster.animator.speed * modifier);
+            //}
         }
 
         public void Update() {
-            if(Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling)) {
+            if(Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling) && modifier != 1f) {
                 Monster.animator.speed = Monster.animator.speed * modifier;
             }
         }
