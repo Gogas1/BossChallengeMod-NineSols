@@ -147,7 +147,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_enabled_description"));
             isSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
-                config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
+                config.BossesEnableSpeedScaling = config.MinibossesEnableSpeedScaling = config.EnemiesEnableSpeedScaling = config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -158,7 +158,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_minspeed_description"));
             minSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
-                config.MinSpeedScalingValue = minSpeedScalingValue.Value;
+                config.BossesMinSpeedScalingValue = config.MinibossesMinSpeedScalingValue = config.EnemiesMinSpeedScalingValue = config.MinSpeedScalingValue = minSpeedScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -169,7 +169,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_maxspeed_description"));
             maxSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingValue = maxSpeedScalingValue.Value;
+                config.BossesMaxSpeedScalingValue = config.MinibossesMaxSpeedScalingValue = config.BossesMaxSpeedScalingValue = config.MaxSpeedScalingValue = maxSpeedScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -180,7 +180,7 @@ namespace BossChallengeMod.Configuration {
                 LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
             maxSpeedScalingCycleValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
-                config.MaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
+                config.BossesMaxSpeedScalingCycle = config.MinibossesMaxSpeedScalingCycle = config.EnemiesMaxSpeedScalingCycle = config.MaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -192,6 +192,7 @@ namespace BossChallengeMod.Configuration {
             isModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.EnableModifiersScaling = isModifiersScalingEnabled.Value;
+                config.BossesEnableModifiersScaling = config.MinibossesEnableModifiersScaling = config.EnemiesEnableModifiersScaling = isModifiersScalingEnabled.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -214,6 +215,7 @@ namespace BossChallengeMod.Configuration {
             maxModifiersNumberScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.MaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
+                config.BossesMaxModifiersScalingCycle = config.MinibossesMaxModifiersScalingCycle = config.EnemiesMaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -225,6 +227,7 @@ namespace BossChallengeMod.Configuration {
             IsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
+                config.BossesEnableRandomSpeedScaling = config.MinibossesEnableRandomSpeedScaling = config.EnemiesEnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -236,6 +239,7 @@ namespace BossChallengeMod.Configuration {
             StartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
+                config.BossesRandomSpeedScalingStartDeath = config.MinibossesRandomSpeedScalingStartDeath = config.EnemiesRandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -247,6 +251,7 @@ namespace BossChallengeMod.Configuration {
             MinRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
+                config.BossesMinRandomSpeedScalingValue = config.MinibossesMinRandomSpeedScalingValue = config.EnemiesMinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -258,6 +263,7 @@ namespace BossChallengeMod.Configuration {
             MaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
+                config.BossesMaxRandomSpeedScalingValue = config.MinibossesMaxRandomSpeedScalingValue = config.EnemiesMaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -270,6 +276,7 @@ namespace BossChallengeMod.Configuration {
             IsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
+                config.BossesEnableRandomModifiersScaling = config.MinibossesEnableRandomModifiersScaling = config.EnemiesEnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;                
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -281,6 +288,7 @@ namespace BossChallengeMod.Configuration {
             StartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
+                config.BossesRandomModifiersScalingStartDeath = config.MinibossesRandomModifiersScalingStartDeath = config.EnemiesRandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -292,6 +300,7 @@ namespace BossChallengeMod.Configuration {
             MinRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
+                config.BossesMinRandomModifiersNumber = config.MinibossesMinRandomModifiersNumber = config.EnemiesMinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -303,6 +312,7 @@ namespace BossChallengeMod.Configuration {
             MaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
                 var config = ChallengeConfigurationManager.ChallengeConfiguration;
                 config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
+                config.BossesMaxRandomModifiersNumber = config.MinibossesMaxRandomModifiersNumber = config.EnemiesMaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
                 ChallengeConfigurationManager.ChallengeConfiguration = config;
             };
 
@@ -572,8 +582,8 @@ namespace BossChallengeMod.Configuration {
             config.BossesEnableRandomSpeedScaling = config.MinibossesEnableRandomSpeedScaling = config.EnemiesEnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
             config.BossesRandomSpeedScalingStartDeath = config.MinibossesRandomSpeedScalingStartDeath = config.EnemiesRandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
             config.BossesMinRandomSpeedScalingValue = config.MinibossesMinRandomSpeedScalingValue = config.EnemiesMinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-
             config.BossesMaxRandomSpeedScalingValue = config.MinibossesMaxRandomSpeedScalingValue = config.EnemiesMaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
+
             config.BossesEnableRandomModifiersScaling = config.MinibossesEnableRandomModifiersScaling = config.EnemiesEnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
             config.BossesRandomModifiersScalingStartDeath = config.MinibossesRandomModifiersScalingStartDeath = config.EnemiesRandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
             config.BossesMinRandomModifiersNumber = config.MinibossesMinRandomModifiersNumber = config.EnemiesMinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
