@@ -274,6 +274,18 @@ The `ModifierBase` class extends `MonoBehaviour` and provides additional members
   ```  
   Handles the notification for when the modifier is deactivated.
 
+- **NotifyEngage**  
+  ```csharp
+  public virtual void NotifyEngage()
+  ```  
+  Handles the notification for when the owner monster proceeds to engage.
+
+- **NotifyDisengage**  
+  ```csharp
+  public virtual void NotifyDisengage()
+  ```  
+  Handles the notification for when the owner monster proceeds to disengage.
+
 - **NotifyDeath**  
   ```csharp
   public virtual void NotifyDeath(int deathNumber = 0) {

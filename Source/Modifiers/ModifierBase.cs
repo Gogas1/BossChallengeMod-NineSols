@@ -56,6 +56,14 @@ namespace BossChallengeMod.Modifiers {
             IsPaused = false;
         }
 
+        public virtual void NotifyEngage() {
+
+        }
+
+        public virtual void NotifyDisengage() {
+
+        }
+
         public virtual void CustomNotify(object message) {
 
         }

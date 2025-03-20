@@ -139,6 +139,12 @@ namespace BossChallengeMod.Modifiers {
             //}
         }
 
+        public override void NotifyEngage() {
+            base.NotifyEngage();
+
+            modifier = CalculateModifier(deathNumber);
+        }
+
         public void Update() {
             if(Monster != null && (EnableSpeedScaling || EnableRandomSpeedScaling) && modifier != 1f) {
                 Monster.animator.speed = Monster.animator.speed * modifier;

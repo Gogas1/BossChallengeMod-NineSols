@@ -186,9 +186,9 @@ namespace BossChallengeMod.BossPatches {
 
             var modifierController = monsterBase.gameObject.AddComponent<MonsterModifierController>();
 
-            if (config.ModifiersEnabled && UseModifiers) {
+            //if (config.ModifiersEnabled && UseModifiers) {
                 InitModifiers(monsterBase, modifierController, config);
-            }
+            //}
 
             modifierController.EnemyType = EnemyType;
             modifierController.CanBeTracked = UseModifierControllerTracking;
@@ -228,7 +228,11 @@ namespace BossChallengeMod.BossPatches {
             var sharedControllers = new Dictionary<Type, Component>();
 
             foreach (var modifierConfig in modifiersConfigs) {
-                if(!modifierConfig.CreateConditionPredicate?.Invoke(modifierConfig) ?? false) {
+                if(!modifierConfig.IsPersistentModifier && !(config.ModifiersEnabled && UseModifiers)) {
+                    continue;
+                }
+
+                if((!modifierConfig.CreateConditionPredicate?.Invoke(modifierConfig) ?? false)) {
                     continue;
                 }
 

@@ -211,6 +211,8 @@ namespace BossChallengeMod.Modifiers.Managers {
                 _isFirstEngage = false;
             }
 
+            NotifyEngage();
+
             if (UseCompositeTracking) {
                 ResumeAll();
                 BossChallengeMod.Instance.MonsterUIController.AddCompositeModifierController(this);
@@ -219,7 +221,21 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
         }
 
+        public void NotifyEngage() {
+            foreach (var item in Modifiers) {
+                item.NotifyEngage();
+            }
+        }
+
+        public void NotifyDisengage() {
+            foreach (var item in Modifiers) {
+                item.NotifyDisengage();
+            }
+        }
+
         public void OnDisengage() {
+            NotifyDisengage();
+
             if (UseCompositeTracking) {
                 PauseAll();
                 BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
