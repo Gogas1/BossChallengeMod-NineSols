@@ -109,7 +109,7 @@ namespace BossChallengeMod.Configuration {
 
             isCyclingEnabled = Config.Bind(
             "1. General",
-            "1.1 Enable Mod",
+            "1.1 Enable Mod in Memories of Battle mode",
             true,
             LocalizationResolver.Localize("config_cycling_enabled_description"));
             isCyclingEnabled.SettingChanged += (_, _) => {
