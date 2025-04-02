@@ -28,7 +28,7 @@ namespace BossChallengeMod.Configuration.Holders {
         public ConfigEntry<bool> IsRandomTalismanModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsEnduranceModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsQiShieldModifierEnabled { get; set; } = null!;
-        public ConfigEntry<bool> IsTimedShieldModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsCoodownShieldModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsQiOverloadModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsDistanceShieldModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsYanlaoGunModifierEnabled { get; set; } = null!;

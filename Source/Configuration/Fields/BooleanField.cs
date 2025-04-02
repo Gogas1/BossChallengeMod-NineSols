@@ -4,13 +4,12 @@ using System.Text;
 using UnityEngine;
 
 namespace BossChallengeMod.Configuration.Fields {
-    internal abstract class FieldBase<T> : ILabeledField<T> {
-        protected T? value;
+    public class BooleanField : ILabeledField<bool> {
+        private float maxWidth = 0;
+        private bool value;
+
         private string _label = "";
         private string? _tooltip = null;
-        private float maxWidth = 0;
-
-        protected string oldText = "";
 
         public string Label {
             get => _label;
@@ -23,18 +22,14 @@ namespace BossChallengeMod.Configuration.Fields {
         }
 
         public event Action<object?>? ValueChanged;
-        public event Action<T?>? FieldValueChanged;
+        public event Action<bool>? FieldValueChanged;
 
-        protected abstract bool Validate(string input);
-        protected abstract T ConvertToValue(string input);
-        protected abstract string ConvertToString(T? input);
+        public void AddValueChangeHandler(Action<bool> handler) {
+            FieldValueChanged += handler;
+        }
 
-        protected FieldBase(string label, float maxWidth, string? tooltip, T defaultValue) {
-            value = defaultValue;
-            oldText = ConvertToString(value);
-            _label = label;
-            this.maxWidth = maxWidth;
-            _tooltip = tooltip;
+        public void AddValueChangeHandler(Action<object?> handler) {
+            ValueChanged += handler;
         }
 
         public void Draw() {
@@ -44,47 +39,31 @@ namespace BossChallengeMod.Configuration.Fields {
                 GUILayout.Label(new GUIContent(_label, _tooltip), GetLabelOptions());
             }
 
-            string newText = GUILayout.TextField(oldText, GetFieldOptions());
+            bool result = GUILayout.Toggle(value, value ? "Enabled" : "Disabled", GetFieldOptions());
 
-            if (newText != oldText) {
-                UpdateValueIfValid(newText);
+            if (result != value) {
+                ValueChanged?.Invoke(value);
+                FieldValueChanged?.Invoke(value);
+                value = result;
             }
 
             GUILayout.EndHorizontal();
-        }
-
-        protected void UpdateValueIfValid(string input) {
-            if (Validate(input)) {
-                value = ConvertToValue(input);
-                ValueChanged?.Invoke(value);
-                FieldValueChanged?.Invoke(value);
-                oldText = ConvertToString(value);
-            }
-        }
-
-
-        public void AddValueChangeHandler(Action<object?> handler) {
-            ValueChanged += handler;
-        }
-
-        public void AddValueChangeHandler(Action<T?> handler) {
-            FieldValueChanged += handler;
         }
 
         public void SetLabel(string label) {
             _label = label;
         }
 
-        public void SetTooltip(string tooltip) {
-            _tooltip = tooltip;
-        }
-
         public void SetMaxWidth(float maxWidth) {
             this.maxWidth = maxWidth;
         }
 
+        public void SetTooltip(string tooltip) {
+            _tooltip = tooltip;
+        }
+
         protected GUILayoutOption[] GetLabelOptions() {
-            List<GUILayoutOption> options = new List<GUILayoutOption>{ GUILayout.ExpandWidth(true) };
+            List<GUILayoutOption> options = new List<GUILayoutOption> { GUILayout.ExpandWidth(true) };
 
             float halfMaxWidth = this.maxWidth / 2;
             options.Add(GUILayout.MaxWidth(halfMaxWidth));
@@ -100,6 +79,5 @@ namespace BossChallengeMod.Configuration.Fields {
 
             return options.ToArray();
         }
-
     }
 }

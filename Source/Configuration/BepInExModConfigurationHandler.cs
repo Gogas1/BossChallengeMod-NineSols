@@ -37,8 +37,6 @@ namespace BossChallengeMod.Configuration {
         private ChallengeConfigurationManager ChallengeConfigurationManager = null!;
         private UIConfiguration UIConfiguration = null!;
 
-        private ConfigTabsDrawer tabsDrawer;
-
         public BepInExModConfigurationHandler(
             ConfigFile config,
             ChallengeConfigurationManager challengeConfigurationManager,
@@ -611,6 +609,180 @@ namespace BossChallengeMod.Configuration {
 
 
         public void InitChallengeConfiguration() {
+            InitGeneralConfig();
+            InitModifiersConfig();
+        }
+
+        private void InitGeneralConfig() {
+            configHolder.IsMoBEnabled = Config.Bind(
+                "1. General",
+                "mob enabled",
+                true,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_general_mob_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_general_mob_enabled_name"),
+                        Order = 0,
+                    }));
+            configHolder.IsMoBEnabled.SettingChanged += (_, _) => {
+
+            };
+
+            configHolder.IsNormalEnabled = Config.Bind(
+                "1. General",
+                "regular enabled",
+                true,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_general_regular_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_general_regular_enabled_name"),
+                        Order = 1,
+                    }));
+        }
+
+        private void InitModifiersConfig() {            
+            configHolder.ModifiersStartDeathValue = Config.Bind(
+                "2. Modifiers",
+                "modifiers start death",
+                1,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsModifiersRepeatingEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifiers repeat enabled",
+                false,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+
+            configHolder.IsSpeedModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier speed",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsTimerModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier timer",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsParryDamageModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier parry damage",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsDamageBuildupModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier damage buildup",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsRegenerationModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier regeneration",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsKnockbackModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier knockback",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsRandomArrowModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier random arrow",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsRandomTalismanModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier random talisman",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsEnduranceModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier endurance",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiShieldModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier qi shield",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsCoodownShieldModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier cooldown shield",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiOverloadModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier qi overload",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsDistanceShieldModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier distance shield",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsYanlaoGunModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier yanlao gun",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiBombModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier qi bomb",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsShieldBreakBombModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier shield bomb",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiOverloadBombModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier qi overload bomb",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiDepletionBombModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier qi depletion bomb",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsCooldownBombModifierEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifier coolldown bomb",
+                true,
+                new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+
+            var modifiersTabsDrawer = new ConfigTabsDrawer();
+            modifiersTabsDrawer.Tabs.AddRange([LocalizationResolver.Localize("label_disabled"), LocalizationResolver.Localize("label_enabled")]);
+            tabsDrawer.SelectedTab = testEnabled ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd("Enabled", () => {
+                testEnabled = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd("Disabled", () => {
+                testEnabled = false;
+            });
+
+            var startingValueField = new FloatField("Starting Value:", RightColumnWidth, "Starting Value", testStartValue);
+            startingValueField.AddFieldValueChangeHandler(arg => { testStartValue = arg; });
+            tabsDrawer.AddField("Enabled", startingValueField);
+
+            var stepValueField = new FloatField("Step Value:", RightColumnWidth, "Step Value", testStepValue);
+            stepValueField.AddFieldValueChangeHandler(arg => { testStepValue = arg; });
+            tabsDrawer.AddField("Enabled", stepValueField);
+
+            var maxStepsValueField = new IntField("Max Steps:", RightColumnWidth, "Max Steps", testMaxSteps);
+            maxStepsValueField.AddFieldValueChangeHandler(arg => { testMaxSteps = arg; });
+            tabsDrawer.AddField("Enabled", maxStepsValueField);
+
+            configHolder.IsModifiersEnabled = Config.Bind(
+                "2. Modifiers",
+                "modifiers enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_modifiers_modifiers_enabled_name"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_modifiers_modifiers_enabled_desc"),
+                        Order = 0,
+                    }));
 
         }
 

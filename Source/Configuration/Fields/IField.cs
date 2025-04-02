@@ -10,7 +10,7 @@ namespace BossChallengeMod.Configuration.Fields {
 
     internal interface IField<T> : IField {
 
-        void AddFieldValueChangeHandler(Action<T?> handler);
+        void AddValueChangeHandler(Action<T?> handler);
     }
 
     internal interface ILabeledField : IField {

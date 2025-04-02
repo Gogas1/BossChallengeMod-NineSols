@@ -117,6 +117,24 @@
 
   "config_story_enemy_deaths_randomized_description": "Enable random regular enemy death count.\n The maximum number of regular enemy deaths will be randomly determined upon entering a location.",
   "config_story_enemy_deaths_randomized_min_description": "Minimum deaths.\n The minimum value for the regular enemy death count.",
-  "config_story_enemy_deaths_randomized_max_description": "Maximum deaths.\n The maximum value for the regular enemy death count."
+  "config_story_enemy_deaths_randomized_max_description": "Maximum deaths.\n The maximum value for the regular enemy death count.",
 
+  "label_disabled": "Disabled",
+  "label_enabled": "Enabled",
+
+  "config_general_mob_enabled_name": "Enable Mod in Memories of Battle mode",
+  "config_general_mob_enabled_desc": "Enables the mod in the Memories of Battle game mode",
+
+  "config_general_regular_enabled_name": "Enable Mod in the regular game mode",
+  "config_general_regular_enabled_desc": "Enables the mod in the regular game mode",
+
+
+  "config_modifiers_modifiers_enabled_name": "Enable Modifiers",
+  "config_modifiers_modifiers_enabled_description": "Enables modifiers that make fights more difficult",
+
+  "config_modifiers_start_death_name": "Modifiers Start Death",
+  "config_modifiers_start_death_desc": "Modifiers will start to apply after this amount of enemy deaths. If set to 0, modifiers will be applied at the start of the fight.",
+
+  "config_modifiers_modifiers_repeat_enabled_name": "Enable Modifiers Repeating",
+  "config_modifiers_modifiers_repeat_enabled_description": "Modifiers can be repeated multiple times in a row."
 }
