@@ -7,6 +7,9 @@ namespace BossChallengeMod.Configuration.Fields {
         public IntField(string label, float maxWidth, string? tooltip, int defaultValue) : base(label, maxWidth, tooltip, defaultValue) {
         }
 
+        public IntField(string label, Func<float>? maxWidthFunc, string? tooltip, int defaultValue) : base(label, maxWidthFunc, tooltip, defaultValue) {
+        }
+
         protected override string ConvertToString(int input) {
             return input.ToString();
         }

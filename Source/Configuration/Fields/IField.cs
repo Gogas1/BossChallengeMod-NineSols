@@ -3,6 +3,7 @@
 namespace BossChallengeMod.Configuration.Fields {
     internal interface IField {
         void SetMaxWidth(float maxWidth);
+        void SetMaxWidthFunction(Func<float> func);
         void AddValueChangeHandler(Action<object?> handler);
         void Draw();
 

@@ -37,6 +37,8 @@ namespace BossChallengeMod.Configuration {
         private ChallengeConfigurationManager ChallengeConfigurationManager = null!;
         private UIConfiguration UIConfiguration = null!;
 
+
+
         public BepInExModConfigurationHandler(
             ConfigFile config,
             ChallengeConfigurationManager challengeConfigurationManager,
@@ -48,569 +50,24 @@ namespace BossChallengeMod.Configuration {
             UIConfiguration = uIConfiguration;
         }
 
-        private bool testEnabled = false;
-        private float testStartValue = 1.0f;
-        private float testStepValue = 0.06f;
-        private int testMaxSteps = 5;
+        public float CalculateRightColumnWidth() {
+            var width = Mathf.Min(Screen.width, 650);
+            var height = Screen.height < 560 ? Screen.height : Screen.height - 100;
+            var offsetX = Mathf.RoundToInt((Screen.width - width) / 2f);
+            var offsetY = Mathf.RoundToInt((Screen.height - height) / 2f);
 
-        //public void InitChallengeConfiguration() {
-        //    var width = Mathf.Min(Screen.width, 650);
-        //    var height = Screen.height < 560 ? Screen.height : Screen.height - 100;
-        //    var offsetX = Mathf.RoundToInt((Screen.width - width) / 2f);
-        //    var offsetY = Mathf.RoundToInt((Screen.height - height) / 2f);
+            var LeftColumnWidth = Mathf.RoundToInt(width / 2.5f);
+            var RightColumnWidth = (int)width - LeftColumnWidth - 115;
 
-        //    var LeftColumnWidth = Mathf.RoundToInt(width / 2.5f);
-        //    var RightColumnWidth = (int)width - LeftColumnWidth - 115;
-
-        //    Config.Bind("0. INFO: Challenge settings are applied at the beginning of the battle or when loading the location (so at the moment of enemy initialization). To apply the settings changed in the middle of the battle, start the battle again (death, reloading the location, re-entering from the lobby)",
-        //        "0. Hover me",
-        //        false,
-        //        LocalizationResolver.Localize("config_top_description"));
-
-        //    isCyclingEnabled = Config.Bind(
-        //    "1. General",
-        //    "1.1 Enable Mod in Memories of Battle mode",
-        //    true,
-        //    LocalizationResolver.Localize("config_cycling_enabled_description"));
-        //    isCyclingEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnableMod = isCyclingEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    tabsDrawer = new ConfigTabsDrawer();
-        //    tabsDrawer.Tabs.AddRange(["Disabled", "Enabled"]);
-        //    tabsDrawer.SelectedTab = testEnabled ? 1 : 0;
-        //    tabsDrawer.OnTabSelectedHandlers.TryAdd("Enabled", () => {
-        //        testEnabled = true;
-        //    });
-        //    tabsDrawer.OnTabSelectedHandlers.TryAdd("Disabled", () => {
-        //        testEnabled = false;
-        //    });
-
-        //    var startingValueField = new FloatField("Starting Value:", RightColumnWidth, "Starting Value", testStartValue);
-        //    startingValueField.AddFieldValueChangeHandler(arg => { testStartValue = arg; });
-        //    tabsDrawer.AddField("Enabled", startingValueField);
-
-        //    var stepValueField = new FloatField("Step Value:", RightColumnWidth, "Step Value", testStepValue);
-        //    stepValueField.AddFieldValueChangeHandler(arg => { testStepValue = arg; });
-        //    tabsDrawer.AddField("Enabled", stepValueField);
-
-        //    var maxStepsValueField = new IntField("Max Steps:", RightColumnWidth, "Max Steps", testMaxSteps);
-        //    maxStepsValueField.AddFieldValueChangeHandler(arg => { testMaxSteps = arg; });
-        //    tabsDrawer.AddField("Enabled", maxStepsValueField);
-
-        //    Config.Bind(
-        //        "1. General",
-        //        "0.1 Some Scaling",
-        //        false,
-        //        new ConfigDescription("Desc", null, tabsDrawer.GetConfigAttributes())
-        //        );
-
-        //    useSingleRecordsKey = Config.Bind(
-        //        "1. General",
-        //        "1.2 Record regardless of configuration",
-        //        false,
-        //        LocalizationResolver.Localize("config_single_recording_enabled_description"));
-        //    useSingleRecordsKey.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.UseSingleRecordKey = useSingleRecordsKey.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    maxCycles = Config.Bind(
-        //        "1. General",
-        //        "1.3 Boss deaths number",
-        //        -1,
-        //        LocalizationResolver.Localize("config_cycles_number_description"));
-        //    maxCycles.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxBossCycles = maxCycles.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isSpeedScalingEnabled = Config.Bind(
-        //        "2. Scaling",
-        //        "2.1 Enable Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_enabled_description"));
-        //    isSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesEnableSpeedScaling = config.MinibossesEnableSpeedScaling = config.EnemiesEnableSpeedScaling = config.EnableSpeedScaling = isSpeedScalingEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    minSpeedScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.1.1 Scaling: Initial Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_scaling_minspeed_description"));
-        //    minSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMinSpeedScalingValue = config.MinibossesMinSpeedScalingValue = config.EnemiesMinSpeedScalingValue = config.MinSpeedScalingValue = minSpeedScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    maxSpeedScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.1.2 Scaling: Maximum Speed",
-        //        1.35f,
-        //        LocalizationResolver.Localize("config_scaling_maxspeed_description"));
-        //    maxSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxSpeedScalingValue = config.MinibossesMaxSpeedScalingValue = config.BossesMaxSpeedScalingValue = config.MaxSpeedScalingValue = maxSpeedScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    maxSpeedScalingCycleValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.1.3 Maximum Speed Scaling After Deaths",
-        //        5,
-        //        LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
-        //    maxSpeedScalingCycleValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxSpeedScalingCycle = config.MinibossesMaxSpeedScalingCycle = config.EnemiesMaxSpeedScalingCycle = config.MaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isModifiersScalingEnabled = Config.Bind(
-        //        "2. Scaling",
-        //        "2.2 Enable Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
-        //    isModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnableModifiersScaling = isModifiersScalingEnabled.Value;
-        //        config.BossesEnableModifiersScaling = config.MinibossesEnableModifiersScaling = config.EnemiesEnableModifiersScaling = isModifiersScalingEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    maxModifiersNumber = Config.Bind(
-        //        "2. Scaling",
-        //        "2.2.1 Scaling: Maximum Modifiers Number",
-        //        3,
-        //        LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
-        //    maxModifiersNumber.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxModifiersNumber = config.MinibossesMaxModifiersNumber = config.EnemiesMaxModifiersNumber = maxModifiersNumber.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    maxModifiersNumberScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.2.2 Maximum Modifiers Number Scaling After Deaths",
-        //        3,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
-        //    maxModifiersNumberScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
-        //        config.BossesMaxModifiersScalingCycle = config.MinibossesMaxModifiersScalingCycle = config.EnemiesMaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    IsRandomSpeedScalingEnabled = Config.Bind(
-        //        "2. Scaling",
-        //        "2.3 Enable Random Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
-        //    IsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
-        //        config.BossesEnableRandomSpeedScaling = config.MinibossesEnableRandomSpeedScaling = config.EnemiesEnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    StartRandomSpeedScalingDeath = Config.Bind(
-        //        "2. Scaling",
-        //        "2.3.1 Random Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
-        //    StartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
-        //        config.BossesRandomSpeedScalingStartDeath = config.MinibossesRandomSpeedScalingStartDeath = config.EnemiesRandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    MinRandomSpeedScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.3.2 Random Scaling: Minimal Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
-        //    MinRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-        //        config.BossesMinRandomSpeedScalingValue = config.MinibossesMinRandomSpeedScalingValue = config.EnemiesMinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    MaxRandomSpeedScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.3.3 Random Scaling: Maximum Speed",
-        //        1.5f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
-        //    MaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
-        //        config.BossesMaxRandomSpeedScalingValue = config.MinibossesMaxRandomSpeedScalingValue = config.EnemiesMaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random modifiers scaling
-        //    IsRandomModifiersScalingEnabled = Config.Bind(
-        //        "2. Scaling",
-        //        "2.4 Enable Random Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
-        //    IsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
-        //        config.BossesEnableRandomModifiersScaling = config.MinibossesEnableRandomModifiersScaling = config.EnemiesEnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;                
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    StartRandomModifiersScalingDeath = Config.Bind(
-        //        "2. Scaling",
-        //        "2.4.1 Random Modifiers Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
-        //    StartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
-        //        config.BossesRandomModifiersScalingStartDeath = config.MinibossesRandomModifiersScalingStartDeath = config.EnemiesRandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    MinRandomModifiersScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.4.2 Random Scaling: Min Modifiers Number",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
-        //    MinRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
-        //        config.BossesMinRandomModifiersNumber = config.MinibossesMinRandomModifiersNumber = config.EnemiesMinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    MaxRandomModifiersScalingValue = Config.Bind(
-        //        "2. Scaling",
-        //        "2.4.3 Random Scaling: Max Modifiers Number",
-        //        4,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
-        //    MaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
-        //        config.BossesMaxRandomModifiersNumber = config.MinibossesMaxRandomModifiersNumber = config.EnemiesMaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isModifiersEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.1 Enable Modifiers",
-        //        false,
-        //        LocalizationResolver.Localize("config_modifiers_enabled_description"));
-        //    isModifiersEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ModifiersEnabled = isModifiersEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    modifiersStartDeathValue = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.2 Modifiers Start Death",
-        //        1,
-        //        LocalizationResolver.Localize("config_modifiers_start_death_description"));
-        //    modifiersStartDeathValue.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isModifiersRepeatingEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.3 Enable Modifiers Repeating",
-        //        false,
-        //        LocalizationResolver.Localize("config_repeating_enabled_description"));
-        //    isModifiersRepeatingEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ModifiersEnabled = isModifiersRepeatingEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isSpeedModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Speed Modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_speed_enabled_description"));
-        //    isSpeedModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.SpeedModifierEnabled = isSpeedModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isTimerModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Timer Modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_timer_enabled_description"));
-        //    isTimerModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.TimerModifierEnabled = isTimerModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isParryDamageModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Precice parry only modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_parry_damage_enabled_description"));
-        //    isParryDamageModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ParryDirectDamageModifierEnabled = isParryDamageModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isDamageBuildupModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Internal damage buildup modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_internal_damage_enabled_description"));
-        //    isDamageBuildupModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.DamageBuildupModifierEnabled = isDamageBuildupModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isRegenerationModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Regeneration modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_regeneration_enabled_description"));
-        //    isRegenerationModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RegenerationModifierEnabled = isRegenerationModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isKnockbackModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Knockback modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_knockback_enabled_description"));
-        //    isKnockbackModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.KnockbackModifierEnabled = isKnockbackModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isRandomArrowModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Random arrow modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_random_arrow_enabled_description"));
-        //    isRandomArrowModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomArrowModifierEnabled = isRandomArrowModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isRandomTalismanModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Random talisman modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_random_talisman_enabled_description"));
-        //    isRandomTalismanModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isEnduranceModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Endurance modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_endurance_enabled_description"));
-        //    isEnduranceModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isQiShieldModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Shield: Qi Shield modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
-        //    isQiShieldModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isTimedShieldModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Shield: Cooldown Shield modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_cooldown_shield_enabled_description"));
-        //    isTimedShieldModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isQiOverloadModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Qi Overload modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_overload_enabled_description"));
-        //    isQiOverloadModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isDistanceShieldModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Shield: Distance Shield modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_distance_shield_enabled_description"));
-        //    isDistanceShieldModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isYanlaoGunModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Yanlaos Assistance modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"));
-        //    isYanlaoGunModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isQiBombModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Bomb: Qi Bomb modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"));
-        //    isQiBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiBombModifierEnabled = isQiBombModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isShieldBreakBombModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Bomb: Shield Break Bomb modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"));
-        //    isShieldBreakBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ShieldBreakBombModifierEnabled = isShieldBreakBombModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isQiOverloadBombModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Bomb: Qi Overload Bomb modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"));
-        //    isQiOverloadBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiOverloadBombModifierEnabled = isQiOverloadBombModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isQiDepletionBombModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Bomb: Qi Depletion Bomb modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"));
-        //    isQiDepletionBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiDepletionBombModifierEnabled = isQiDepletionBombModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    isCooldownBombModifierEnabled = Config.Bind(
-        //        "3. Modifiers",
-        //        "3.M Bomb: Cooldown Bomb modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_cooldown_bomb_enabled_description"));
-        //    isCooldownBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.CooldownBombModifierEnabled = isCooldownBombModifierEnabled.Value;
-        //        ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-        //}
-
-        //public void HandleConfigurationValues() {
-        //    var config = ChallengeConfigurationManager.ChallengeConfiguration;
-        //    config.EnableMod = isCyclingEnabled.Value;
-        //    config.UseSingleRecordKey = useSingleRecordsKey.Value;
-        //    config.MaxBossCycles = maxCycles.Value;
-
-        //    config.AffectBosses = true;
-        //    config.AffectMiniBosses = true;
-        //    config.AffectRegularEnemies = true;
-
-        //    #region Scaling
-        //    config.BossesEnableSpeedScaling = config.MinibossesEnableSpeedScaling = config.EnemiesEnableSpeedScaling = isSpeedScalingEnabled.Value;
-        //    config.BossesMinSpeedScalingValue = config.MinibossesMinSpeedScalingValue = config.EnemiesMinSpeedScalingValue = minSpeedScalingValue.Value;
-        //    config.BossesMaxSpeedScalingValue = config.MinibossesMaxSpeedScalingValue = config.BossesMaxSpeedScalingValue = maxSpeedScalingValue.Value;
-        //    config.BossesMaxSpeedScalingCycle = config.MinibossesMaxSpeedScalingCycle = config.EnemiesMaxSpeedScalingCycle = maxSpeedScalingCycleValue.Value;
-
-        //    config.BossesEnableModifiersScaling = config.MinibossesEnableModifiersScaling = config.EnemiesEnableModifiersScaling = isModifiersScalingEnabled.Value;
-        //    config.BossesMaxModifiersNumber = config.MinibossesMaxModifiersNumber = config.EnemiesMaxModifiersNumber = maxModifiersNumber.Value;
-        //    config.BossesMaxModifiersScalingCycle = config.MinibossesMaxModifiersScalingCycle = config.EnemiesMaxModifiersScalingCycle = maxModifiersNumberScalingValue.Value;
-
-        //    config.BossesEnableRandomSpeedScaling = config.MinibossesEnableRandomSpeedScaling = config.EnemiesEnableRandomSpeedScaling = IsRandomSpeedScalingEnabled.Value;
-        //    config.BossesRandomSpeedScalingStartDeath = config.MinibossesRandomSpeedScalingStartDeath = config.EnemiesRandomSpeedScalingStartDeath = StartRandomSpeedScalingDeath.Value;
-        //    config.BossesMinRandomSpeedScalingValue = config.MinibossesMinRandomSpeedScalingValue = config.EnemiesMinRandomSpeedScalingValue = MinRandomSpeedScalingValue.Value;
-        //    config.BossesMaxRandomSpeedScalingValue = config.MinibossesMaxRandomSpeedScalingValue = config.EnemiesMaxRandomSpeedScalingValue = MaxRandomSpeedScalingValue.Value;
-
-        //    config.BossesEnableRandomModifiersScaling = config.MinibossesEnableRandomModifiersScaling = config.EnemiesEnableRandomModifiersScaling = IsRandomModifiersScalingEnabled.Value;
-        //    config.BossesRandomModifiersScalingStartDeath = config.MinibossesRandomModifiersScalingStartDeath = config.EnemiesRandomModifiersScalingStartDeath = StartRandomModifiersScalingDeath.Value;
-        //    config.BossesMinRandomModifiersNumber = config.MinibossesMinRandomModifiersNumber = config.EnemiesMinRandomModifiersNumber = MinRandomModifiersScalingValue.Value;
-        //    config.BossesMaxRandomModifiersNumber = config.MinibossesMaxRandomModifiersNumber = config.EnemiesMaxRandomModifiersNumber = MaxRandomModifiersScalingValue.Value;
-        //    #endregion Scaling
-
-        //    config.ModifiersEnabled = isModifiersEnabled.Value;
-        //    config.AllowRepeatModifiers = isModifiersRepeatingEnabled.Value;
-        //    config.SpeedModifierEnabled = isSpeedModifierEnabled.Value;
-        //    config.TimerModifierEnabled = isTimerModifierEnabled.Value;
-        //    config.ParryDirectDamageModifierEnabled = isParryDamageModifierEnabled.Value;
-        //    config.DamageBuildupModifierEnabled = isDamageBuildupModifierEnabled.Value;
-        //    config.RegenerationModifierEnabled = isRegenerationModifierEnabled.Value;
-        //    config.KnockbackModifierEnabled = isKnockbackModifierEnabled.Value;
-        //    //config.KnockoutModifierEnabled = isKnockoutModifierEnabled.Value;
-        //    config.RandomArrowModifierEnabled = isRandomArrowModifierEnabled.Value;
-        //    config.RandomTalismanModifierEnabled = isRandomTalismanModifierEnabled.Value;
-        //    config.EnduranceModifierEnabled = isEnduranceModifierEnabled.Value;
-        //    config.QiShieldModifierEnabled = isQiShieldModifierEnabled.Value;
-        //    config.TimedShieldModifierEnabled = isTimedShieldModifierEnabled.Value;
-        //    config.QiOverloadModifierEnabled = isQiOverloadModifierEnabled.Value;
-        //    config.DistanceShieldModifierEnabled = isDistanceShieldModifierEnabled.Value;
-        //    config.YanlaoGunModifierEnabled = isYanlaoGunModifierEnabled.Value;
-        //    config.QiBombModifierEnabled = isQiBombModifierEnabled.Value;
-        //    config.ShieldBreakBombModifierEnabled = isShieldBreakBombModifierEnabled.Value;
-        //    config.QiOverloadBombModifierEnabled = isQiOverloadBombModifierEnabled.Value;
-        //    config.QiDepletionBombModifierEnabled = isQiDepletionBombModifierEnabled.Value;
-        //    config.CooldownBombModifierEnabled = isCooldownBombModifierEnabled.Value;
-
-        //    config.ModifiersStartFromDeath = modifiersStartDeathValue.Value;
-
-        //    ChallengeConfigurationManager.ChallengeConfiguration = config;
-        //}
-
+            return RightColumnWidth;
+        }
 
         public void InitChallengeConfiguration() {
             InitGeneralConfig();
             InitModifiersConfig();
+            InitBossesConfig();
+            InitMinibossesConfig();
+            InitEnemiesConfig();
         }
 
         private void InitGeneralConfig() {
@@ -626,7 +83,7 @@ namespace BossChallengeMod.Configuration {
                         Order = 0,
                     }));
             configHolder.IsMoBEnabled.SettingChanged += (_, _) => {
-
+                ChallengeConfigurationManager.ChallengeConfiguration.IsEnabledInMoB = configHolder.IsMoBEnabled.Value;
             };
 
             configHolder.IsNormalEnabled = Config.Bind(
@@ -640,137 +97,396 @@ namespace BossChallengeMod.Configuration {
                         DispName = LocalizationResolver.Localize("config_general_regular_enabled_name"),
                         Order = 1,
                     }));
+            configHolder.IsNormalEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsEnabledInNormal = configHolder.IsNormalEnabled.Value;
+            };
         }
 
-        private void InitModifiersConfig() {            
+        private void InitModifiersConfig() {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            #region Hidden Config
+
             configHolder.ModifiersStartDeathValue = Config.Bind(
                 "2. Modifiers",
                 "modifiers start death",
                 1,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.ModifiersStartDeathValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.ModifiersStartDeath = configHolder.ModifiersStartDeathValue.Value;
+            };
+
             configHolder.IsModifiersRepeatingEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifiers repeat enabled",
                 false,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsModifiersRepeatingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsRepeatingEnabled = configHolder.IsModifiersRepeatingEnabled.Value;
+            };
 
             configHolder.IsSpeedModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier speed",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsSpeedModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsSpeedModifierEnabled = configHolder.IsSpeedModifierEnabled.Value;
+            };
+
             configHolder.IsTimerModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier timer",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsTimerModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsTimerModifierEnabled = configHolder.IsTimerModifierEnabled.Value;
+            };
+
             configHolder.IsParryDamageModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier parry damage",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsParryDamageModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsParryDamageModifierEnabled = configHolder.IsParryDamageModifierEnabled.Value;
+            };
+
             configHolder.IsDamageBuildupModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier damage buildup",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsDamageBuildupModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsDamageBuildupModifierEnabled = configHolder.IsDamageBuildupModifierEnabled.Value;
+            };
+
             configHolder.IsRegenerationModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier regeneration",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsRegenerationModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsRegenerationModifierEnabled = configHolder.IsRegenerationModifierEnabled.Value;
+            };
+
             configHolder.IsKnockbackModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier knockback",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsKnockbackModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsKnockbackModifierEnabled = configHolder.IsKnockbackModifierEnabled.Value;
+            };
+
             configHolder.IsRandomArrowModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier random arrow",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsRandomArrowModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsRandomArrowModifierEnabled = configHolder.IsRandomArrowModifierEnabled.Value;
+            };
+
             configHolder.IsRandomTalismanModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier random talisman",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsRandomTalismanModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsRandomTalismanModifierEnabled = configHolder.IsRandomTalismanModifierEnabled.Value;
+            };
+
             configHolder.IsEnduranceModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier endurance",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsEnduranceModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsEnduranceModifierEnabled = configHolder.IsEnduranceModifierEnabled.Value;
+            };
+
             configHolder.IsQiShieldModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier qi shield",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
-            configHolder.IsCoodownShieldModifierEnabled = Config.Bind(
+            configHolder.IsQiShieldModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsQiShieldModifierEnabled = configHolder.IsQiShieldModifierEnabled.Value;
+            };
+
+            configHolder.IsCooldownShieldModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier cooldown shield",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsCooldownShieldModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsCooldownShieldModifierEnabled = configHolder.IsCooldownShieldModifierEnabled.Value;
+            };
+
             configHolder.IsQiOverloadModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier qi overload",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiOverloadModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsQiOverloadModifierEnabled = configHolder.IsQiOverloadModifierEnabled.Value;
+            };
+
             configHolder.IsDistanceShieldModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier distance shield",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsDistanceShieldModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsDistanceShieldModifierEnabled = configHolder.IsDistanceShieldModifierEnabled.Value;
+            };
+
             configHolder.IsYanlaoGunModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier yanlao gun",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsYanlaoGunModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsYanlaoGunModifierEnabled = configHolder.IsYanlaoGunModifierEnabled.Value;
+            };
+
             configHolder.IsQiBombModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier qi bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiBombModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsQiBombModifierEnabled = configHolder.IsQiBombModifierEnabled.Value;
+            };
+
             configHolder.IsShieldBreakBombModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier shield bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsShieldBreakBombModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsShieldBreakBombModifierEnabled = configHolder.IsShieldBreakBombModifierEnabled.Value;
+            };
+
             configHolder.IsQiOverloadBombModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier qi overload bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiOverloadBombModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsQiOverloadBombModifierEnabled = configHolder.IsQiOverloadBombModifierEnabled.Value;
+            };
+
             configHolder.IsQiDepletionBombModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier qi depletion bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsQiDepletionBombModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsQiDepletionBombModifierEnabled = configHolder.IsQiDepletionBombModifierEnabled.Value;
+            };
+
             configHolder.IsCooldownBombModifierEnabled = Config.Bind(
                 "2. Modifiers",
                 "modifier coolldown bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
+            configHolder.IsCooldownBombModifierEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsCooldownBombModifierEnabled = configHolder.IsCooldownBombModifierEnabled.Value;
+            };
+            #endregion Hidden Config
 
             var modifiersTabsDrawer = new ConfigTabsDrawer();
-            modifiersTabsDrawer.Tabs.AddRange([LocalizationResolver.Localize("label_disabled"), LocalizationResolver.Localize("label_enabled")]);
-            tabsDrawer.SelectedTab = testEnabled ? 1 : 0;
-            tabsDrawer.OnTabSelectedHandlers.TryAdd("Enabled", () => {
-                testEnabled = true;
-            });
-            tabsDrawer.OnTabSelectedHandlers.TryAdd("Disabled", () => {
-                testEnabled = false;
-            });
+            modifiersTabsDrawer.Tabs.AddRange([disabledText, enabledText]);
 
-            var startingValueField = new FloatField("Starting Value:", RightColumnWidth, "Starting Value", testStartValue);
-            startingValueField.AddFieldValueChangeHandler(arg => { testStartValue = arg; });
-            tabsDrawer.AddField("Enabled", startingValueField);
+            IntField modifiersStartDeathField = new IntField(
+                            LocalizationResolver.Localize("config_modifiers_start_death_name"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_start_death_desc"),
+                            configHolder.ModifiersStartDeathValue.Value);
+            modifiersTabsDrawer.AddField(1, modifiersStartDeathField);
 
-            var stepValueField = new FloatField("Step Value:", RightColumnWidth, "Step Value", testStepValue);
-            stepValueField.AddFieldValueChangeHandler(arg => { testStepValue = arg; });
-            tabsDrawer.AddField("Enabled", stepValueField);
+            BooleanField modifiersRepeatSwitch = new BooleanField(
+                            LocalizationResolver.Localize("config_modifiers_modifiers_repeat_enabled_name"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_modifiers_repeat_enabled_desc"),
+                            configHolder.IsModifiersRepeatingEnabled.Value);
+            modifiersTabsDrawer.AddField(1, modifiersRepeatSwitch);
 
-            var maxStepsValueField = new IntField("Max Steps:", RightColumnWidth, "Max Steps", testMaxSteps);
-            maxStepsValueField.AddFieldValueChangeHandler(arg => { testMaxSteps = arg; });
-            tabsDrawer.AddField("Enabled", maxStepsValueField);
+            #region Modifiers switches init
+            //Speed
+            BooleanField speedModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("speed_temp"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_speed_enabled_description"),
+                            configHolder.IsSpeedModifierEnabled.Value);
+            speedModSwitch.AddValueChangeHandler(arg => { configHolder.IsSpeedModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, speedModSwitch);
+
+            //Timer
+            BooleanField timerModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("timer"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_timer_enabled_description"),
+                            configHolder.IsTimerModifierEnabled.Value);
+            timerModSwitch.AddValueChangeHandler(arg => { configHolder.IsTimerModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, timerModSwitch);
+
+            //Parry damage
+            BooleanField parryDamageModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("parry_damage"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_parry_damage_enabled_description"),
+                            configHolder.IsParryDamageModifierEnabled.Value);
+            parryDamageModSwitch.AddValueChangeHandler(arg => { configHolder.IsParryDamageModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, parryDamageModSwitch);
+
+            //Damage buildup
+            BooleanField damageBuildupModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("damage_buildup"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_internal_damage_enabled_description"),
+                            configHolder.IsDamageBuildupModifierEnabled.Value);
+            damageBuildupModSwitch.AddValueChangeHandler(arg => { configHolder.IsDamageBuildupModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, damageBuildupModSwitch);
+
+            //Regeneration
+            BooleanField regenerationModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("regeneration"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_regeneration_enabled_description"),
+                            configHolder.IsRegenerationModifierEnabled.Value);
+            regenerationModSwitch.AddValueChangeHandler(arg => { configHolder.IsRegenerationModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, regenerationModSwitch);
+
+            //Knockback
+            BooleanField knockbackModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("knockback"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_knockback_enabled_description"),
+                            configHolder.IsKnockbackModifierEnabled.Value);
+            knockbackModSwitch.AddValueChangeHandler(arg => { configHolder.IsKnockbackModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, knockbackModSwitch);
+
+            //Random arrow
+            BooleanField randomArrowModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("random_arrow"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_random_arrow_enabled_description"),
+                            configHolder.IsRandomArrowModifierEnabled.Value);
+            randomArrowModSwitch.AddValueChangeHandler(arg => { configHolder.IsRandomArrowModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, randomArrowModSwitch);
+
+            //Random talisman
+            BooleanField randomTaliModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("random_talisman"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_random_talisman_enabled_description"),
+                            configHolder.IsRandomTalismanModifierEnabled.Value);
+            randomTaliModSwitch.AddValueChangeHandler(arg => { configHolder.IsRandomTalismanModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, randomTaliModSwitch);
+
+            //Endurance
+            BooleanField enduranceModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("endurance"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_endurance_enabled_description"),
+                            configHolder.IsEnduranceModifierEnabled.Value);
+            enduranceModSwitch.AddValueChangeHandler(arg => { configHolder.IsEnduranceModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, enduranceModSwitch);
+
+            //Qi-Shield
+            BooleanField qiShieldModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("qi_shield"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"),
+                            configHolder.IsQiShieldModifierEnabled.Value);
+            qiShieldModSwitch.AddValueChangeHandler(arg => { configHolder.IsQiShieldModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, qiShieldModSwitch);
+
+            //Coolldown shield
+            BooleanField cooldownShieldModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("timer_shield"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_cooldown_shield_enabled_description"),
+                            configHolder.IsCooldownShieldModifierEnabled.Value);
+            cooldownShieldModSwitch.AddValueChangeHandler(arg => { configHolder.IsCooldownShieldModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, cooldownShieldModSwitch);
+
+            //Qi-Overload
+            BooleanField qiOverloadModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("qi_overload"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_qi_overload_enabled_description"),
+                            configHolder.IsQiOverloadModifierEnabled.Value);
+            qiOverloadModSwitch.AddValueChangeHandler(arg => { configHolder.IsQiOverloadModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, qiOverloadModSwitch);
+
+            //Distance shield
+            BooleanField distanceShieldModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("distance_shield"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_distance_shield_enabled_description"),
+                            configHolder.IsDistanceShieldModifierEnabled.Value);
+            distanceShieldModSwitch.AddValueChangeHandler(arg => { configHolder.IsDistanceShieldModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, distanceShieldModSwitch);
+
+            //Yanlao Gun
+            BooleanField yaGunModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("ya_gun"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"),
+                            configHolder.IsYanlaoGunModifierEnabled.Value);
+            yaGunModSwitch.AddValueChangeHandler(arg => { configHolder.IsYanlaoGunModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, yaGunModSwitch);
+
+            //Qi-Bomb
+            BooleanField qiBombModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("qi_bomb"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"),
+                            configHolder.IsQiBombModifierEnabled.Value);
+            qiBombModSwitch.AddValueChangeHandler(arg => { configHolder.IsQiBombModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, qiBombModSwitch);
+
+            //Shield break bomb
+            BooleanField shieldBreakBombModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("shield_break_bomb"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"),
+                            configHolder.IsShieldBreakBombModifierEnabled.Value);
+            shieldBreakBombModSwitch.AddValueChangeHandler(arg => { configHolder.IsShieldBreakBombModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, shieldBreakBombModSwitch);
+
+            //Qi Overload bomb
+            BooleanField qiOverloadBombModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("qi_overload_bomb"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"),
+                            configHolder.IsQiOverloadBombModifierEnabled.Value);
+            qiOverloadBombModSwitch.AddValueChangeHandler(arg => { configHolder.IsQiOverloadBombModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, qiOverloadBombModSwitch);
+
+            //Qi Depletion bomb
+            BooleanField qiDepletionBombModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("qi_depletion_bomb"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"),
+                            configHolder.IsQiDepletionBombModifierEnabled.Value);
+            qiDepletionBombModSwitch.AddValueChangeHandler(arg => { configHolder.IsQiDepletionBombModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, qiDepletionBombModSwitch);
+
+            //Cooldown bomb
+            BooleanField cooldownBombModSwitch = new BooleanField(
+                            LocalizationResolver.Localize("cooldown_bomb"),
+                            CalculateRightColumnWidth,
+                            LocalizationResolver.Localize("config_modifiers_cooldown_bomb_enabled_description"),
+                            configHolder.IsCooldownBombModifierEnabled.Value);
+            cooldownBombModSwitch.AddValueChangeHandler(arg => { configHolder.IsCooldownBombModifierEnabled.Value = arg; });
+            modifiersTabsDrawer.AddField(1, cooldownBombModSwitch);
+            #endregion Modifiers switches init
 
             configHolder.IsModifiersEnabled = Config.Bind(
                 "2. Modifiers",
@@ -782,8 +498,1335 @@ namespace BossChallengeMod.Configuration {
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_modifiers_modifiers_enabled_desc"),
                         Order = 0,
-                    }));
+                    }, 
+                    modifiersTabsDrawer.GetConfigAttributes()));
+            configHolder.IsModifiersEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.IsModifiersEnabled = configHolder.IsModifiersEnabled.Value;
+            };
 
+            modifiersTabsDrawer.SelectedTab = configHolder.IsModifiersEnabled.Value ? 1 : 0;
+            modifiersTabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.IsModifiersEnabled.Value = true;
+            });
+            modifiersTabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.IsModifiersEnabled.Value = false;
+            });
+        }
+
+        #region Boss config
+        private void InitBossesConfig() {
+            string sectionName = "3. Bosses config";            
+
+            configHolder.AffectBosses = Config.Bind(
+                sectionName,
+                "bosses affected",
+                true,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_affect_bosses_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_affect_bosses_name"),
+                        Order = 0,
+                    }));
+            configHolder.AffectBosses.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.AffectBosses = configHolder.AffectBosses.Value;
+            };
+
+            configHolder.MaxBossCycles = Config.Bind(
+                sectionName,
+                "bosses deaths",
+                -1,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_boss_deaths_number_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_boss_deaths_number_name"),
+                        Order = 1,
+                    }));
+            configHolder.MaxBossCycles.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MaxBossCycles = configHolder.MaxBossCycles.Value;
+            };
+
+            SetupBossSpeedScaling(sectionName);
+            SetupBossModifiersScaling(sectionName);
+            SetupBossRandomSpeedScaling(sectionName);
+            SetupBossRandomModifiersScaling(sectionName);
+        }
+
+        private void SetupBossSpeedScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.BossesMinSpeedScalingValue = Config.Bind(
+                sectionName,
+                "boss speed scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesMinSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesMinSpeedScalingValue = configHolder.BossesMinSpeedScalingValue.Value;
+            };
+
+            configHolder.BossesSpeedScalingStepValue = Config.Bind(
+                sectionName,
+                "boss speed scaling step value",
+                0.06f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesSpeedScalingStepValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesSpeedScalingStepValue = configHolder.BossesSpeedScalingStepValue.Value;
+            };
+
+            configHolder.BossesSpeedStepsCapValue = Config.Bind(
+                sectionName,
+                "boss speed scaling steps cap",
+                5,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesSpeedStepsCapValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesSpeedStepsCapValue = configHolder.BossesSpeedStepsCapValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_boss_speed_scaling_minspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_speed_scaling_minspeed_desc"),
+                configHolder.BossesMinSpeedScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesMinSpeedScalingValue.Value = arg;
+            });
+
+            var stepValueField = new FloatField(
+                LocalizationResolver.Localize("config_boss_speed_scaling_step_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_speed_scaling_step_desc"),
+                configHolder.BossesSpeedScalingStepValue.Value);
+            stepValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesSpeedScalingStepValue.Value = arg;
+            });
+
+            var stepsCapField = new IntField(
+                LocalizationResolver.Localize("config_boss_speed_scaling_steps_cap_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_speed_scaling_steps_cap_desc"),
+                configHolder.BossesSpeedStepsCapValue.Value);
+            stepsCapField.AddValueChangeHandler(arg => {
+                configHolder.BossesSpeedStepsCapValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, stepValueField);
+            tabsDrawer.AddField(1, stepsCapField);
+
+            configHolder.BossesIsSpeedScalingEnabled = Config.Bind(
+                sectionName,
+                "boss speed scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_boss_speed_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_boss_speed_scaling_enabled_name"),
+                        Order = 2
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.BossesIsSpeedScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.BossesIsSpeedScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.BossesIsSpeedScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupBossModifiersScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.BossesMinModifiersNumber = Config.Bind(
+                sectionName,
+                "boss modifiers scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesMinModifiersNumber.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesMinModifiersNumber = configHolder.BossesMinModifiersNumber.Value;
+            };
+
+            configHolder.BossesModifiersScalingStepValue = Config.Bind(
+                sectionName,
+                "boss modifiers scaling step value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesSpeedScalingStepValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesModifiersScalingStepValue = configHolder.BossesModifiersScalingStepValue.Value;
+            };
+
+            configHolder.BossesModifiersStepsCapValue = Config.Bind(
+                sectionName,
+                "boss modifiers scaling steps cap",
+                2,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesSpeedStepsCapValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesModifiersStepsCapValue = configHolder.BossesModifiersStepsCapValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_boss_modifiers_scaling_min_number_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_modifiers_scaling_min_number_desc"),
+                configHolder.BossesMinModifiersNumber.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesMinModifiersNumber.Value = arg;
+            });
+
+            var stepValueField = new FloatField(
+                LocalizationResolver.Localize("config_boss_modifiers_scaling_step_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_modifiers_scaling_step_desc"),
+                configHolder.BossesModifiersScalingStepValue.Value);
+            stepValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesModifiersScalingStepValue.Value = arg;
+            });
+
+            var stepsCapField = new IntField(
+                LocalizationResolver.Localize("config_boss_modifiers_scaling_steps_cap_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_modifiers_scaling_steps_cap_desc"),
+                configHolder.BossesModifiersStepsCapValue.Value);
+            stepsCapField.AddValueChangeHandler(arg => {
+                configHolder.BossesModifiersStepsCapValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, stepValueField);
+            tabsDrawer.AddField(1, stepsCapField);
+
+            configHolder.BossesIsModifiersScalingEnabled = Config.Bind(
+                sectionName,
+                "boss modifiers scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_boss_modifiers_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_boss_modifiers_scaling_enabled_name"),
+                        Order = 3
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.BossesIsModifiersScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.BossesIsModifiersScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.BossesIsModifiersScalingEnabled.Value = false;
+            });
+        }
+        
+        private void SetupBossRandomSpeedScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.BossesMinRandomSpeedScalingValue = Config.Bind(
+                sectionName,
+                "boss random speed scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesMinRandomSpeedScalingValue = configHolder.BossesMinRandomSpeedScalingValue.Value;
+            };
+
+            configHolder.BossesMaxRandomSpeedScalingValue = Config.Bind(
+                sectionName,
+                "boss random speed scaling max value",
+                1.5f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesMaxRandomSpeedScalingValue = configHolder.BossesMaxRandomSpeedScalingValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_boss_rand_speed_scaling_minspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_rand_speed_scaling_minspeed_desc"),
+                configHolder.BossesMinRandomSpeedScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesMinRandomSpeedScalingValue.Value = arg;
+            });
+
+            var maxValueField = new FloatField(
+                LocalizationResolver.Localize("config_boss_rand_speed_scaling_maxspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_rand_speed_scaling_maxspeed_desc"),
+                configHolder.BossesMaxRandomSpeedScalingValue.Value);
+            maxValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesMaxRandomSpeedScalingValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, maxValueField);
+
+            configHolder.BossesIsRandomSpeedScalingEnabled = Config.Bind(
+                sectionName,
+                "boss random speed scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_boss_rand_speed_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_boss_rand_speed_scaling_enabled_name"),
+                        Order = 4
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.BossesIsRandomSpeedScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.BossesIsRandomSpeedScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.BossesIsRandomSpeedScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupBossRandomModifiersScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.BossesMinRandomModifiersScalingValue = Config.Bind(
+                sectionName,
+                "boss random modifiers scaling min value",
+                1,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesMinRandomModifiersScalingValue = configHolder.BossesMinRandomModifiersScalingValue.Value;
+            };
+
+            configHolder.BossesMaxRandomModifiersScalingValue = Config.Bind(
+                sectionName,
+                "boss random modifiers scaling max value",
+                3,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.BossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesMaxRandomModifiersScalingValue = configHolder.BossesMaxRandomModifiersScalingValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new IntField(
+                LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_min_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_min_desc"),
+                configHolder.BossesMinRandomModifiersScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesMinRandomModifiersScalingValue.Value = arg;
+            });
+
+            var maxValueField = new IntField(
+                LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_max_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_max_desc"),
+                configHolder.BossesMaxRandomModifiersScalingValue.Value);
+            maxValueField.AddValueChangeHandler(arg => {
+                configHolder.BossesMaxRandomModifiersScalingValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, maxValueField);
+
+            configHolder.BossesIsRandomModifiersScalingEnabled = Config.Bind(
+                sectionName,
+                "boss random modifiers scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_enabled_name"),
+                        Order = 5
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.BossesIsRandomModifiersScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.BossesIsRandomModifiersScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.BossesIsRandomModifiersScalingEnabled.Value = false;
+            });
+        }
+        #endregion Boss config
+
+        #region Miniboss config
+        private void InitMinibossesConfig() {
+            string sectionName = "3. Minibosses config";
+
+            configHolder.AffectMinibosses = Config.Bind(
+                sectionName,
+                "minibosses affected",
+                true,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_affect_minibosses_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_affect_minibosses_name"),
+                        Order = 0,
+                    }));
+            configHolder.AffectMinibosses.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.AffectMinibosses = configHolder.AffectMinibosses.Value;
+            };
+
+            configHolder.MaxMinibossCycles = Config.Bind(
+                sectionName,
+                "minibosses deaths",
+                -1,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_miniboss_deaths_number_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_miniboss_deaths_number_name"),
+                        Order = 1,
+                    }));
+            configHolder.MaxMinibossCycles.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MaxMinibossCycles = configHolder.MaxMinibossCycles.Value;
+            };
+
+            SetupMinibossSpeedScaling(sectionName);
+            SetupMinibossModifiersScaling(sectionName);
+            SetupMinibossRandomSpeedScaling(sectionName);
+            SetupMinibossRandomModifiersScaling(sectionName);
+        }
+
+        private void SetupMinibossSpeedScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.MinibossesMinSpeedScalingValue = Config.Bind(
+                sectionName,
+                "miniboss speed scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesMinSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesMinSpeedScalingValue = configHolder.MinibossesMinSpeedScalingValue.Value;
+            };
+
+            configHolder.MinibossesSpeedScalingStepValue = Config.Bind(
+                sectionName,
+                "miniboss speed scaling step value",
+                0.06f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesSpeedScalingStepValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesSpeedScalingStepValue = configHolder.MinibossesSpeedScalingStepValue.Value;
+            };
+
+            configHolder.MinibossesSpeedStepsCapValue = Config.Bind(
+                sectionName,
+                "miniboss speed scaling steps cap",
+                5,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesSpeedStepsCapValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesSpeedStepsCapValue = configHolder.MinibossesSpeedStepsCapValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_miniboss_speed_scaling_minspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_speed_scaling_minspeed_desc"),
+                configHolder.MinibossesMinSpeedScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesMinSpeedScalingValue.Value = arg;
+            });
+
+            var stepValueField = new FloatField(
+                LocalizationResolver.Localize("config_miniboss_speed_scaling_step_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_speed_scaling_step_desc"),
+                configHolder.MinibossesSpeedScalingStepValue.Value);
+            stepValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesSpeedScalingStepValue.Value = arg;
+            });
+
+            var stepsCapField = new IntField(
+                LocalizationResolver.Localize("config_miniboss_speed_scaling_steps_cap_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_speed_scaling_steps_cap_desc"),
+                configHolder.MinibossesSpeedStepsCapValue.Value);
+            stepsCapField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesSpeedStepsCapValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, stepValueField);
+            tabsDrawer.AddField(1, stepsCapField);
+
+            configHolder.MinibossesIsSpeedScalingEnabled = Config.Bind(
+                sectionName,
+                "miniboss speed scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_miniboss_speed_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_miniboss_speed_scaling_enabled_name"),
+                        Order = 2
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.MinibossesIsSpeedScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.MinibossesIsSpeedScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.MinibossesIsSpeedScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupMinibossModifiersScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.MinibossesMinModifiersNumber = Config.Bind(
+                sectionName,
+                "miniboss modifiers scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesMinModifiersNumber.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesMinModifiersNumber = configHolder.MinibossesMinModifiersNumber.Value;
+            };
+
+            configHolder.MinibossesModifiersScalingStepValue = Config.Bind(
+                sectionName,
+                "miniboss modifiers scaling step value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesSpeedScalingStepValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesModifiersScalingStepValue = configHolder.MinibossesModifiersScalingStepValue.Value;
+            };
+
+            configHolder.MinibossesModifiersStepsCapValue = Config.Bind(
+                sectionName,
+                "miniboss modifiers scaling steps cap",
+                2,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesSpeedStepsCapValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesModifiersStepsCapValue = configHolder.MinibossesModifiersStepsCapValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_miniboss_modifiers_scaling_min_number_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_modifiers_scaling_min_number_desc"),
+                configHolder.MinibossesMinModifiersNumber.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesMinModifiersNumber.Value = arg;
+            });
+
+            var stepValueField = new FloatField(
+                LocalizationResolver.Localize("config_miniboss_modifiers_scaling_step_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_modifiers_scaling_step_desc"),
+                configHolder.MinibossesModifiersScalingStepValue.Value);
+            stepValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesModifiersScalingStepValue.Value = arg;
+            });
+
+            var stepsCapField = new IntField(
+                LocalizationResolver.Localize("config_miniboss_modifiers_scaling_steps_cap_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_modifiers_scaling_steps_cap_desc"),
+                configHolder.MinibossesModifiersStepsCapValue.Value);
+            stepsCapField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesModifiersStepsCapValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, stepValueField);
+            tabsDrawer.AddField(1, stepsCapField);
+
+            configHolder.MinibossesIsModifiersScalingEnabled = Config.Bind(
+                sectionName,
+                "miniboss modifiers scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_miniboss_modifiers_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_miniboss_modifiers_scaling_enabled_name"),
+                        Order = 3
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.MinibossesIsModifiersScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.MinibossesIsModifiersScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.MinibossesIsModifiersScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupMinibossRandomSpeedScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.MinibossesMinRandomSpeedScalingValue = Config.Bind(
+                sectionName,
+                "miniboss random speed scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesMinRandomSpeedScalingValue = configHolder.MinibossesMinRandomSpeedScalingValue.Value;
+            };
+
+            configHolder.MinibossesMaxRandomSpeedScalingValue = Config.Bind(
+                sectionName,
+                "miniboss random speed scaling max value",
+                1.5f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesMaxRandomSpeedScalingValue = configHolder.MinibossesMaxRandomSpeedScalingValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_minspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_minspeed_desc"),
+                configHolder.MinibossesMinRandomSpeedScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesMinRandomSpeedScalingValue.Value = arg;
+            });
+
+            var maxValueField = new FloatField(
+                LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_maxspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_maxspeed_desc"),
+                configHolder.MinibossesMaxRandomSpeedScalingValue.Value);
+            maxValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesMaxRandomSpeedScalingValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, maxValueField);
+
+            configHolder.MinibossesIsRandomSpeedScalingEnabled = Config.Bind(
+                sectionName,
+                "miniboss random speed scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_enabled_name"),
+                        Order = 4
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.MinibossesIsRandomSpeedScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.MinibossesIsRandomSpeedScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.MinibossesIsRandomSpeedScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupMinibossRandomModifiersScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.MinibossesMinRandomModifiersScalingValue = Config.Bind(
+                sectionName,
+                "miniboss random modifiers scaling min value",
+                1,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesMinRandomModifiersScalingValue = configHolder.MinibossesMinRandomModifiersScalingValue.Value;
+            };
+
+            configHolder.MinibossesMaxRandomModifiersScalingValue = Config.Bind(
+                sectionName,
+                "miniboss random modifiers scaling max value",
+                3,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.MinibossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesMaxRandomModifiersScalingValue = configHolder.MinibossesMaxRandomModifiersScalingValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new IntField(
+                LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_min_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_min_desc"),
+                configHolder.MinibossesMinRandomModifiersScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesMinRandomModifiersScalingValue.Value = arg;
+            });
+
+            var maxValueField = new IntField(
+                LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_max_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_max_desc"),
+                configHolder.MinibossesMaxRandomModifiersScalingValue.Value);
+            maxValueField.AddValueChangeHandler(arg => {
+                configHolder.MinibossesMaxRandomModifiersScalingValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, maxValueField);
+
+            configHolder.MinibossesIsRandomModifiersScalingEnabled = Config.Bind(
+                sectionName,
+                "miniboss random modifiers scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_enabled_name"),
+                        Order = 5
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.MinibossesIsRandomModifiersScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.MinibossesIsRandomModifiersScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.MinibossesIsRandomModifiersScalingEnabled.Value = false;
+            });
+        }
+        #endregion Miniboss config
+
+        #region Enemy config
+        private void InitEnemiesConfig() {
+            string sectionName = "3. Enemies config";
+
+            configHolder.AffectEnemies = Config.Bind(
+                sectionName,
+                "enemies affected",
+                true,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_affect_enemies_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_affect_enemies_name"),
+                        Order = 0,
+                    }));
+            configHolder.AffectEnemies.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.AffectEnemies = configHolder.AffectEnemies.Value;
+            };
+
+            configHolder.MaxEnemyCycles = Config.Bind(
+                sectionName,
+                "enemies deaths",
+                -1,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_enemy_deaths_number_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_enemy_deaths_number_name"),
+                        Order = 1,
+                    }));
+            configHolder.MaxEnemyCycles.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MaxEnemyCycles = configHolder.MaxEnemyCycles.Value;
+            };
+
+            SetupEnemySpeedScaling(sectionName);
+            SetupEnemyModifiersScaling(sectionName);
+            SetupEnemyRandomSpeedScaling(sectionName);
+            SetupEnemyRandomModifiersScaling(sectionName);
+        }
+
+        private void SetupEnemySpeedScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.EnemiesMinSpeedScalingValue = Config.Bind(
+                sectionName,
+                "enemy speed scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesMinSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesMinSpeedScalingValue = configHolder.EnemiesMinSpeedScalingValue.Value;
+            };
+
+            configHolder.EnemiesSpeedScalingStepValue = Config.Bind(
+                sectionName,
+                "enemy speed scaling step value",
+                0.06f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesSpeedScalingStepValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesSpeedScalingStepValue = configHolder.EnemiesSpeedScalingStepValue.Value;
+            };
+
+            configHolder.EnemiesSpeedStepsCapValue = Config.Bind(
+                sectionName,
+                "enemy speed scaling steps cap",
+                5,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesSpeedStepsCapValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesSpeedStepsCapValue = configHolder.EnemiesSpeedStepsCapValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_enemy_speed_scaling_minspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_speed_scaling_minspeed_desc"),
+                configHolder.EnemiesMinSpeedScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesMinSpeedScalingValue.Value = arg;
+            });
+
+            var stepValueField = new FloatField(
+                LocalizationResolver.Localize("config_enemy_speed_scaling_step_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_speed_scaling_step_desc"),
+                configHolder.EnemiesSpeedScalingStepValue.Value);
+            stepValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesSpeedScalingStepValue.Value = arg;
+            });
+
+            var stepsCapField = new IntField(
+                LocalizationResolver.Localize("config_enemy_speed_scaling_steps_cap_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_speed_scaling_steps_cap_desc"),
+                configHolder.EnemiesSpeedStepsCapValue.Value);
+            stepsCapField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesSpeedStepsCapValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, stepValueField);
+            tabsDrawer.AddField(1, stepsCapField);
+
+            configHolder.EnemiesIsSpeedScalingEnabled = Config.Bind(
+                sectionName,
+                "enemy speed scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_enemy_speed_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_enemy_speed_scaling_enabled_name"),
+                        Order = 2
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.EnemiesIsSpeedScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.EnemiesIsSpeedScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.EnemiesIsSpeedScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupEnemyModifiersScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.EnemiesMinModifiersNumber = Config.Bind(
+                sectionName,
+                "enemy modifiers scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesMinModifiersNumber.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesMinModifiersNumber = configHolder.EnemiesMinModifiersNumber.Value;
+            };
+
+            configHolder.EnemiesModifiersScalingStepValue = Config.Bind(
+                sectionName,
+                "enemy modifiers scaling step value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesSpeedScalingStepValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesModifiersScalingStepValue = configHolder.EnemiesModifiersScalingStepValue.Value;
+            };
+
+            configHolder.EnemiesModifiersStepsCapValue = Config.Bind(
+                sectionName,
+                "enemy modifiers scaling steps cap",
+                2,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesSpeedStepsCapValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesModifiersStepsCapValue = configHolder.EnemiesModifiersStepsCapValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_enemy_modifiers_scaling_min_number_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_modifiers_scaling_min_number_desc"),
+                configHolder.EnemiesMinModifiersNumber.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesMinModifiersNumber.Value = arg;
+            });
+
+            var stepValueField = new FloatField(
+                LocalizationResolver.Localize("config_enemy_modifiers_scaling_step_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_modifiers_scaling_step_desc"),
+                configHolder.EnemiesModifiersScalingStepValue.Value);
+            stepValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesModifiersScalingStepValue.Value = arg;
+            });
+
+            var stepsCapField = new IntField(
+                LocalizationResolver.Localize("config_enemy_modifiers_scaling_steps_cap_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_modifiers_scaling_steps_cap_desc"),
+                configHolder.EnemiesModifiersStepsCapValue.Value);
+            stepsCapField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesModifiersStepsCapValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, stepValueField);
+            tabsDrawer.AddField(1, stepsCapField);
+
+            configHolder.EnemiesIsModifiersScalingEnabled = Config.Bind(
+                sectionName,
+                "enemy modifiers scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_enemy_modifiers_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_enemy_modifiers_scaling_enabled_name"),
+                        Order = 3
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.EnemiesIsModifiersScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.EnemiesIsModifiersScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.EnemiesIsModifiersScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupEnemyRandomSpeedScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.EnemiesMinRandomSpeedScalingValue = Config.Bind(
+                sectionName,
+                "enemy random speed scaling min value",
+                1f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesMinRandomSpeedScalingValue = configHolder.EnemiesMinRandomSpeedScalingValue.Value;
+            };
+
+            configHolder.EnemiesMaxRandomSpeedScalingValue = Config.Bind(
+                sectionName,
+                "enemy random speed scaling max value",
+                1.5f,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesMaxRandomSpeedScalingValue = configHolder.EnemiesMaxRandomSpeedScalingValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new FloatField(
+                LocalizationResolver.Localize("config_enemy_rand_speed_scaling_minspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_rand_speed_scaling_minspeed_desc"),
+                configHolder.EnemiesMinRandomSpeedScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesMinRandomSpeedScalingValue.Value = arg;
+            });
+
+            var maxValueField = new FloatField(
+                LocalizationResolver.Localize("config_enemy_rand_speed_scaling_maxspeed_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_rand_speed_scaling_maxspeed_desc"),
+                configHolder.EnemiesMaxRandomSpeedScalingValue.Value);
+            maxValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesMaxRandomSpeedScalingValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, maxValueField);
+
+            configHolder.EnemiesIsRandomSpeedScalingEnabled = Config.Bind(
+                sectionName,
+                "enemy random speed scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_enemy_rand_speed_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_enemy_rand_speed_scaling_enabled_name"),
+                        Order = 4
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.EnemiesIsRandomSpeedScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.EnemiesIsRandomSpeedScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.EnemiesIsRandomSpeedScalingEnabled.Value = false;
+            });
+        }
+
+        private void SetupEnemyRandomModifiersScaling(string sectionName) {
+            string enabledText = LocalizationResolver.Localize("label_enabled");
+            string disabledText = LocalizationResolver.Localize("label_disabled");
+
+            configHolder.EnemiesMinRandomModifiersScalingValue = Config.Bind(
+                sectionName,
+                "enemy random modifiers scaling min value",
+                1,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesMinRandomModifiersScalingValue = configHolder.EnemiesMinRandomModifiersScalingValue.Value;
+            };
+
+            configHolder.EnemiesMaxRandomModifiersScalingValue = Config.Bind(
+                sectionName,
+                "enemy random modifiers scaling max value",
+                3,
+                new ConfigDescription(
+                    "",
+                    null,
+                    new ConfigurationManagerAttributes {
+                        Browsable = false,
+                    }));
+            configHolder.EnemiesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesMaxRandomModifiersScalingValue = configHolder.EnemiesMaxRandomModifiersScalingValue.Value;
+            };
+
+
+            var tabsDrawer = new ConfigTabsDrawer();
+            tabsDrawer.Tabs = [disabledText, enabledText];
+
+            var minValueField = new IntField(
+                LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_min_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_min_desc"),
+                configHolder.EnemiesMinRandomModifiersScalingValue.Value);
+            minValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesMinRandomModifiersScalingValue.Value = arg;
+            });
+
+            var maxValueField = new IntField(
+                LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_max_name"),
+                CalculateRightColumnWidth,
+                LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_max_desc"),
+                configHolder.EnemiesMaxRandomModifiersScalingValue.Value);
+            maxValueField.AddValueChangeHandler(arg => {
+                configHolder.EnemiesMaxRandomModifiersScalingValue.Value = arg;
+            });
+
+            tabsDrawer.AddField(1, minValueField);
+            tabsDrawer.AddField(1, maxValueField);
+
+            configHolder.EnemiesIsRandomModifiersScalingEnabled = Config.Bind(
+                sectionName,
+                "enemy random modifiers scaling enabled",
+                false,
+                new ConfigDescription(
+                    LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_enabled_desc"),
+                    null,
+                    new ConfigurationManagerAttributes {
+                        DispName = LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_enabled_name"),
+                        Order = 5
+                    },
+                    tabsDrawer.GetConfigAttributes()
+                ));
+            tabsDrawer.SelectedTab = configHolder.EnemiesIsRandomModifiersScalingEnabled.Value ? 1 : 0;
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                configHolder.EnemiesIsRandomModifiersScalingEnabled.Value = true;
+            });
+            tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                configHolder.EnemiesIsRandomModifiersScalingEnabled.Value = false;
+            });
+        }
+
+        #endregion Enemy config
+
+        public void HandleChallengeConfigurationValues() {
+            var config = ChallengeConfigurationManager.ChallengeConfiguration;
+
+            config.IsEnabledInMoB = configHolder.IsMoBEnabled.Value;
+            config.IsEnabledInNormal = configHolder.IsNormalEnabled.Value;
+
+            config.IsModifiersEnabled = configHolder.IsModifiersEnabled.Value;
+            config.ModifiersStartDeath = configHolder.ModifiersStartDeathValue.Value;
+            config.IsRepeatingEnabled = configHolder.IsModifiersRepeatingEnabled.Value;
+            
+            config.IsSpeedModifierEnabled = configHolder.IsSpeedModifierEnabled.Value;
+            config.IsTimerModifierEnabled = configHolder.IsTimerModifierEnabled.Value;
+            config.IsParryDamageModifierEnabled = configHolder.IsParryDamageModifierEnabled.Value;
+            config.IsDamageBuildupModifierEnabled = configHolder.IsDamageBuildupModifierEnabled.Value;
+            config.IsRegenerationModifierEnabled = configHolder.IsRegenerationModifierEnabled.Value;
+            config.IsKnockbackModifierEnabled = configHolder.IsKnockbackModifierEnabled.Value;
+            config.IsRandomArrowModifierEnabled = configHolder.IsRandomArrowModifierEnabled.Value;
+            config.IsRandomTalismanModifierEnabled = configHolder.IsRandomTalismanModifierEnabled.Value;
+            config.IsEnduranceModifierEnabled = configHolder.IsEnduranceModifierEnabled.Value;
+            config.IsQiShieldModifierEnabled = configHolder.IsQiShieldModifierEnabled.Value;
+            config.IsCooldownShieldModifierEnabled = configHolder.IsCooldownShieldModifierEnabled.Value;
+            config.IsQiOverloadModifierEnabled = configHolder.IsQiOverloadModifierEnabled.Value;
+            config.IsDistanceShieldModifierEnabled = configHolder.IsDistanceShieldModifierEnabled.Value;
+            config.IsYanlaoGunModifierEnabled = configHolder.IsYanlaoGunModifierEnabled.Value;
+            config.IsQiBombModifierEnabled = configHolder.IsQiBombModifierEnabled.Value;
+            config.IsShieldBreakBombModifierEnabled = configHolder.IsShieldBreakBombModifierEnabled.Value;
+            config.IsQiOverloadBombModifierEnabled = configHolder.IsQiOverloadBombModifierEnabled.Value;
+            config.IsQiDepletionBombModifierEnabled = configHolder.IsQiDepletionBombModifierEnabled.Value;
+            config.IsCooldownBombModifierEnabled = configHolder.IsCooldownBombModifierEnabled.Value;
+
+            #region Bosses
+            config.AffectBosses = configHolder.AffectBosses.Value;
+            config.MaxBossCycles = configHolder.MaxBossCycles.Value;
+
+            config.BossesIsSpeedScalingEnabled = configHolder.BossesIsSpeedScalingEnabled.Value;
+            config.BossesMinSpeedScalingValue = configHolder.BossesMinSpeedScalingValue.Value;
+            config.BossesSpeedScalingStepValue = configHolder.BossesSpeedScalingStepValue.Value;
+            config.BossesSpeedStepsCapValue = configHolder.BossesSpeedStepsCapValue.Value;
+
+            config.BossesIsModifiersScalingEnabled = configHolder.BossesIsModifiersScalingEnabled.Value;
+            config.BossesMinModifiersNumber = configHolder.BossesMinModifiersNumber.Value;
+            config.BossesModifiersScalingStepValue = configHolder.BossesModifiersScalingStepValue.Value;
+            config.BossesModifiersStepsCapValue = configHolder.BossesModifiersStepsCapValue.Value;
+
+            config.BossesIsRandomSpeedScalingEnabled = configHolder.BossesIsRandomSpeedScalingEnabled.Value;
+            config.BossesMinRandomSpeedScalingValue = configHolder.BossesMinRandomSpeedScalingValue.Value;
+            config.BossesMaxRandomSpeedScalingValue = configHolder.BossesMaxRandomSpeedScalingValue.Value;
+            
+            config.BossesIsRandomModifiersScalingEnabled = configHolder.BossesIsRandomModifiersScalingEnabled.Value;
+            config.BossesMinRandomModifiersScalingValue = configHolder.BossesMinRandomModifiersScalingValue.Value;
+            config.BossesMaxRandomModifiersScalingValue = configHolder.BossesMaxRandomModifiersScalingValue.Value;
+            #endregion Bosses
+
+            #region Minibosses
+            config.AffectMinibosses = configHolder.AffectMinibosses.Value;
+            config.MaxMinibossCycles = configHolder.MaxMinibossCycles.Value;
+
+            config.MinibossesIsSpeedScalingEnabled = configHolder.MinibossesIsSpeedScalingEnabled.Value;
+            config.MinibossesMinSpeedScalingValue = configHolder.MinibossesMinSpeedScalingValue.Value;
+            config.MinibossesSpeedScalingStepValue = configHolder.MinibossesSpeedScalingStepValue.Value;
+            config.MinibossesSpeedStepsCapValue = configHolder.MinibossesSpeedStepsCapValue.Value;
+
+            config.MinibossesIsModifiersScalingEnabled = configHolder.MinibossesIsModifiersScalingEnabled.Value;
+            config.MinibossesMinModifiersNumber = configHolder.MinibossesMinModifiersNumber.Value;
+            config.MinibossesModifiersScalingStepValue = configHolder.MinibossesModifiersScalingStepValue.Value;
+            config.MinibossesModifiersStepsCapValue = configHolder.MinibossesModifiersStepsCapValue.Value;
+
+            config.MinibossesIsRandomSpeedScalingEnabled = configHolder.MinibossesIsRandomSpeedScalingEnabled.Value;
+            config.MinibossesMinRandomSpeedScalingValue = configHolder.MinibossesMinRandomSpeedScalingValue.Value;
+            config.MinibossesMaxRandomSpeedScalingValue = configHolder.MinibossesMaxRandomSpeedScalingValue.Value;
+
+            config.MinibossesIsRandomModifiersScalingEnabled = configHolder.MinibossesIsRandomModifiersScalingEnabled.Value;
+            config.MinibossesMinRandomModifiersScalingValue = configHolder.MinibossesMinRandomModifiersScalingValue.Value;
+            config.MinibossesMaxRandomModifiersScalingValue = configHolder.MinibossesMaxRandomModifiersScalingValue.Value;
+            #endregion Minibosses
+
+            #region Enemies
+            config.AffectEnemies = configHolder.AffectEnemies.Value;
+            config.MaxEnemyCycles = configHolder.MaxEnemyCycles.Value;
+
+            config.EnemiesIsSpeedScalingEnabled = configHolder.EnemiesIsSpeedScalingEnabled.Value;
+            config.EnemiesMinSpeedScalingValue = configHolder.EnemiesMinSpeedScalingValue.Value;
+            config.EnemiesSpeedScalingStepValue = configHolder.EnemiesSpeedScalingStepValue.Value;
+            config.EnemiesSpeedStepsCapValue = configHolder.EnemiesSpeedStepsCapValue.Value;
+
+            config.EnemiesIsModifiersScalingEnabled = configHolder.EnemiesIsModifiersScalingEnabled.Value;
+            config.EnemiesMinModifiersNumber = configHolder.EnemiesMinModifiersNumber.Value;
+            config.EnemiesModifiersScalingStepValue = configHolder.EnemiesModifiersScalingStepValue.Value;
+            config.EnemiesModifiersStepsCapValue = configHolder.EnemiesModifiersStepsCapValue.Value;
+
+            config.EnemiesIsRandomSpeedScalingEnabled = configHolder.EnemiesIsRandomSpeedScalingEnabled.Value;
+            config.EnemiesMinRandomSpeedScalingValue = configHolder.EnemiesMinRandomSpeedScalingValue.Value;
+            config.EnemiesMaxRandomSpeedScalingValue = configHolder.EnemiesMaxRandomSpeedScalingValue.Value;
+
+            config.EnemiesIsRandomModifiersScalingEnabled = configHolder.EnemiesIsRandomModifiersScalingEnabled.Value;
+            config.EnemiesMinRandomModifiersScalingValue = configHolder.EnemiesMinRandomModifiersScalingValue.Value;
+            config.EnemiesMaxRandomModifiersScalingValue = configHolder.EnemiesMaxRandomModifiersScalingValue.Value;
+            #endregion Enemies
         }
 
         public void InitializeUIConfiguration() {
@@ -913,1063 +1956,6 @@ namespace BossChallengeMod.Configuration {
             UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value;
             UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value;
             UIConfiguration.TalismanUIScale = talismanModeScale.Value;
-        }
-
-        //public void InitStoryChallengeConfiguration() {
-        //    #region General
-        //    //Mod enabled
-        //    _storyConfigs.IsModEnabled = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.1 Enable Mod",
-        //        false,
-        //        LocalizationResolver.Localize("config_story_enabled_description"));
-        //    _storyConfigs.IsModEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnableMod = _storyConfigs.IsModEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Max Cycles
-        //    _storyConfigs.MaxBossCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.2.1 Boss deaths number",
-        //        2,
-        //        LocalizationResolver.Localize("config_cycles_number_description"));
-        //    _storyConfigs.MaxBossCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxBossCycles = _storyConfigs.MaxBossCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MaxMinibossCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.2.2 Miniboss deaths number",
-        //        2,
-        //        LocalizationResolver.Localize("config_story_miniboss_cycles_number_description"));
-        //    _storyConfigs.MaxMinibossCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxMinibossCycles = _storyConfigs.MaxMinibossCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MaxEnemyCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.2.3 Regular enemy deaths number",
-        //        2,
-        //        LocalizationResolver.Localize("config_story_enemy_cycles_number_description"));
-        //    _storyConfigs.MaxEnemyCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxEnemyCycles = _storyConfigs.MaxEnemyCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Affect monsters
-        //    _storyConfigs.AffectBosses = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.3.1 Affect bosses",
-        //        true,
-        //        LocalizationResolver.Localize("config_story_affect_bosses_description"));
-        //    _storyConfigs.AffectBosses.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.AffectBosses = _storyConfigs.AffectBosses.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.AffectMiniBosses = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.3.2 Affect minibosses",
-        //        true,
-        //        LocalizationResolver.Localize("config_story_affect_minibosses_description"));
-        //    _storyConfigs.AffectMiniBosses.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.AffectMiniBosses = _storyConfigs.AffectMiniBosses.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.AffectEnemies = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.3.3 Affect regular enemies",
-        //        true,
-        //        LocalizationResolver.Localize("config_story_affect_enemies_description"));
-        //    _storyConfigs.AffectEnemies.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.AffectRegularEnemies = _storyConfigs.AffectEnemies.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Randomize boss cycles
-        //    _storyConfigs.IsBossCyclesNumberRandomized = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.4 Randomize boss death number",
-        //        false,
-        //        LocalizationResolver.Localize("config_boss_deaths_randomized_enabled_description"));
-        //    _storyConfigs.IsBossCyclesNumberRandomized.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomizeBossCyclesNumber = _storyConfigs.IsBossCyclesNumberRandomized.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinRandomBossCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.4.1 Min boss deaths random number",
-        //        2,
-        //        LocalizationResolver.Localize("config_boss_deaths_randomized_min_description"));
-        //    _storyConfigs.MinRandomBossCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinRandomBossCycles = _storyConfigs.MinRandomBossCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MaxRandomBossCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.4.2 Max boss deaths random number",
-        //        3,
-        //        LocalizationResolver.Localize("config_boss_deaths_randomized_max_description"));
-        //    _storyConfigs.MaxRandomBossCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxRandomBossCycles = _storyConfigs.MaxRandomBossCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Randomize miniboss cycles
-        //    _storyConfigs.IsMiniBossCyclesNumberRandomized = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.5 Randomize miniboss death number",
-        //        false,
-        //        LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_description"));
-        //    _storyConfigs.IsMiniBossCyclesNumberRandomized.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomizeMiniBossCyclesNumber = _storyConfigs.IsMiniBossCyclesNumberRandomized.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinRandomMiniBossCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.5.1 Min miniboss deaths random number",
-        //        2,
-        //        LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_min_description"));
-        //    _storyConfigs.MinRandomMiniBossCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinRandomMiniBossCycles = _storyConfigs.MinRandomMiniBossCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MaxRandomMiniBossCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.5.2 Max miniboss deaths random number",
-        //        3,
-        //        LocalizationResolver.Localize("config_story_miniboss_deaths_randomized_max_description"));
-        //    _storyConfigs.MaxRandomMiniBossCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxRandomMiniBossCycles = _storyConfigs.MaxRandomMiniBossCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Randomize enemy cycles
-        //    _storyConfigs.IsEnemyCyclesNumberRandomized = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.6 Randomize regular enemy death number",
-        //        false,
-        //        LocalizationResolver.Localize("config_story_enemy_deaths_randomized_description"));
-        //    _storyConfigs.IsEnemyCyclesNumberRandomized.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomizeEnemyCyclesNumber = _storyConfigs.IsEnemyCyclesNumberRandomized.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinRandomEnemyCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.6.1 Min regular enemy deaths random number",
-        //        2,
-        //        LocalizationResolver.Localize("config_story_enemy_deaths_randomized_min_description"));
-        //    _storyConfigs.MinRandomEnemyCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinRandomEnemyCycles = _storyConfigs.MinRandomEnemyCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MaxRandomEnemyCycles = Config.Bind(
-        //        "5. Story Challenge General",
-        //        "5.6.2 Max regular enemy deaths random number",
-        //        3,
-        //        LocalizationResolver.Localize("config_story_enemy_deaths_randomized_max_description"));
-        //    _storyConfigs.MaxRandomEnemyCycles.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MaxRandomEnemyCycles = _storyConfigs.MaxRandomEnemyCycles.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    #endregion General
-
-        //    #region Scaling
-
-        //    #region Bosses scaling
-        //    //Speed scaling
-        //    _storyConfigs.BossesIsSpeedScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.1 Enable Bosses Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_enabled_description"));
-        //    _storyConfigs.BossesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesEnableSpeedScaling = _storyConfigs.BossesIsSpeedScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMinSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.1.1 Bosses Scaling: Initial Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_scaling_minspeed_description"));
-        //    _storyConfigs.BossesMinSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMinSpeedScalingValue = _storyConfigs.BossesMinSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMaxSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.1.2 Bosses Scaling: Maximum Speed",
-        //        1.35f,
-        //        LocalizationResolver.Localize("config_scaling_maxspeed_description"));
-        //    _storyConfigs.BossesMaxSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxSpeedScalingValue = _storyConfigs.BossesMaxSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMaxSpeedScalingCycleValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.1.3 Bosses Maximum Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
-        //    _storyConfigs.BossesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxSpeedScalingCycle = _storyConfigs.BossesMaxSpeedScalingCycleValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Modifiers scaling
-        //    _storyConfigs.BossesIsModifiersScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.2 Enable Bosses Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
-        //    _storyConfigs.BossesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesEnableModifiersScaling = _storyConfigs.BossesIsModifiersScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMaxModifiersNumber = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.2.1 Bosses Scaling: Maximum Modifiers Number",
-        //        3,
-        //        LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
-        //    _storyConfigs.BossesMaxModifiersNumber.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxModifiersNumber = _storyConfigs.BossesMaxModifiersNumber.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMaxModifiersNumberScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.2.2 Bosses Maximum Modifiers Number Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
-        //    _storyConfigs.BossesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxModifiersScalingCycle = _storyConfigs.BossesMaxModifiersNumberScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random speed scaling
-        //    _storyConfigs.BossesIsRandomSpeedScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.3 Enable Bosses Random Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
-        //    _storyConfigs.BossesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesEnableRandomSpeedScaling = _storyConfigs.BossesIsRandomSpeedScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesStartRandomSpeedScalingDeath = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.3.1 Bosses Random Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
-        //    _storyConfigs.BossesStartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesRandomSpeedScalingStartDeath = _storyConfigs.BossesStartRandomSpeedScalingDeath.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMinRandomSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.3.2 Bosses Random Scaling: Minimal Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
-        //    _storyConfigs.BossesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMinRandomSpeedScalingValue = _storyConfigs.BossesMinRandomSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMaxRandomSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.3.3 Bosses Random Scaling: Maximum Speed",
-        //        1.5f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
-        //    _storyConfigs.BossesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxSpeedScalingValue = _storyConfigs.BossesMaxRandomSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random modifiers scaling
-        //    _storyConfigs.BossesIsRandomModifiersScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.4 Enable Bosses Random Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
-        //    _storyConfigs.BossesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesEnableRandomModifiersScaling = _storyConfigs.BossesIsRandomModifiersScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesStartRandomModifiersScalingDeath = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.4.1 Bosses Random Modifiers Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
-        //    _storyConfigs.BossesStartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesRandomModifiersScalingStartDeath = _storyConfigs.BossesStartRandomModifiersScalingDeath.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMinRandomModifiersScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.4.2 Bosses Random Scaling: Min Modifiers Number",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
-        //    _storyConfigs.BossesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMinRandomModifiersNumber = _storyConfigs.BossesMinRandomModifiersScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.BossesMaxRandomModifiersScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.1.4.3 Bosses Random Scaling: Max Modifiers Number",
-        //        3,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
-        //    _storyConfigs.BossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.BossesMaxRandomModifiersNumber = _storyConfigs.BossesMaxRandomModifiersScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    #endregion Bosses scaling
-
-        //    #region Minibosses scaling
-        //    //Speed scaling
-        //    _storyConfigs.MinibossesIsSpeedScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.1 Enable Minibosses Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_enabled_description"));
-        //    _storyConfigs.MinibossesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesEnableSpeedScaling = _storyConfigs.MinibossesIsSpeedScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMinSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.1.1 Minibosses Scaling: Initial Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_scaling_minspeed_description"));
-        //    _storyConfigs.MinibossesMinSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMinSpeedScalingValue = _storyConfigs.MinibossesMinSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMaxSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.1.2 Minibosses Scaling: Maximum Speed",
-        //        1.35f,
-        //        LocalizationResolver.Localize("config_scaling_maxspeed_description"));
-        //    _storyConfigs.MinibossesMaxSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMaxSpeedScalingValue = _storyConfigs.MinibossesMaxSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMaxSpeedScalingCycleValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.1.3 Minibosses Maximum Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
-        //    _storyConfigs.MinibossesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMaxSpeedScalingCycle = _storyConfigs.MinibossesMaxSpeedScalingCycleValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Modifiers scaling
-        //    _storyConfigs.MinibossesIsModifiersScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.2 Enable Minibosses Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
-        //    _storyConfigs.MinibossesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesEnableModifiersScaling = _storyConfigs.MinibossesIsModifiersScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMaxModifiersNumber = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.2.1 Minibosses Scaling: Maximum Modifiers Number",
-        //        3,
-        //        LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
-        //    _storyConfigs.MinibossesMaxModifiersNumber.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMaxModifiersNumber = _storyConfigs.MinibossesMaxModifiersNumber.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMaxModifiersNumberScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.2.2 Minibosses Maximum Modifiers Number Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
-        //    _storyConfigs.MinibossesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMaxModifiersScalingCycle = _storyConfigs.MinibossesMaxModifiersNumberScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random speed scaling
-        //    _storyConfigs.MinibossesIsRandomSpeedScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.2.3 Enable Minibosses Random Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
-        //    _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesEnableRandomSpeedScaling = _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesStartRandomSpeedScalingDeath = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.3.1 Minibosses Random Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
-        //    _storyConfigs.MinibossesStartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesRandomSpeedScalingStartDeath = _storyConfigs.MinibossesStartRandomSpeedScalingDeath.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMinRandomSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.3.2 Minibosses Random Scaling: Minimal Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
-        //    _storyConfigs.MinibossesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMinRandomSpeedScalingValue = _storyConfigs.MinibossesMinRandomSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMaxRandomSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.3.3 Minibosses Random Scaling: Maximum Speed",
-        //        1.5f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
-        //    _storyConfigs.MinibossesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMaxSpeedScalingValue = _storyConfigs.MinibossesMaxRandomSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random modifiers scaling
-        //    _storyConfigs.MinibossesIsRandomModifiersScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.4 Enable Minibosses Random Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
-        //    _storyConfigs.MinibossesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesEnableRandomModifiersScaling = _storyConfigs.MinibossesIsRandomModifiersScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesStartRandomModifiersScalingDeath = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.4.1 Minibosses Random Modifiers Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
-        //    _storyConfigs.MinibossesStartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesRandomModifiersScalingStartDeath = _storyConfigs.MinibossesStartRandomModifiersScalingDeath.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMinRandomModifiersScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.4.2 Minibosses Random Scaling: Min Modifiers Number",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
-        //    _storyConfigs.MinibossesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMinRandomModifiersNumber = _storyConfigs.MinibossesMinRandomModifiersScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.MinibossesMaxRandomModifiersScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.2.4.3 Minibosses Random Scaling: Max Modifiers Number",
-        //        4,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
-        //    _storyConfigs.MinibossesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.MinibossesMaxRandomModifiersNumber = _storyConfigs.MinibossesMaxRandomModifiersScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    #endregion Minibosses scaling
-
-        //    #region Enemies scaling
-        //    //Speed scaling
-        //    _storyConfigs.EnemiesIsSpeedScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.1 Enable Enemies Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_enabled_description"));
-        //    _storyConfigs.EnemiesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesEnableSpeedScaling = _storyConfigs.EnemiesIsSpeedScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMinSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.1.1 Enemies Scaling: Initial Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_scaling_minspeed_description"));
-        //    _storyConfigs.EnemiesMinSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMinSpeedScalingValue = _storyConfigs.EnemiesMinSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMaxSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.1.2 Enemies Scaling: Maximum Speed",
-        //        1.35f,
-        //        LocalizationResolver.Localize("config_scaling_maxspeed_description"));
-        //    _storyConfigs.EnemiesMaxSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMaxSpeedScalingValue = _storyConfigs.EnemiesMaxSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMaxSpeedScalingCycleValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.1.3 Enemies Maximum Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_scaling_scaling_cycle_description"));
-        //    _storyConfigs.EnemiesMaxSpeedScalingCycleValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMaxSpeedScalingCycle = _storyConfigs.EnemiesMaxSpeedScalingCycleValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Modifiers scaling
-        //    _storyConfigs.EnemiesIsModifiersScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.2 Enable Enemies Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_enabled_description"));
-        //    _storyConfigs.EnemiesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesEnableModifiersScaling = _storyConfigs.EnemiesIsModifiersScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMaxModifiersNumber = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.2.1 Enemies Scaling: Maximum Modifiers Number",
-        //        3,
-        //        LocalizationResolver.Localize("config_scaling_maxmodifiers_description"));
-        //    _storyConfigs.EnemiesMaxModifiersNumber.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMaxModifiersNumber = _storyConfigs.EnemiesMaxModifiersNumber.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMaxModifiersNumberScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.2.2 Enemies Maximum Modifiers Number Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_scaling_modifiers_scaling_cycle_description"));
-        //    _storyConfigs.EnemiesMaxModifiersNumberScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMaxModifiersScalingCycle = _storyConfigs.EnemiesMaxModifiersNumberScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random speed scaling
-        //    _storyConfigs.EnemiesIsRandomSpeedScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.3 Enable Enemies Random Speed Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_enabled_description"));
-        //    _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesEnableRandomSpeedScaling = _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesStartRandomSpeedScalingDeath = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.3.1 Enemies Random Speed Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_start_death_description"));
-        //    _storyConfigs.EnemiesStartRandomSpeedScalingDeath.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesRandomSpeedScalingStartDeath = _storyConfigs.EnemiesStartRandomSpeedScalingDeath.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMinRandomSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.3.2 Enemies Random Scaling: Minimal Speed",
-        //        1.0f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_minspeed_description"));
-        //    _storyConfigs.EnemiesMinRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMinRandomSpeedScalingValue = _storyConfigs.EnemiesMinRandomSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMaxRandomSpeedScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.3.3 Enemies Random Scaling: Maximum Speed",
-        //        1.5f,
-        //        LocalizationResolver.Localize("config_rand_speed_scaling_maxspeed_description"));
-        //    _storyConfigs.EnemiesMaxRandomSpeedScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMaxSpeedScalingValue = _storyConfigs.EnemiesMaxRandomSpeedScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    //Random modifiers scaling
-        //    _storyConfigs.EnemiesIsRandomModifiersScalingEnabled = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.4 Enable Enemies Random Modifiers Scaling",
-        //        false,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_enabled_description"));
-        //    _storyConfigs.EnemiesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesEnableRandomModifiersScaling = _storyConfigs.EnemiesIsRandomModifiersScalingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesStartRandomModifiersScalingDeath = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.4.1 Enemies Random Modifiers Scaling After Deaths",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_start_death_description"));
-        //    _storyConfigs.EnemiesStartRandomModifiersScalingDeath.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesRandomModifiersScalingStartDeath = _storyConfigs.EnemiesStartRandomModifiersScalingDeath.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMinRandomModifiersScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.4.2 Enemies Random Scaling: Min Modifiers Number",
-        //        1,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_min_description"));
-        //    _storyConfigs.EnemiesMinRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMinRandomModifiersNumber = _storyConfigs.EnemiesMinRandomModifiersScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.EnemiesMaxRandomModifiersScalingValue = Config.Bind(
-        //        "6. Story Challenge Scaling",
-        //        "6.3.4.3 Enemies Random Scaling: Max Modifiers Number",
-        //        4,
-        //        LocalizationResolver.Localize("config_rand_modifiers_scaling_max_description"));
-        //    _storyConfigs.EnemiesMaxRandomModifiersScalingValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnemiesMaxRandomModifiersNumber = _storyConfigs.EnemiesMaxRandomModifiersScalingValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    #endregion Enemies scaling
-
-        //    #endregion Scaling
-
-        //    #region Modifiers
-
-        //    _storyConfigs.IsModifiersEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.1 Enable Modifiers",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_enabled_description"));
-        //    _storyConfigs.IsModifiersEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ModifiersEnabled = _storyConfigs.IsModifiersEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.ModifiersStartDeathValue = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.2 Modifiers Start Death",
-        //        1,
-        //        LocalizationResolver.Localize("config_modifiers_start_death_description"));
-        //    _storyConfigs.ModifiersStartDeathValue.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ModifiersStartFromDeath = _storyConfigs.ModifiersStartDeathValue.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsModifiersRepeatingEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.3 Enable Modifiers Repeating",
-        //        false,
-        //        LocalizationResolver.Localize("config_repeating_enabled_description"));
-        //    _storyConfigs.IsModifiersRepeatingEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.AllowRepeatModifiers = _storyConfigs.IsModifiersRepeatingEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsSpeedModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Speed Modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_speed_enabled_description"));
-        //    _storyConfigs.IsSpeedModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.SpeedModifierEnabled = _storyConfigs.IsSpeedModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsParryDamageModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Precice parry only modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_parry_damage_enabled_description"));
-        //    _storyConfigs.IsParryDamageModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ParryDirectDamageModifierEnabled = _storyConfigs.IsParryDamageModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsDamageBuildupModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Internal damage buildup modifier",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_internal_damage_enabled_description"));
-        //    _storyConfigs.IsDamageBuildupModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.DamageBuildupModifierEnabled = _storyConfigs.IsDamageBuildupModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsRegenerationModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Regeneration modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_regeneration_enabled_description"));
-        //    _storyConfigs.IsRegenerationModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RegenerationModifierEnabled = _storyConfigs.IsRegenerationModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsKnockbackModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Knockback modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_knockback_enabled_description"));
-        //    _storyConfigs.IsKnockbackModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.KnockbackModifierEnabled = _storyConfigs.IsKnockbackModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsRandomArrowModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Random arrow modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_random_arrow_enabled_description"));
-        //    _storyConfigs.IsRandomArrowModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomArrowModifierEnabled = _storyConfigs.IsRandomArrowModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsRandomTalismanModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Random talisman modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_random_talisman_enabled_description"));
-        //    _storyConfigs.IsRandomTalismanModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.RandomTalismanModifierEnabled = _storyConfigs.IsRandomTalismanModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsEnduranceModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Endurance modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_endurance_enabled_description"));
-        //    _storyConfigs.IsEnduranceModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.EnduranceModifierEnabled = _storyConfigs.IsEnduranceModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsQiShieldModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Shield: Qi Shield modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_shield_enabled_description"));
-        //    _storyConfigs.IsQiShieldModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiShieldModifierEnabled = _storyConfigs.IsQiShieldModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsTimedShieldModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Shield: Cooldown Shield modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_cooldown_shield_enabled_description"));
-        //    _storyConfigs.IsTimedShieldModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.TimedShieldModifierEnabled = _storyConfigs.IsTimedShieldModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsQiOverloadModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Qi Overload modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_overload_enabled_description"));
-        //    _storyConfigs.IsQiOverloadModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiOverloadModifierEnabled = _storyConfigs.IsQiOverloadModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsDistanceShieldModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Shield: Distance Shield modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_distance_shield_enabled_description"));
-        //    _storyConfigs.IsDistanceShieldModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.DistanceShieldModifierEnabled = _storyConfigs.IsDistanceShieldModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsYanlaoGunModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Yanlaos Gun modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_yanlao_gun_enabled_description"));
-        //    _storyConfigs.IsYanlaoGunModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.YanlaoGunModifierEnabled = _storyConfigs.IsYanlaoGunModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsQiBombModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Bomb: Qi Bomb modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_bomb_enabled_description"));
-        //    _storyConfigs.IsQiBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiBombModifierEnabled = _storyConfigs.IsQiBombModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsShieldBreakBombModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Bomb: Shield Break Bomb modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_shield_break_bomb_enabled_description"));
-        //    _storyConfigs.IsShieldBreakBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.ShieldBreakBombModifierEnabled = _storyConfigs.IsShieldBreakBombModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsQiOverloadBombModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Bomb: Qi Overload Bomb modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_overload_bomb_enabled_description"));
-        //    _storyConfigs.IsQiOverloadBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiOverloadBombModifierEnabled = _storyConfigs.IsQiOverloadBombModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsQiDepletionBombModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Bomb: Qi Depletion Bomb modiifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_qi_depletion_bomb_enabled_description"));
-        //    _storyConfigs.IsQiDepletionBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.QiDepletionBombModifierEnabled = _storyConfigs.IsQiDepletionBombModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    _storyConfigs.IsCooldownBombModifierEnabled = Config.Bind(
-        //        "7. Story Challenge Modifiers",
-        //        "7.M Bomb: Cooldown Bomb modifer",
-        //        true,
-        //        LocalizationResolver.Localize("config_modifiers_cooldown_bomb_enabled_description"));
-        //    _storyConfigs.IsCooldownBombModifierEnabled.SettingChanged += (_, _) => {
-        //        var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-        //        config.CooldownBombModifierEnabled = _storyConfigs.IsCooldownBombModifierEnabled.Value;
-        //        StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //    };
-
-        //    #endregion Modifiers
-        //}
-
-        //public void HandleStoryChallengeConfigurationValues() {
-        //    var config = StoryChallengeConfigurationManager.ChallengeConfiguration;
-
-        //    config.EnableMod = _storyConfigs.IsModEnabled.Value;
-        //    config.MaxBossCycles = _storyConfigs.MaxBossCycles.Value;
-        //    config.MaxMinibossCycles = _storyConfigs.MaxMinibossCycles.Value;
-        //    config.MaxEnemyCycles = _storyConfigs.MaxEnemyCycles.Value;
-
-        //    config.AffectBosses = _storyConfigs.AffectBosses.Value;
-        //    config.AffectMiniBosses = _storyConfigs.AffectMiniBosses.Value;
-        //    config.AffectRegularEnemies = _storyConfigs.AffectEnemies.Value;
-
-        //    config.RandomizeBossCyclesNumber = _storyConfigs.IsBossCyclesNumberRandomized.Value;
-        //    config.MinRandomBossCycles = _storyConfigs.MinRandomBossCycles.Value;
-        //    config.MaxRandomBossCycles = _storyConfigs.MaxRandomBossCycles.Value;
-
-        //    config.RandomizeMiniBossCyclesNumber = _storyConfigs.IsMiniBossCyclesNumberRandomized.Value;
-        //    config.MinRandomMiniBossCycles = _storyConfigs.MinRandomMiniBossCycles.Value;
-        //    config.MaxRandomMiniBossCycles = _storyConfigs.MaxRandomMiniBossCycles.Value;
-
-        //    config.RandomizeEnemyCyclesNumber = _storyConfigs.IsEnemyCyclesNumberRandomized.Value;
-        //    config.MinRandomEnemyCycles = _storyConfigs.MinRandomEnemyCycles.Value;
-        //    config.MaxRandomEnemyCycles = _storyConfigs.MaxRandomEnemyCycles.Value;
-
-        //    #region Bosses scaling
-        //    config.BossesEnableSpeedScaling = _storyConfigs.BossesIsSpeedScalingEnabled.Value;
-        //    config.BossesMinSpeedScalingValue = _storyConfigs.BossesMinSpeedScalingValue.Value;
-        //    config.BossesMaxSpeedScalingValue = _storyConfigs.BossesMaxSpeedScalingValue.Value;
-        //    config.BossesMaxSpeedScalingCycle = _storyConfigs.BossesMaxSpeedScalingCycleValue.Value;
-
-        //    config.BossesEnableModifiersScaling = _storyConfigs.BossesIsModifiersScalingEnabled.Value;
-        //    config.BossesMaxModifiersNumber = _storyConfigs.BossesMaxModifiersNumber.Value;
-        //    config.BossesMaxModifiersScalingCycle = _storyConfigs.BossesMaxModifiersNumberScalingValue.Value;
-
-        //    config.BossesEnableRandomSpeedScaling = _storyConfigs.BossesIsRandomSpeedScalingEnabled.Value;
-        //    config.BossesRandomSpeedScalingStartDeath = _storyConfigs.BossesStartRandomSpeedScalingDeath.Value;
-        //    config.BossesMinRandomSpeedScalingValue = _storyConfigs.BossesMinRandomSpeedScalingValue.Value;
-        //    config.BossesMaxRandomSpeedScalingValue = _storyConfigs.BossesMaxRandomSpeedScalingValue.Value;
-
-        //    config.BossesEnableRandomModifiersScaling = _storyConfigs.BossesIsRandomSpeedScalingEnabled.Value;
-        //    config.BossesRandomModifiersScalingStartDeath = _storyConfigs.BossesStartRandomSpeedScalingDeath.Value;
-        //    config.BossesMinRandomModifiersNumber = _storyConfigs.BossesMinRandomModifiersScalingValue.Value;
-        //    config.BossesMaxRandomModifiersNumber = _storyConfigs.BossesMaxRandomModifiersScalingValue.Value;
-        //    #endregion Bosses scaling
-
-        //    #region Minibosses scaling
-        //    config.MinibossesEnableSpeedScaling = _storyConfigs.MinibossesIsSpeedScalingEnabled.Value;
-        //    config.MinibossesMinSpeedScalingValue = _storyConfigs.MinibossesMinSpeedScalingValue.Value;
-        //    config.MinibossesMaxSpeedScalingValue = _storyConfigs.MinibossesMaxSpeedScalingValue.Value;
-        //    config.MinibossesMaxSpeedScalingCycle = _storyConfigs.MinibossesMaxSpeedScalingCycleValue.Value;
-
-        //    config.MinibossesEnableModifiersScaling = _storyConfigs.MinibossesIsModifiersScalingEnabled.Value;
-        //    config.MinibossesMaxModifiersNumber = _storyConfigs.MinibossesMaxModifiersNumber.Value;
-        //    config.MinibossesMaxModifiersScalingCycle = _storyConfigs.MinibossesMaxModifiersNumberScalingValue.Value;
-
-        //    config.MinibossesEnableRandomSpeedScaling = _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.Value;
-        //    config.MinibossesRandomSpeedScalingStartDeath = _storyConfigs.MinibossesStartRandomSpeedScalingDeath.Value;
-        //    config.MinibossesMinRandomSpeedScalingValue = _storyConfigs.MinibossesMinRandomSpeedScalingValue.Value;
-        //    config.MinibossesMaxRandomSpeedScalingValue = _storyConfigs.MinibossesMaxRandomSpeedScalingValue.Value;
-
-        //    config.MinibossesEnableRandomModifiersScaling = _storyConfigs.MinibossesIsRandomSpeedScalingEnabled.Value;
-        //    config.MinibossesRandomModifiersScalingStartDeath = _storyConfigs.MinibossesStartRandomSpeedScalingDeath.Value;
-        //    config.MinibossesMinRandomModifiersNumber = _storyConfigs.MinibossesMinRandomModifiersScalingValue.Value;
-        //    config.MinibossesMaxRandomModifiersNumber = _storyConfigs.MinibossesMaxRandomModifiersScalingValue.Value;
-        //    #endregion Minibosses scaling
-
-        //    #region Enemies scaling
-        //    config.EnemiesEnableSpeedScaling = _storyConfigs.EnemiesIsSpeedScalingEnabled.Value;
-        //    config.EnemiesMinSpeedScalingValue = _storyConfigs.EnemiesMinSpeedScalingValue.Value;
-        //    config.EnemiesMaxSpeedScalingValue = _storyConfigs.EnemiesMaxSpeedScalingValue.Value;
-        //    config.EnemiesMaxSpeedScalingCycle = _storyConfigs.EnemiesMaxSpeedScalingCycleValue.Value;
-
-        //    config.EnemiesEnableModifiersScaling = _storyConfigs.EnemiesIsModifiersScalingEnabled.Value;
-        //    config.EnemiesMaxModifiersNumber = _storyConfigs.EnemiesMaxModifiersNumber.Value;
-        //    config.EnemiesMaxModifiersScalingCycle = _storyConfigs.EnemiesMaxModifiersNumberScalingValue.Value;
-
-        //    config.EnemiesEnableRandomSpeedScaling = _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.Value;
-        //    config.EnemiesRandomSpeedScalingStartDeath = _storyConfigs.EnemiesStartRandomSpeedScalingDeath.Value;
-        //    config.EnemiesMinRandomSpeedScalingValue = _storyConfigs.EnemiesMinRandomSpeedScalingValue.Value;
-        //    config.EnemiesMaxRandomSpeedScalingValue = _storyConfigs.EnemiesMaxRandomSpeedScalingValue.Value;
-
-        //    config.EnemiesEnableRandomModifiersScaling = _storyConfigs.EnemiesIsRandomSpeedScalingEnabled.Value;
-        //    config.EnemiesRandomModifiersScalingStartDeath = _storyConfigs.EnemiesStartRandomSpeedScalingDeath.Value;
-        //    config.EnemiesMinRandomModifiersNumber = _storyConfigs.EnemiesMinRandomModifiersScalingValue.Value;
-        //    config.EnemiesMaxRandomModifiersNumber = _storyConfigs.EnemiesMaxRandomModifiersScalingValue.Value;
-        //    #endregion Enemies scaling
-
-        //    config.ModifiersEnabled = _storyConfigs.IsModifiersEnabled.Value;
-        //    config.AllowRepeatModifiers = _storyConfigs.IsModifiersRepeatingEnabled.Value;
-        //    config.SpeedModifierEnabled = _storyConfigs.IsSpeedModifierEnabled.Value;
-        //    config.TimerModifierEnabled = false;
-        //    config.ParryDirectDamageModifierEnabled = _storyConfigs.IsParryDamageModifierEnabled.Value;
-        //    config.DamageBuildupModifierEnabled = _storyConfigs.IsDamageBuildupModifierEnabled.Value;
-        //    config.RegenerationModifierEnabled = _storyConfigs.IsRegenerationModifierEnabled.Value;
-        //    config.KnockbackModifierEnabled = _storyConfigs.IsKnockbackModifierEnabled.Value;            
-        //    config.RandomArrowModifierEnabled = _storyConfigs.IsRandomArrowModifierEnabled.Value;
-        //    config.RandomTalismanModifierEnabled = _storyConfigs.IsRandomTalismanModifierEnabled.Value;
-        //    config.EnduranceModifierEnabled = _storyConfigs.IsEnduranceModifierEnabled.Value;
-        //    config.QiShieldModifierEnabled = _storyConfigs.IsQiShieldModifierEnabled.Value;
-        //    config.TimedShieldModifierEnabled = _storyConfigs.IsTimedShieldModifierEnabled.Value;
-        //    config.QiOverloadModifierEnabled = _storyConfigs.IsQiOverloadModifierEnabled.Value;
-        //    config.DistanceShieldModifierEnabled = _storyConfigs.IsDistanceShieldModifierEnabled.Value;
-        //    config.YanlaoGunModifierEnabled = _storyConfigs.IsYanlaoGunModifierEnabled.Value;
-
-        //    config.QiBombModifierEnabled = _storyConfigs.IsQiBombModifierEnabled.Value;
-        //    config.ShieldBreakBombModifierEnabled = _storyConfigs.IsShieldBreakBombModifierEnabled.Value;
-        //    config.QiOverloadBombModifierEnabled = _storyConfigs.IsQiOverloadBombModifierEnabled.Value;
-        //    config.QiDepletionBombModifierEnabled = _storyConfigs.IsQiDepletionBombModifierEnabled.Value;
-        //    config.CooldownBombModifierEnabled = _storyConfigs.IsCooldownBombModifierEnabled.Value;
-
-        //    config.ModifiersStartFromDeath = _storyConfigs.ModifiersStartDeathValue.Value;
-
-        //    StoryChallengeConfigurationManager.ChallengeConfiguration = config;
-        //}
+        }        
     }
 }

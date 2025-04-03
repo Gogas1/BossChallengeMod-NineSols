@@ -190,14 +190,14 @@ namespace BossChallengeMod.Configuration {
             }
         }
 
-        private bool _isTimedShieldModifierEnabled;
-        public event Action<bool>? OnIsTimedShieldModifierEnabledChanged;
-        public bool IsTimedShieldModifierEnabled {
-            get => _isTimedShieldModifierEnabled;
+        private bool _isCooldownShieldModifierEnabled;
+        public event Action<bool>? OnIsCooldownShieldModifierEnabledChanged;
+        public bool IsCooldownShieldModifierEnabled {
+            get => _isCooldownShieldModifierEnabled;
             set {
-                if (_isTimedShieldModifierEnabled != value) {
-                    _isTimedShieldModifierEnabled = value;
-                    OnIsTimedShieldModifierEnabledChanged?.Invoke(_isTimedShieldModifierEnabled);
+                if (_isCooldownShieldModifierEnabled != value) {
+                    _isCooldownShieldModifierEnabled = value;
+                    OnIsCooldownShieldModifierEnabledChanged?.Invoke(_isCooldownShieldModifierEnabled);
                 }
             }
         }

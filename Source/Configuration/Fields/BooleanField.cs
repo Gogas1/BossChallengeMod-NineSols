@@ -8,6 +8,8 @@ namespace BossChallengeMod.Configuration.Fields {
         private float maxWidth = 0;
         private bool value;
 
+        private Func<float>? maxWidthFunc;
+
         private string _label = "";
         private string? _tooltip = null;
 
@@ -23,6 +25,13 @@ namespace BossChallengeMod.Configuration.Fields {
 
         public event Action<object?>? ValueChanged;
         public event Action<bool>? FieldValueChanged;
+
+        public BooleanField(string label, Func<float>? maxWidthFunc, string? tooltip, bool defaultValue) {
+            Label = label;
+            this.maxWidthFunc = maxWidthFunc;
+            Tooltip = tooltip;
+            this.value = defaultValue;
+        }
 
         public void AddValueChangeHandler(Action<bool> handler) {
             FieldValueChanged += handler;
@@ -65,7 +74,9 @@ namespace BossChallengeMod.Configuration.Fields {
         protected GUILayoutOption[] GetLabelOptions() {
             List<GUILayoutOption> options = new List<GUILayoutOption> { GUILayout.ExpandWidth(true) };
 
-            float halfMaxWidth = this.maxWidth / 2;
+            var maxWidth = maxWidthFunc?.Invoke() ?? this.maxWidth;
+
+            float halfMaxWidth = maxWidth / 2;
             options.Add(GUILayout.MaxWidth(halfMaxWidth));
 
             return options.ToArray();
@@ -74,10 +85,16 @@ namespace BossChallengeMod.Configuration.Fields {
         protected GUILayoutOption[] GetFieldOptions() {
             List<GUILayoutOption> options = new List<GUILayoutOption> { GUILayout.ExpandWidth(true) };
 
-            float fieldMaxWidth = string.IsNullOrEmpty(_label) ? this.maxWidth : this.maxWidth / 2;
+            var maxWidth = maxWidthFunc?.Invoke() ?? this.maxWidth;
+
+            float fieldMaxWidth = string.IsNullOrEmpty(_label) ? maxWidth : maxWidth / 2;
             options.Add(GUILayout.MaxWidth(fieldMaxWidth));
 
             return options.ToArray();
+        }
+
+        public void SetMaxWidthFunction(Func<float> func) {
+            maxWidthFunc = func;
         }
     }
 }

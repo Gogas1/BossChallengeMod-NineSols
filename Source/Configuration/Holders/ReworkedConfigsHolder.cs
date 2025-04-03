@@ -28,7 +28,7 @@ namespace BossChallengeMod.Configuration.Holders {
         public ConfigEntry<bool> IsRandomTalismanModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsEnduranceModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsQiShieldModifierEnabled { get; set; } = null!;
-        public ConfigEntry<bool> IsCoodownShieldModifierEnabled { get; set; } = null!;
+        public ConfigEntry<bool> IsCooldownShieldModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsQiOverloadModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsDistanceShieldModifierEnabled { get; set; } = null!;
         public ConfigEntry<bool> IsYanlaoGunModifierEnabled { get; set; } = null!;
@@ -92,26 +92,26 @@ namespace BossChallengeMod.Configuration.Holders {
 
         #region Enemy
 
-        public ConfigEntry<bool> AffectEnemy { get; set; } = null!;
+        public ConfigEntry<bool> AffectEnemies { get; set; } = null!;
         public ConfigEntry<int> MaxEnemyCycles { get; set; } = null!;
 
-        public ConfigEntry<bool> EnemyIsSpeedScalingEnabled { get; set; } = null!;
-        public ConfigEntry<float> EnemyMinSpeedScalingValue { get; set; } = null!;
-        public ConfigEntry<float> EnemySpeedScalingStepValue { get; set; } = null!;
-        public ConfigEntry<int> EnemySpeedStepsCapValue { get; set; } = null!;
+        public ConfigEntry<bool> EnemiesIsSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMinSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> EnemiesSpeedScalingStepValue { get; set; } = null!;
+        public ConfigEntry<int> EnemiesSpeedStepsCapValue { get; set; } = null!;
 
-        public ConfigEntry<bool> EnemyIsModifiersScalingEnabled { get; set; } = null!;
-        public ConfigEntry<float> EnemyMinModifiersNumber { get; set; } = null!;
-        public ConfigEntry<float> EnemyModifiersScalingStepValue { get; set; } = null!;
-        public ConfigEntry<int> EnemyModifiersStepsCapValue { get; set; } = null!;
+        public ConfigEntry<bool> EnemiesIsModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMinModifiersNumber { get; set; } = null!;
+        public ConfigEntry<float> EnemiesModifiersScalingStepValue { get; set; } = null!;
+        public ConfigEntry<int> EnemiesModifiersStepsCapValue { get; set; } = null!;
 
-        public ConfigEntry<bool> EnemyIsRandomSpeedScalingEnabled { get; set; } = null!;
-        public ConfigEntry<float> EnemyMinRandomSpeedScalingValue { get; set; } = null!;
-        public ConfigEntry<float> EnemyMaxRandomSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<bool> EnemiesIsRandomSpeedScalingEnabled { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMinRandomSpeedScalingValue { get; set; } = null!;
+        public ConfigEntry<float> EnemiesMaxRandomSpeedScalingValue { get; set; } = null!;
 
-        public ConfigEntry<bool> EnemyIsRandomModifiersScalingEnabled { get; set; } = null!;
-        public ConfigEntry<int> EnemyMinRandomModifiersScalingValue { get; set; } = null!;
-        public ConfigEntry<int> EnemyMaxRandomModifiersScalingValue { get; set; } = null!;
+        public ConfigEntry<bool> EnemiesIsRandomModifiersScalingEnabled { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMinRandomModifiersScalingValue { get; set; } = null!;
+        public ConfigEntry<int> EnemiesMaxRandomModifiersScalingValue { get; set; } = null!;
 
         #endregion Enemy
     }

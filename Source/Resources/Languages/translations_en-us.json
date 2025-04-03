@@ -50,7 +50,7 @@
   "config_top_description": "Challenge settings are applied at the beginning of the battle or when loading the location (so at the moment of enemy initialization). To apply the settings changed in the middle of the battle, start the battle again (death, reloading the location, re-entering from the lobby)\n The mod is disabled by default in normal game mode, sections 5,6,7 are responsible for configuring the mod. ",
 
   "config_cycling_enabled_description": "Enable Mod\n Enables the mod in the Memories of Battle game mode",
-  "config_cycles_number_description": "Boss deaths number.\n Boss will die after this number of deaths(including this one).",
+
 
   "config_single_recording_enabled_description": "Record fight results regardless of the configuration. By default, fight results records are created for each unique configuration state (sections 1, 2, 3 are considered), so each configured challenge difficulty has its own results. Enabling this setting will record and use a single result regardless of the challenge settings.",
 
@@ -107,9 +107,8 @@
   "config_story_miniboss_cycles_number_description": "Number of miniboss deaths.\n The miniboss will die after the specified number of deaths (including this one).",
   "config_story_enemy_cycles_number_description": "Number of regular enemy deaths.\n The regular enemy will die after the specified number of deaths (including this one).",
 
-  "config_story_affect_bosses_description": "Boss enhancement. Bosses will revive, gain modifiers and boosts.",
-  "config_story_affect_minibosses_description": "Miniboss enhancement. Minibosses will revive, gain modifiers and boosts.",
-  "config_story_affect_enemies_description": "Regular enemy enhancement. Regular enemies will revive, gain modifiers and boosts.",
+  "config_affect_minibosses_description": "Miniboss enhancement. Minibosses will revive, gain modifiers and boosts.",
+  "config_affect_enemies_description": "Regular enemy enhancement. Regular enemies will revive, gain modifiers and boosts.",
 
   "config_story_miniboss_deaths_randomized_description": "Enable random miniboss death count.\n The maximum number of miniboss deaths will be randomly determined upon entering a location.",
   "config_story_miniboss_deaths_randomized_min_description": "Minimum deaths.\n The minimum value for the miniboss death count.",
@@ -121,6 +120,8 @@
 
   "label_disabled": "Disabled",
   "label_enabled": "Enabled",
+  "label_limited": "Limited",
+  "label_unlimited": "Unlimited",
 
   "config_general_mob_enabled_name": "Enable Mod in Memories of Battle mode",
   "config_general_mob_enabled_desc": "Enables the mod in the Memories of Battle game mode",
@@ -130,11 +131,63 @@
 
 
   "config_modifiers_modifiers_enabled_name": "Enable Modifiers",
-  "config_modifiers_modifiers_enabled_description": "Enables modifiers that make fights more difficult",
+  "config_modifiers_modifiers_enabled_desc": "Enables modifiers that make fights more difficult",
 
   "config_modifiers_start_death_name": "Modifiers Start Death",
   "config_modifiers_start_death_desc": "Modifiers will start to apply after this amount of enemy deaths. If set to 0, modifiers will be applied at the start of the fight.",
 
   "config_modifiers_modifiers_repeat_enabled_name": "Enable Modifiers Repeating",
-  "config_modifiers_modifiers_repeat_enabled_description": "Modifiers can be repeated multiple times in a row."
+  "config_modifiers_modifiers_repeat_enabled_desc": "Modifiers can be repeated multiple times in a row.",
+
+  "config_affect_bosses_name": "Affect Bosses",
+  "config_affect_bosses_desc": "Boss enhancement. Bosses will revive, gain modifiers and boosts.",
+
+  "config_boss_deaths_number_name": "Max boss deaths",
+  "config_boss_deaths_number_desc": "Boss will die after this number of deaths.",
+
+
+  "config_boss_speed_scaling_enabled_name": "Speed Scaling",
+  "config_boss_speed_scaling_enabled_desc": "Bosses will gain linear speed scaling with each death. Stacked multiplicatively with the random speed scaling and modifiers.",
+
+  "config_boss_speed_scaling_minspeed_name": "Initial Speed:",
+  "config_boss_speed_scaling_minspeed_desc": "The starting value for speed scaling.",
+
+  "config_boss_speed_scaling_step_name": "Step Value:",
+  "config_boss_speed_scaling_step_desc": "Speed modifier increment value.",
+
+  "config_boss_speed_scaling_steps_cap_name": "Steps Cap:",
+  "config_boss_speed_scaling_steps_cap_desc": "How many times starting value can be incremented. Set to -1 for unlimited incrementing.",
+
+
+  "config_boss_modifiers_scaling_enabled_name": "Modifiers Number Scaling",
+  "config_boss_modifiers_scaling_enabled_desc": "Bosses will receive additional modifiers, with the total number being the sum of the scaling and a random scaling value. When this scaling is enabled, additional modifiers are calculated from a base of 0, so the default amount of one modifier is overwritten.",
+
+  "config_boss_modifiers_scaling_min_number_name": "Initial Modifiers Number:",
+  "config_boss_modifiers_scaling_min_number_desc": "The starting value for modifiers scaling.",
+
+  "config_boss_modifiers_scaling_step_name": "Step Value:",
+  "config_boss_modifiers_scaling_step_desc": "Modifiers number increment value.",
+
+  "config_boss_modifiers_scaling_steps_cap_name": "Steps Cap:",
+  "config_boss_modifiers_scaling_steps_cap_desc": "How many times starting value can be incremented. Set to -1 for unlimited incrementing(in case of modifiers, it is still capped by available modifiers number).",
+
+
+  "config_boss_rand_speed_scaling_enabled_name": "Random Speed Scaling.",
+  "config_boss_rand_speed_scaling_enabled_desc": "Bosses will receive a random speed boost with each death. Stacks multiplicatively with the linear speed scaling and modifiers.",
+
+  "config_boss_rand_speed_scaling_minspeed_name": "Min speed:",
+  "config_boss_rand_speed_scaling_minspeed_desc": "The minimum value for the random speed scaling.",
+
+  "config_boss_rand_speed_scaling_maxspeed_name": "Max speed:",
+  "config_boss_rand_speed_scaling_maxspeed_desc": "The maximum value for the random speed boost.",
+
+
+  "config_boss_rand_modifiers_scaling_enabled_name": "Random Modifiers Scaling.",
+  "config_boss_rand_modifiers_scaling_enabled_desc": "Bosses will receive a random number of modifiers with each death, added to the linear modifier increase.",
+
+  "config_boss_rand_modifiers_scaling_min_name": "Minimum modifiers:",
+  "config_boss_rand_modifiers_scaling_min_desc": "The minimum value for the random modifiers count.",
+
+  "config_boss_rand_modifiers_scaling_max_name": "Maximum modifiers:",
+  "config_boss_rand_modifiers_scaling_max_desc": "The maximum value for the random modifiers count."
 }

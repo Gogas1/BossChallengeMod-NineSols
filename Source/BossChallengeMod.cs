@@ -103,10 +103,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         BepInExModConfigurationHandler = new BepInExModConfigurationHandler(Config, ChallengeConfigurationManager, UIConfiguration, StoryChallengeConfigurationManager);
 
         BepInExModConfigurationHandler.InitChallengeConfiguration();
-        BepInExModConfigurationHandler.HandleConfigurationValues();
-
-        BepInExModConfigurationHandler.InitStoryChallengeConfiguration();
-        BepInExModConfigurationHandler.HandleStoryChallengeConfigurationValues();
+        BepInExModConfigurationHandler.HandleChallengeConfigurationValues();
 
         BepInExModConfigurationHandler.InitializeUIConfiguration();
         UIController = new UIController(UIConfiguration);

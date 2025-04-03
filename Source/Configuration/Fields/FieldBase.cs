@@ -9,6 +9,7 @@ namespace BossChallengeMod.Configuration.Fields {
         private string _label = "";
         private string? _tooltip = null;
         private float maxWidth = 0;
+        private Func<float>? maxWidthFunc;
 
         protected string oldText = "";
 
@@ -35,6 +36,14 @@ namespace BossChallengeMod.Configuration.Fields {
             _label = label;
             this.maxWidth = maxWidth;
             _tooltip = tooltip;
+        }
+
+        protected FieldBase(string label, Func<float>? maxWidthFunc, string? tooltip, T defaultValue) {
+            value = defaultValue;
+            oldText = ConvertToString(value);
+            Label = label;
+            this.maxWidthFunc = maxWidthFunc;
+            Tooltip = tooltip;
         }
 
         public void Draw() {
@@ -82,11 +91,16 @@ namespace BossChallengeMod.Configuration.Fields {
         public void SetMaxWidth(float maxWidth) {
             this.maxWidth = maxWidth;
         }
+        public void SetMaxWidthFunction(Func<float> func) {
+            maxWidthFunc = func;
+        }
 
         protected GUILayoutOption[] GetLabelOptions() {
             List<GUILayoutOption> options = new List<GUILayoutOption>{ GUILayout.ExpandWidth(true) };
 
-            float halfMaxWidth = this.maxWidth / 2;
+            var maxWidth = maxWidthFunc?.Invoke() ?? this.maxWidth;
+
+            float halfMaxWidth = maxWidth / 2;
             options.Add(GUILayout.MaxWidth(halfMaxWidth));
 
             return options.ToArray();
@@ -95,7 +109,9 @@ namespace BossChallengeMod.Configuration.Fields {
         protected GUILayoutOption[] GetFieldOptions() {
             List<GUILayoutOption> options = new List<GUILayoutOption> { GUILayout.ExpandWidth(true) };
 
-            float fieldMaxWidth = string.IsNullOrEmpty(_label) ? this.maxWidth : this.maxWidth / 2;
+            var maxWidth = maxWidthFunc?.Invoke() ?? this.maxWidth;
+
+            float fieldMaxWidth = string.IsNullOrEmpty(_label) ? maxWidth : maxWidth / 2;
             options.Add(GUILayout.MaxWidth(fieldMaxWidth));
 
             return options.ToArray();

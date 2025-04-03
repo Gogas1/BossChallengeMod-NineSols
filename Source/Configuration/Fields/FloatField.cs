@@ -9,6 +9,9 @@ namespace BossChallengeMod.Configuration.Fields {
         public FloatField(string label, float maxWidth, string? tooltip, float defaultValue) : base(label, maxWidth, tooltip, defaultValue) {
         }
 
+        public FloatField(string label, Func<float>? maxWidthFunc, string? tooltip, float defaultValue) : base(label, maxWidthFunc, tooltip, defaultValue) {
+        }
+
         protected override float ConvertToValue(string input) {
             if (float.TryParse(input, 
                 NumberStyles.AllowLeadingWhite |

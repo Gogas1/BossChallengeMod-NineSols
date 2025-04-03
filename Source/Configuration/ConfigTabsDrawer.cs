@@ -46,6 +46,15 @@ namespace BossChallengeMod.Configuration {
             }
         }
 
+        public void AddField(int index, IField field) {
+            var tab = Tabs[index];
+            if (NestedFields.TryGetValue(tab, out var fields)) {
+                fields.Add(field);
+            } else {
+                NestedFields.TryAdd(tab, new List<IField> { field });
+            }
+        }
+
         public void Draw(ConfigEntryBase entry) {
             GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
 
