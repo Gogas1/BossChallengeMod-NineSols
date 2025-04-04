@@ -231,7 +231,7 @@ namespace BossChallengeMod.BossPatches {
             var sharedControllers = new Dictionary<Type, Component>();
 
             foreach (var modifierConfig in modifiersConfigs) {
-                if(!modifierConfig.IsPersistentModifier && !(config.IsModifiersEnabled && UseModifiers)) {
+                if(!UseModifiers) {
                     continue;
                 }
 

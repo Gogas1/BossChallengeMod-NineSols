@@ -50,10 +50,10 @@ namespace BossChallengeMod.Configuration.Fields {
 
             bool result = GUILayout.Toggle(value, value ? "Enabled" : "Disabled", GetFieldOptions());
 
-            if (result != value) {
+            if (result != value) {                
+                value = result;
                 ValueChanged?.Invoke(value);
                 FieldValueChanged?.Invoke(value);
-                value = result;
             }
 
             GUILayout.EndHorizontal();

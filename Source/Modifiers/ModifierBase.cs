@@ -68,6 +68,10 @@ namespace BossChallengeMod.Modifiers {
 
         }
 
+        public virtual void NotifyDestroing() {
+
+        }
+
         public virtual void SetController(Component controllerComponent) {
             throw new NotImplementedException();
         }

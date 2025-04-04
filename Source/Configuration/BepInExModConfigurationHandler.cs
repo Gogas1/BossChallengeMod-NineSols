@@ -303,6 +303,7 @@ namespace BossChallengeMod.Configuration {
                             CalculateRightColumnWidth,
                             LocalizationResolver.Localize("config_modifiers_start_death_desc"),
                             configHolder.ModifiersStartDeathValue.Value);
+            modifiersStartDeathField.AddValueChangeHandler(arg => { configHolder.ModifiersStartDeathValue.Value = arg; });
             modifiersTabsDrawer.AddField(1, modifiersStartDeathField);
 
             BooleanField modifiersRepeatSwitch = new BooleanField(
@@ -310,6 +311,7 @@ namespace BossChallengeMod.Configuration {
                             CalculateRightColumnWidth,
                             LocalizationResolver.Localize("config_modifiers_modifiers_repeat_enabled_desc"),
                             configHolder.IsModifiersRepeatingEnabled.Value);
+            modifiersRepeatSwitch.AddValueChangeHandler(arg => { configHolder.IsModifiersRepeatingEnabled.Value = arg; });
             modifiersTabsDrawer.AddField(1, modifiersRepeatSwitch);
 
             #region Modifiers switches init

@@ -11,21 +11,20 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
         protected override MonsterModifierController InitializeModifiers(MonsterBase monsterBase, ChallengeMonsterController monsterController) {
             var controller = base.InitializeModifiers(monsterBase, monsterController);
 
-            if (IsModEnabled && ConfigurationToUse.IsModifiersEnabled) {
-                controller.RollOnStart = true;
+            controller.RollOnStart = true;
 
-                var spearZombiePath = "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieSpear";
-                var hammerZombiePath = "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieHammer";
+            var spearZombiePath = "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieSpear";
+            var hammerZombiePath = "A3_S5_BossGouMang_GameLevel/Room/StealthGameMonster_BossZombieHammer";
 
-                var spearZombie = GameObject.Find(spearZombiePath).GetComponent<StealthGameMonster>();
-                var hammerZombie = GameObject.Find(hammerZombiePath).GetComponent<StealthGameMonster>();
+            var spearZombie = GameObject.Find(spearZombiePath).GetComponent<StealthGameMonster>();
+            var hammerZombie = GameObject.Find(hammerZombiePath).GetComponent<StealthGameMonster>();
 
-                var spearZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
-                var hammerZombieModifiers = InitModifiers(hammerZombie, controller, ConfigurationToUse);
+            var spearZombieModifiers = InitModifiers(spearZombie, controller, ConfigurationToUse);
+            var hammerZombieModifiers = InitModifiers(hammerZombie, controller, ConfigurationToUse);
 
-                controller.MustIncludeModifiers.AddRange(spearZombieModifiers);
-                controller.MustIncludeModifiers.AddRange(hammerZombieModifiers);
-            }
+            controller.MustIncludeModifiers.AddRange(spearZombieModifiers);
+            controller.MustIncludeModifiers.AddRange(hammerZombieModifiers);
+
 
             return controller;
         }

@@ -111,9 +111,46 @@ namespace BossChallengeMod.Modifiers {
             }
         }
 
+        protected void HandleSpeedScalingReconfiguration() {
+            modifier = CalculateModifier(deathNumber);
+        }
+
         public override void Awake() {
             base.Awake();
             enabled = true;
+
+            switch (EnemyType) {
+                case ChallengeEnemyType.Boss:
+                    challengeConfiguration.OnBossesIsSpeedScalingEnabledChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesMinSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesSpeedScalingStepValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesSpeedStepsCapValueChanged += _ => HandleSpeedScalingReconfiguration();
+
+                    challengeConfiguration.OnBossesIsRandomSpeedScalingEnabledChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesMinRandomSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesMaxRandomSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    break;
+                case ChallengeEnemyType.Miniboss:
+                    challengeConfiguration.OnMinibossesIsSpeedScalingEnabledChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesMinSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesSpeedScalingStepValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesSpeedStepsCapValueChanged += _ => HandleSpeedScalingReconfiguration();
+
+                    challengeConfiguration.OnMinibossesIsRandomSpeedScalingEnabledChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesMinRandomSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesMaxRandomSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    break;
+                case ChallengeEnemyType.Regular:
+                    challengeConfiguration.OnEnemiesIsSpeedScalingEnabledChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesMinSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesSpeedScalingStepValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesSpeedStepsCapValueChanged += _ => HandleSpeedScalingReconfiguration();
+
+                    challengeConfiguration.OnEnemiesIsRandomSpeedScalingEnabledChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesMinRandomSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesMaxRandomSpeedScalingValueChanged += _ => HandleSpeedScalingReconfiguration();
+                    break;
+            }
         }
 
         public override void NotifyDeath(int deathNumber = 0) {
@@ -127,8 +164,13 @@ namespace BossChallengeMod.Modifiers {
 
         public override void NotifyEngage() {
             base.NotifyEngage();
-
+            enabled = true;
             modifier = CalculateModifier(deathNumber);
+        }
+
+        public override void NotifyDisengage() {
+            base.NotifyDisengage();
+            enabled = false;
         }
 
         public void Update() {
@@ -163,6 +205,43 @@ namespace BossChallengeMod.Modifiers {
             }
 
             return result;
+        }
+
+        public override void NotifyDestroing() {
+            base.NotifyDestroing();
+
+            switch (EnemyType) {
+                case ChallengeEnemyType.Boss:
+                    challengeConfiguration.OnBossesIsSpeedScalingEnabledChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesMinSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesSpeedScalingStepValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesSpeedStepsCapValueChanged -= _ => HandleSpeedScalingReconfiguration();
+
+                    challengeConfiguration.OnBossesIsRandomSpeedScalingEnabledChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesMinRandomSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnBossesMaxRandomSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    break;
+                case ChallengeEnemyType.Miniboss:
+                    challengeConfiguration.OnMinibossesIsSpeedScalingEnabledChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesMinSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesSpeedScalingStepValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesSpeedStepsCapValueChanged -= _ => HandleSpeedScalingReconfiguration();
+
+                    challengeConfiguration.OnMinibossesIsRandomSpeedScalingEnabledChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesMinRandomSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnMinibossesMaxRandomSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    break;
+                case ChallengeEnemyType.Regular:
+                    challengeConfiguration.OnEnemiesIsSpeedScalingEnabledChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesMinSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesSpeedScalingStepValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesSpeedStepsCapValueChanged -= _ => HandleSpeedScalingReconfiguration();
+
+                    challengeConfiguration.OnEnemiesIsRandomSpeedScalingEnabledChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesMinRandomSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    challengeConfiguration.OnEnemiesMaxRandomSpeedScalingValueChanged -= _ => HandleSpeedScalingReconfiguration();
+                    break;
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         public List<ModifierConfig> RollableModifiers = new List<ModifierConfig>();
         public List<ModifierConfig> Available = new List<ModifierConfig>();
         public List<ModifierConfig> Selected = new List<ModifierConfig>();
+        public List<ModifierConfig> Activated = new List<ModifierConfig>();
 
         public Dictionary<string, ModifierConfig> CombinationModifiers = new();
 
@@ -38,6 +39,13 @@ namespace BossChallengeMod.Modifiers.Managers {
         protected ChallengeConfiguration ConfigurationToUse {
             get {
                 return challengeConfigurationManager.ChallengeConfiguration;
+            }
+        }
+
+        protected bool IsEnabled {
+            get {
+                bool isInMob = ApplicationCore.IsInBossMemoryMode;
+                return ((ConfigurationToUse.IsEnabledInMoB && isInMob) || (ConfigurationToUse.IsEnabledInNormal && !isInMob)) && ConfigurationToUse.IsModifiersEnabled;
             }
         }
 
@@ -165,6 +173,10 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void Init() {
+            ConfigurationToUse.OnIsModifiersEnabledChanged += _ => HandleGlobalActivationReconfiguration();
+            ConfigurationToUse.OnIsEnabledInMoBChanged += _ => HandleGlobalActivationReconfiguration();
+            ConfigurationToUse.OnIsEnabledInNormalChanged += _ => HandleGlobalActivationReconfiguration();
+
             FindModifiers();
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
                 PauseAll();
@@ -172,12 +184,6 @@ namespace BossChallengeMod.Modifiers.Managers {
             SetupModifiersLists();
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.IsRepeatingEnabled;
-        }
-
-        private void Start() {
-            if(RollOnStart) {
-                ForceRollBeforeEngage();
-            }
         }
 
         public void OnRevival() {
@@ -260,13 +266,13 @@ namespace BossChallengeMod.Modifiers.Managers {
             int modifiersNum = CalculateModifiersNumber(iteration);
 
             if (_isDied) {
-                Selected.Clear();
+                Activated.Clear();
                 OnModifiersChange?.Invoke();
                 return;
             }
 
             if (iteration < challengeConfiguration.ModifiersStartDeath) {
-                Selected.Clear();
+                Activated.Clear();
                 return;
             }
 
@@ -304,8 +310,6 @@ namespace BossChallengeMod.Modifiers.Managers {
                     }
                 }
             }
-
-            OnModifiersChange?.Invoke();
         }
 
         public void ApplyModifiers() {
@@ -329,6 +333,11 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void OnDestroing() {
+            ConfigurationToUse.OnIsModifiersEnabledChanged -= _ => HandleGlobalActivationReconfiguration();
+            ConfigurationToUse.OnIsEnabledInMoBChanged -= _ => HandleGlobalActivationReconfiguration();
+            ConfigurationToUse.OnIsEnabledInNormalChanged -= _ => HandleGlobalActivationReconfiguration();
+
+            NotifyDestroing();
             OnDestroyActions?.Invoke();
 
             if (UseCompositeTracking) {
@@ -336,20 +345,15 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
         }
 
-        private void OnDieHandler() {
-            Selected.Clear();
-            ApplyModifiers();
-
-            if (UseCompositeTracking) {
-                BossChallengeMod.Instance.MonsterUIController.RemoveCompositeModifierController(this);
+        private void NotifyDestroing() {
+            foreach (var item in Modifiers) {
+                item.NotifyDestroing();
             }
-
-            playerSensor.gameObject.SetActive(false);
-            _isDied = true;
-            OnModifiersChange?.Invoke();
         }
 
         private void NotifyModifiers() {
+            if (!IsEnabled) return;
+
             try {
                 var selectedKeys = new HashSet<string>(Selected.Select(m => m.Key));
                 foreach (var modifier in Modifiers) {
@@ -363,9 +367,23 @@ namespace BossChallengeMod.Modifiers.Managers {
                         Log.Error($"Exception occured while applying {modifier.name}: {ex.Message}, {ex.StackTrace}");
                     }
                 }
+
+                Activated.Clear();
+                Activated.AddRange(Selected);
+                OnModifiersChange?.Invoke();
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
+        }
+
+
+        private void NotifyDeactivation() {
+            foreach (var modifier in Modifiers) {
+                modifier.NotifyDeactivation();
+            }
+
+            Activated.Clear();
+            OnModifiersChange?.Invoke();
         }
 
         private void NotifyModifiersOnDeath() {
@@ -443,6 +461,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             playerSensor?.gameObject.SetActive(true);
 
             Selected.Clear();
+            Activated.Clear();
             ApplyModifiers();
             OnDie();
         }
@@ -477,5 +496,13 @@ namespace BossChallengeMod.Modifiers.Managers {
         public int GetPriority() {
             return 0;
         }
+
+        private void HandleGlobalActivationReconfiguration() {
+            if(IsEnabled) {
+                NotifyModifiers();
+            } else {
+                NotifyDeactivation();
+            }
+        }        
     }
 }

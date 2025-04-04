@@ -181,14 +181,12 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 GameObject.Destroy(shieldController);
             }
 
-            if (IsModEnabled && ConfigurationToUse.IsModifiersEnabled) {
 
-                var clones = GetClones(monsterBase);
+            var clones = GetClones(monsterBase);
 
-                foreach (var clone in clones) {
-                    var cloneModifiers = InitModifiers(clone, controller, ConfigurationToUse);
-                    controller.MustIncludeModifiers.AddRange(cloneModifiers);
-                }
+            foreach (var clone in clones) {
+                var cloneModifiers = InitModifiers(clone, controller, ConfigurationToUse);
+                controller.MustIncludeModifiers.AddRange(cloneModifiers);
             }
 
             return controller;
