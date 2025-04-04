@@ -54,9 +54,9 @@
 
   "config_single_recording_enabled_description": "Record fight results regardless of the configuration. By default, fight results records are created for each unique configuration state (sections 1, 2, 3 are considered), so each configured challenge difficulty has its own results. Enabling this setting will record and use a single result regardless of the challenge settings.",
 
-  "config_boss_deaths_randomized_enabled_description": "Enable randomized boss death number. The maximum number of boss deaths will be randomly determined at the start of the battle.",
-  "config_boss_deaths_randomized_min_description": "Minimum Deaths: The lowest possible value for the randomized boss death count.",
-  "config_boss_deaths_randomized_max_description": "Maximum Deaths: The highest possible value for the randomized boss death count.",
+  "config_boss_deaths_randomized_enabled_description": "Enable randomized miniboss death number. The maximum number of miniboss deaths will be randomly determined at the start of the battle.",
+  "config_boss_deaths_randomized_min_description": "Minimum Deaths: The lowest possible value for the randomized miniboss death count.",
+  "config_boss_deaths_randomized_max_description": "Maximum Deaths: The highest possible value for the randomized miniboss death count.",
 
   "config_scaling_enabled_description": "Enable Speed Scaling.\nBosses will gain linear speed scaling with each death. Stacked multiplicatively with the random speed scaling and modifiers.",
   "config_scaling_minspeed_description": "Scaling: Initial Speed.\nThe starting value for speed scaling.",
@@ -68,20 +68,20 @@
   "config_scaling_modifiers_scaling_cycle_description": "Maximum Modifiers Scaling After Deaths.\nThe increase in modifiers will reach its maximum after this amount of deaths.",
 
   "config_rand_speed_scaling_enabled_description": "Enable Random Speed Scaling.\nBosses will receive a random speed boost with each death. Stacks multiplicatively with the linear speed scaling.",
-  "config_rand_speed_scaling_start_death_description": "Starting Death for Random Speed Scaling.\nThe boss will begin receiving a random speed boost after this death.",
+  "config_rand_speed_scaling_start_death_description": "Starting Death for Random Speed Scaling.\nThe miniboss will begin receiving a random speed boost after this death.",
   "config_rand_speed_scaling_minspeed_description": "Random Boost: Minimum speed.\nThe minimum value for the random speed boost.",
   "config_rand_speed_scaling_maxspeed_description": "Random Boost: Maximum speed.\nThe maximum value for the random speed boost.",
 
   "config_rand_modifiers_scaling_enabled_description": "Enable Random Modifiers Scaling.\nBosses will receive a random number of modifiers with each death, added to the linear modifier increase.",
-  "config_rand_modifiers_scaling_start_death_description": "Starting Death for Random Modifiers Scaling.\nThe boss will begin receiving a random number of modifiers after this death.",
+  "config_rand_modifiers_scaling_start_death_description": "Starting Death for Random Modifiers Scaling.\nThe miniboss will begin receiving a random number of modifiers after this death.",
   "config_rand_modifiers_scaling_min_description": "Random Boost: Minimum modifiers.\nThe minimum value for the random modifiers count.",
   "config_rand_modifiers_scaling_max_description": "Random Boost: Maximum modifiers.\nThe maximum value for the random modifiers count.",
 
-  "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the boss fight.",
-  "config_modifiers_start_death_description": "The death number for modifiers to appear.\n Modifiers will start to apply after this amount of boss deaths. If set to 0, modifiers will be applied at the start of the fight.",
+  "config_modifiers_enabled_description": "Enable Modifiers.\n Enable or disable modifiers that affect the miniboss fight.",
+  "config_modifiers_start_death_description": "The death number for modifiers to appear.\n Modifiers will start to apply after this amount of miniboss deaths. If set to 0, modifiers will be applied at the start of the fight.",
   "config_repeating_enabled_description": "Repeating modifiers.\n Modifiers can be repeated multiple times in a row.",
-  "config_modifiers_speed_enabled_description": "Speed Modifier.\n +20% boss speed increase. Stacks multiplicatively with speed scaling.",
-  "config_modifiers_timer_enabled_description": "Timer Modifier.\n Starts a timer to kill the boss. When the time runs out, Yi dies.",
+  "config_modifiers_speed_enabled_description": "Speed Modifier.\n +20% miniboss speed increase. Stacks multiplicatively with speed scaling.",
+  "config_modifiers_timer_enabled_description": "Timer Modifier.\n Starts a timer to kill the miniboss. When the time runs out, Yi dies.",
   "config_modifiers_parry_damage_enabled_description": "Modifier to disable imprecise parries.\n Imprecise parries do not protect Yi.",
   "config_modifiers_internal_damage_enabled_description": "Internal Damage Accumulation Modifier.\n Yi accumulates internal damage over time. In exchange, Yi will not receive internal damage from parries of attacks of the modifier's owner.",
   "config_modifiers_regeneration_enabled_description": "Regeneration modifier.\nThe enemy will slowly regenerate their health. The total health restored is equal to half of the total health in all phases.",
@@ -130,7 +130,7 @@
   "config_general_regular_enabled_desc": "Enables the mod in the regular game mode",
 
 
-  "config_modifiers_modifiers_enabled_name": "Enable Modifiers",
+  "config_modifiers_modifiers_enabled_name": "Modifiers",
   "config_modifiers_modifiers_enabled_desc": "Enables modifiers that make fights more difficult",
 
   "config_modifiers_start_death_name": "Modifiers Start Death",
@@ -160,7 +160,7 @@
 
 
   "config_boss_modifiers_scaling_enabled_name": "Modifiers Number Scaling",
-  "config_boss_modifiers_scaling_enabled_desc": "Bosses will receive additional modifiers, with the total number being the sum of the scaling and a random scaling value. When this scaling is enabled, additional modifiers are calculated from a base of 0, so the default amount of one modifier is overwritten.",
+  "config_boss_modifiers_scaling_enabled_desc": "Bosses will receive additional modifiers, with the total number being the sum of the scaling and a random scaling value. When this scaling is enabled, additional modifiers are calculated from a base of 0, so the default amount of one modifier is overwritten. The number of scaling steps is calculated starting from the death of the appearance of modifiers (for example, if modifiers start appearing from the second death, and the miniboss died four times, then the initial value will be incremented twice)",
 
   "config_boss_modifiers_scaling_min_number_name": "Initial Modifiers Number:",
   "config_boss_modifiers_scaling_min_number_desc": "The starting value for modifiers scaling.",
@@ -189,5 +189,113 @@
   "config_boss_rand_modifiers_scaling_min_desc": "The minimum value for the random modifiers count.",
 
   "config_boss_rand_modifiers_scaling_max_name": "Maximum modifiers:",
-  "config_boss_rand_modifiers_scaling_max_desc": "The maximum value for the random modifiers count."
+  "config_boss_rand_modifiers_scaling_max_desc": "The maximum value for the random modifiers count.",
+
+
+
+  "config_affect_minibosses_name": "Affect Minibosses",
+  "config_affect_minibosses_desc": "Miniboss enhancement. Minibosses will revive, gain modifiers and boosts.",
+
+  "config_miniboss_deaths_number_name": "Max miniboss deaths",
+  "config_miniboss_deaths_number_desc": "Miniboss will die after this number of deaths.",
+
+
+  "config_miniboss_speed_scaling_enabled_name": "Speed Scaling",
+  "config_miniboss_speed_scaling_enabled_desc": "Minibosses will gain linear speed scaling with each death. Stacked multiplicatively with the random speed scaling and modifiers.",
+
+  "config_miniboss_speed_scaling_minspeed_name": "Initial Speed:",
+  "config_miniboss_speed_scaling_minspeed_desc": "The starting value for speed scaling.",
+
+  "config_miniboss_speed_scaling_step_name": "Step Value:",
+  "config_miniboss_speed_scaling_step_desc": "Speed modifier increment value.",
+
+  "config_miniboss_speed_scaling_steps_cap_name": "Steps Cap:",
+  "config_miniboss_speed_scaling_steps_cap_desc": "How many times starting value can be incremented. Set to -1 for unlimited incrementing.",
+
+
+  "config_miniboss_modifiers_scaling_enabled_name": "Modifiers Number Scaling",
+  "config_miniboss_modifiers_scaling_enabled_desc": "Minibosses will receive additional modifiers, with the total number being the sum of the scaling and a random scaling value. When this scaling is enabled, additional modifiers are calculated from a base of 0, so the default amount of one modifier is overwritten. The number of scaling steps is calculated starting from the death of the appearance of modifiers (for example, if modifiers start appearing from the second death, and the miniboss died four times, then the initial value will be incremented twice)",
+
+  "config_miniboss_modifiers_scaling_min_number_name": "Initial Modifiers Number:",
+  "config_miniboss_modifiers_scaling_min_number_desc": "The starting value for modifiers scaling.",
+
+  "config_miniboss_modifiers_scaling_step_name": "Step Value:",
+  "config_miniboss_modifiers_scaling_step_desc": "Modifiers number increment value.",
+
+  "config_miniboss_modifiers_scaling_steps_cap_name": "Steps Cap:",
+  "config_miniboss_modifiers_scaling_steps_cap_desc": "How many times starting value can be incremented. Set to -1 for unlimited incrementing(in case of modifiers, it is still capped by available modifiers number).",
+
+
+  "config_miniboss_rand_speed_scaling_enabled_name": "Random Speed Scaling.",
+  "config_miniboss_rand_speed_scaling_enabled_desc": "Minibosses will receive a random speed boost with each death. Stacks multiplicatively with the linear speed scaling and modifiers.",
+
+  "config_miniboss_rand_speed_scaling_minspeed_name": "Min speed:",
+  "config_miniboss_rand_speed_scaling_minspeed_desc": "The minimum value for the random speed scaling.",
+
+  "config_miniboss_rand_speed_scaling_maxspeed_name": "Max speed:",
+  "config_miniboss_rand_speed_scaling_maxspeed_desc": "The maximum value for the random speed boost.",
+
+
+  "config_miniboss_rand_modifiers_scaling_enabled_name": "Random Modifiers Scaling.",
+  "config_miniboss_rand_modifiers_scaling_enabled_desc": "Minibosses will receive a random number of modifiers with each death, added to the linear modifier increase.",
+
+  "config_miniboss_rand_modifiers_scaling_min_name": "Minimum modifiers:",
+  "config_miniboss_rand_modifiers_scaling_min_desc": "The minimum value for the random modifiers count.",
+
+  "config_miniboss_rand_modifiers_scaling_max_name": "Maximum modifiers:",
+  "config_miniboss_rand_modifiers_scaling_max_desc": "The maximum value for the random modifiers count.",
+
+
+
+  "config_affect_enemies_name": "Affect Enemies",
+  "config_affect_enemies_desc": "Enemy enhancement. Enemies will revive, gain modifiers and boosts.",
+
+  "config_enemy_deaths_number_name": "Max enemy deaths",
+  "config_enemy_deaths_number_desc": "Enemy will die after this number of deaths.",
+
+
+  "config_enemy_speed_scaling_enabled_name": "Speed Scaling",
+  "config_enemy_speed_scaling_enabled_desc": "Enemies will gain linear speed scaling with each death. Stacked multiplicatively with the random speed scaling and modifiers.",
+
+  "config_enemy_speed_scaling_minspeed_name": "Initial Speed:",
+  "config_enemy_speed_scaling_minspeed_desc": "The starting value for speed scaling.",
+
+  "config_enemy_speed_scaling_step_name": "Step Value:",
+  "config_enemy_speed_scaling_step_desc": "Speed modifier increment value.",
+
+  "config_enemy_speed_scaling_steps_cap_name": "Steps Cap:",
+  "config_enemy_speed_scaling_steps_cap_desc": "How many times starting value can be incremented. Set to -1 for unlimited incrementing.",
+
+
+  "config_enemy_modifiers_scaling_enabled_name": "Modifiers Number Scaling",
+  "config_enemy_modifiers_scaling_enabled_desc": "Enemies will receive additional modifiers, with the total number being the sum of the scaling and a random scaling value. When this scaling is enabled, additional modifiers are calculated from a base of 0, so the default amount of one modifier is overwritten. The number of scaling steps is calculated starting from the death of the appearance of modifiers (for example, if modifiers start appearing from the second death, and the minienemy died four times, then the initial value will be incremented twice)",
+
+  "config_enemy_modifiers_scaling_min_number_name": "Initial Modifiers Number:",
+  "config_enemy_modifiers_scaling_min_number_desc": "The starting value for modifiers scaling.",
+
+  "config_enemy_modifiers_scaling_step_name": "Step Value:",
+  "config_enemy_modifiers_scaling_step_desc": "Modifiers number increment value.",
+
+  "config_enemy_modifiers_scaling_steps_cap_name": "Steps Cap:",
+  "config_enemy_modifiers_scaling_steps_cap_desc": "How many times starting value can be incremented. Set to -1 for unlimited incrementing(in case of modifiers, it is still capped by available modifiers number).",
+
+
+  "config_enemy_rand_speed_scaling_enabled_name": "Random Speed Scaling.",
+  "config_enemy_rand_speed_scaling_enabled_desc": "Enemies will receive a random speed boost with each death. Stacks multiplicatively with the linear speed scaling and modifiers.",
+
+  "config_enemy_rand_speed_scaling_minspeed_name": "Min speed:",
+  "config_enemy_rand_speed_scaling_minspeed_desc": "The minimum value for the random speed scaling.",
+
+  "config_enemy_rand_speed_scaling_maxspeed_name": "Max speed:",
+  "config_enemy_rand_speed_scaling_maxspeed_desc": "The maximum value for the random speed boost.",
+
+
+  "config_enemy_rand_modifiers_scaling_enabled_name": "Random Modifiers Scaling.",
+  "config_enemy_rand_modifiers_scaling_enabled_desc": "Enemies will receive a random number of modifiers with each death, added to the linear modifier increase.",
+
+  "config_enemy_rand_modifiers_scaling_min_name": "Minimum modifiers:",
+  "config_enemy_rand_modifiers_scaling_min_desc": "The minimum value for the random modifiers count.",
+
+  "config_enemy_rand_modifiers_scaling_max_name": "Maximum modifiers:",
+  "config_enemy_rand_modifiers_scaling_max_desc": "The maximum value for the random modifiers count."
 }

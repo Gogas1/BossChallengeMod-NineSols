@@ -13,15 +13,13 @@ using UnityEngine;
 namespace BossChallengeMod.KillCounting {
     public class MonsterKillCounter : MonoBehaviour, IResettableComponent {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
-        private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
         private ChallengeMonsterController monsterController = null!;
         private MonsterBase monster = null!;
         private ChallengeConfiguration challengeConfiguration;
 
         protected ChallengeConfiguration ConfigurationToUse {
             get {
-                if (ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
-                else return storyChallengeConfigurationManager.ChallengeConfiguration;
+                return challengeConfigurationManager.ChallengeConfiguration;
             }
         }
 
@@ -113,7 +111,7 @@ namespace BossChallengeMod.KillCounting {
                 BestCount = KillCounter;
             }
             if (CanRecord) {
-                StartCoroutine(challengeConfigurationManager.SaveRecordForBoss(monster, challengeConfiguration, BestCount, KillCounter, challengeConfiguration.UseSingleRecordKey));
+                StartCoroutine(challengeConfigurationManager.SaveRecordForBoss(monster, challengeConfiguration, BestCount, KillCounter, true));
             }
         }
 
@@ -140,28 +138,13 @@ namespace BossChallengeMod.KillCounting {
         private void CalculateMaxCycles() {
             switch (EnemyType) {
                 case ChallengeEnemyType.Regular:
-                    if (challengeConfiguration.RandomizeEnemyCyclesNumber) {
-                        MaxBossCycles = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomEnemyCycles, challengeConfiguration.MaxRandomEnemyCycles + 1);
-                    } else {
-                        MaxBossCycles = challengeConfiguration.MaxEnemyCycles;
-                    }
-
+                    MaxBossCycles = challengeConfiguration.MaxEnemyCycles;
                     break;
                 case ChallengeEnemyType.Miniboss:
-                    if (challengeConfiguration.RandomizeMiniBossCyclesNumber) {
-                        MaxBossCycles = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomMiniBossCycles, challengeConfiguration.MaxRandomMiniBossCycles + 1);
-                    } else {
-                        MaxBossCycles = challengeConfiguration.MaxMinibossCycles;
-                    }
-
+                    MaxBossCycles = challengeConfiguration.MaxMinibossCycles;
                     break;
                 case ChallengeEnemyType.Boss:
-                    if (challengeConfiguration.RandomizeBossCyclesNumber) {
-                        MaxBossCycles = BossChallengeMod.Random.Next(challengeConfiguration.MinRandomBossCycles, challengeConfiguration.MaxRandomBossCycles + 1);
-                    } else {
-                        MaxBossCycles = challengeConfiguration.MaxBossCycles;
-                    }
-
+                    MaxBossCycles = challengeConfiguration.MaxBossCycles;
                     break;
             }
         }

@@ -22,9 +22,7 @@ namespace BossChallengeMod.Configuration {
         }
 
         public async Task<BossEntry> GetRecordForBoss(MonsterBase monsterBase, ChallengeConfiguration challengeConfiguration) {
-            var targetRecordEntry = !challengeConfiguration.UseSingleRecordKey ?
-                await _recordsRepository.GetRecordForConfigurationAsync(challengeConfiguration) :
-                await _recordsRepository.GetRecordForKeyAsync("uni");
+            var targetRecordEntry = await _recordsRepository.GetRecordForKeyAsync("uni");
 
             if (targetRecordEntry == null) {
                 return new BossEntry() {
@@ -49,29 +47,16 @@ namespace BossChallengeMod.Configuration {
         }
 
         public IEnumerator SaveRecordForBoss(MonsterBase monsterBase, ChallengeConfiguration challengeConfiguration, int bestValue, int lastValue, bool useSingleKey = false) {
-            if(!useSingleKey) {
-                taskQueue.Enqueue(() => {
-                    _recordsRepository.SaveBossRecordForConfigurationAsync(
-                        challengeConfiguration,
-                        new BossEntry() {
-                            Boss = monsterBase.gameObject.name,
-                            BestValue = bestValue,
-                            LastValue = lastValue
-                        });
-                });
-            }
-            else {
-                taskQueue.Enqueue(() => {
-                    _recordsRepository.SaveBossRecordForKeyAsync(
-                        "uni",
-                        new BossEntry() {
-                            Boss = monsterBase.gameObject.name,
-                            BestValue = bestValue,
-                            LastValue = lastValue
-                        });
-                });
-            }
 
+            taskQueue.Enqueue(() => {
+                _recordsRepository.SaveBossRecordForKeyAsync(
+                    "uni",
+                    new BossEntry() {
+                        Boss = monsterBase.gameObject.name,
+                        BestValue = bestValue,
+                        LastValue = lastValue
+                    });
+            });
             if (!isInProcess) {
                 isInProcess = true;
                 yield return ProcessQueue();

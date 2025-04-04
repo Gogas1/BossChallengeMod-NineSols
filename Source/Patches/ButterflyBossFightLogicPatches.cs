@@ -20,11 +20,11 @@ namespace BossChallengeMod.Patches {
                 GeneralBossPatch bossPatch = BossChallengeMod.Instance.BossesPatchResolver.GetPatch("P2_R22_Savepoint_GameLevel/EventBinder/General Boss Fight FSM Object Variant/FSM Animator/LogicRoot/ButterFly_BossFight_Logic/StealthGameMonster_Boss_ButterFly Variant")!;
 
                 ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
-                StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
+                ChallengeConfiguration ConfigurationToUse = challengeConfigurationManager.ChallengeConfiguration;
 
-                ChallengeConfiguration ConfigurationToUse = ApplicationCore.IsInBossMemoryMode ? challengeConfigurationManager.ChallengeConfiguration : storyChallengeConfigurationManager.ChallengeConfiguration;
+                bool IsModEnabled = ApplicationCore.IsInBossMemoryMode ? ConfigurationToUse.IsEnabledInMoB : ConfigurationToUse.IsEnabledInNormal;
 
-                if(ConfigurationToUse.EnableMod) {
+                if(IsModEnabled) {
                     var targetMonster = __instance.allMonsters[0];
                     var killCountingController = targetMonster.GetComponent<MonsterKillCounter>();
 

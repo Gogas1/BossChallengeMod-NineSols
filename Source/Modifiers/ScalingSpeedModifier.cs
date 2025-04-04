@@ -15,17 +15,17 @@ namespace BossChallengeMod.Modifiers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return challengeConfiguration.BossesEnableSpeedScaling;
+                        return challengeConfiguration.BossesIsSpeedScalingEnabled;
                     case ChallengeEnemyType.Miniboss:
-                        return challengeConfiguration.MinibossesEnableSpeedScaling;
+                        return challengeConfiguration.MinibossesIsSpeedScalingEnabled;
                     case ChallengeEnemyType.Regular:
-                        return challengeConfiguration.EnemiesEnableSpeedScaling;
+                        return challengeConfiguration.EnemiesIsSpeedScalingEnabled;
                     default:
                         return false;
                 }
             }
         }
-        protected float MinSpeedScalingValue {
+        protected float InitialScalingValue {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
@@ -39,29 +39,29 @@ namespace BossChallengeMod.Modifiers {
                 }
             }
         }
-        protected float MaxSpeedScalingValue {
+        protected float ScalingStepValue {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return challengeConfiguration.BossesMaxSpeedScalingValue;
+                        return challengeConfiguration.BossesSpeedScalingStepValue;
                     case ChallengeEnemyType.Miniboss:
-                        return challengeConfiguration.MinibossesMaxSpeedScalingValue;
+                        return challengeConfiguration.MinibossesSpeedScalingStepValue;
                     case ChallengeEnemyType.Regular:
-                        return challengeConfiguration.EnemiesMaxSpeedScalingValue;
+                        return challengeConfiguration.EnemiesSpeedScalingStepValue;
                     default:
                         return 1f;
                 }
             }
         }
-        protected int MaxSpeedScalingCycle {
+        protected int ScalingStepsCap {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return challengeConfiguration.BossesMaxSpeedScalingCycle;
+                        return challengeConfiguration.BossesSpeedStepsCapValue;
                     case ChallengeEnemyType.Miniboss:
-                        return challengeConfiguration.MinibossesMaxSpeedScalingCycle;
+                        return challengeConfiguration.MinibossesSpeedStepsCapValue;
                     case ChallengeEnemyType.Regular:
-                        return challengeConfiguration.EnemiesMaxSpeedScalingCycle;
+                        return challengeConfiguration.EnemiesSpeedStepsCapValue;
                     default:
                         return 1;
                 }
@@ -72,27 +72,13 @@ namespace BossChallengeMod.Modifiers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return challengeConfiguration.BossesEnableRandomSpeedScaling;
+                        return challengeConfiguration.BossesIsRandomSpeedScalingEnabled;
                     case ChallengeEnemyType.Miniboss:
-                        return challengeConfiguration.MinibossesEnableRandomSpeedScaling;
+                        return challengeConfiguration.MinibossesIsRandomSpeedScalingEnabled;
                     case ChallengeEnemyType.Regular:
-                        return challengeConfiguration.EnemiesEnableRandomSpeedScaling;
+                        return challengeConfiguration.EnemiesIsRandomSpeedScalingEnabled;
                     default:
                         return false;
-                }
-            }
-        }
-        protected int RandomSpeedScalingStartDeath {
-            get {
-                switch (EnemyType) {
-                    case ChallengeEnemyType.Boss:
-                        return challengeConfiguration.BossesRandomSpeedScalingStartDeath;
-                    case ChallengeEnemyType.Miniboss:
-                        return challengeConfiguration.MinibossesRandomSpeedScalingStartDeath;
-                    case ChallengeEnemyType.Regular:
-                        return challengeConfiguration.EnemiesRandomSpeedScalingStartDeath;
-                    default:
-                        return 1;
                 }
             }
         }
@@ -159,14 +145,15 @@ namespace BossChallengeMod.Modifiers {
             var result = 1f;
 
             if (EnableSpeedScaling) {
-                float baseScalingValue = MinSpeedScalingValue;
-                float progress = (float)iteration / Mathf.Max(MaxSpeedScalingCycle, 1);
-                float progressMultiplier = Mathf.Min(1, progress);
-                float scalingDiff = Mathf.Abs(MaxSpeedScalingValue - MinSpeedScalingValue);
-                result *= baseScalingValue + scalingDiff * progressMultiplier;
+                int stepsToScale = iteration;
+                if (ScalingStepsCap != -1) {
+                    stepsToScale = Math.Min(iteration, ScalingStepsCap);
+                }
+
+                result *= InitialScalingValue + stepsToScale * ScalingStepValue;
             }
 
-            if (EnableRandomSpeedScaling && iteration >= RandomSpeedScalingStartDeath) {
+            if (EnableRandomSpeedScaling) {
                 float min = MathF.Min(MinRandomSpeedScalingValue, MaxRandomSpeedScalingValue);
                 float max = MathF.Max(MinRandomSpeedScalingValue, MaxRandomSpeedScalingValue);
 

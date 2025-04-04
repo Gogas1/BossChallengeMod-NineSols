@@ -15,12 +15,17 @@ namespace BossChallengeMod.BossPatches {
         public ResetBossStateConfiguration ResetStateConfiguration = new ResetBossStateConfiguration();
 
         protected ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
-        protected StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
 
         protected ChallengeConfiguration ConfigurationToUse {
             get {
-                if(ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
-                else return storyChallengeConfigurationManager.ChallengeConfiguration;
+                return challengeConfigurationManager.ChallengeConfiguration;
+            }
+        }
+
+        protected bool IsModEnabled {
+            get {
+                if(ApplicationCore.IsInBossMemoryMode) return ConfigurationToUse.IsEnabledInMoB;
+                return ConfigurationToUse.IsEnabledInNormal;
             }
         }
 
@@ -59,9 +64,7 @@ namespace BossChallengeMod.BossPatches {
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
-
-
-            if (ConfigurationToUse.EnableMod) {
+            if (IsModEnabled) {
                 ModifiedDieStates.Clear();
                 ModifiedDieStates.AddRange(DieStates);
 
@@ -77,12 +80,12 @@ namespace BossChallengeMod.BossPatches {
             var result = base.PatchMonsterStates(monsterBase).ToList();
             
             try {
-                if(ConfigurationToUse.EnableMod) {
+                if(IsModEnabled) {
                     var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                     var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
                     resetBossState.AssignChallengeConfig(ConfigurationToUse);
 
-                    if (ConfigurationToUse.EnableMod && UseKillCounter) {
+                    if (IsModEnabled && UseKillCounter) {
                         var mainController = InitializeMainController(monsterBase, resetBossState);
 
                         var killCounter = InitializeKillCounter(monsterBase, mainController);
@@ -117,7 +120,7 @@ namespace BossChallengeMod.BossPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if(ConfigurationToUse.EnableMod) {
+                        if(IsModEnabled) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateEnterEvent);
                             result.Add(resStateEnterSender);
@@ -133,7 +136,7 @@ namespace BossChallengeMod.BossPatches {
         }
 
         public override void PostfixPatch(MonsterBase monster) {
-            if(ConfigurationToUse.EnableMod) {
+            if(IsModEnabled) {
                 base.PostfixPatch(monster);
             }
         }
@@ -143,9 +146,9 @@ namespace BossChallengeMod.BossPatches {
                 case ChallengeEnemyType.Boss:
                     return ConfigurationToUse.AffectBosses;
                 case ChallengeEnemyType.Miniboss:
-                    return ConfigurationToUse.AffectMiniBosses;
+                    return ConfigurationToUse.AffectMinibosses;
                 case ChallengeEnemyType.Regular:
-                    return ConfigurationToUse.AffectRegularEnemies;
+                    return ConfigurationToUse.AffectEnemies;
                 default:
                     return true;
             }
@@ -228,7 +231,7 @@ namespace BossChallengeMod.BossPatches {
             var sharedControllers = new Dictionary<Type, Component>();
 
             foreach (var modifierConfig in modifiersConfigs) {
-                if(!modifierConfig.IsPersistentModifier && !(config.ModifiersEnabled && UseModifiers)) {
+                if(!modifierConfig.IsPersistentModifier && !(config.IsModifiersEnabled && UseModifiers)) {
                     continue;
                 }
 

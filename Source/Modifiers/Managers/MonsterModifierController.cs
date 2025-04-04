@@ -13,7 +13,6 @@ using UnityEngine;
 namespace BossChallengeMod.Modifiers.Managers {
     public class MonsterModifierController : MonoBehaviour, IResettableComponent {
         private ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
-        private StoryChallengeConfigurationManager storyChallengeConfigurationManager = BossChallengeMod.Instance.StoryChallengeConfigurationManager;
         private ChallengeMonsterController monsterController = null!;
         private MonsterBase monster = null!;
         private int modifiersNumber = 1;
@@ -38,8 +37,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         protected ChallengeConfiguration ConfigurationToUse {
             get {
-                if (ApplicationCore.IsInBossMemoryMode) return challengeConfigurationManager.ChallengeConfiguration;
-                else return storyChallengeConfigurationManager.ChallengeConfiguration;
+                return challengeConfigurationManager.ChallengeConfiguration;
             }
         }
 
@@ -47,39 +45,55 @@ namespace BossChallengeMod.Modifiers.Managers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesEnableModifiersScaling;                        
+                        return ConfigurationToUse.BossesIsModifiersScalingEnabled;                        
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesEnableModifiersScaling;
+                        return ConfigurationToUse.MinibossesIsModifiersScalingEnabled;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesEnableModifiersScaling;
+                        return ConfigurationToUse.EnemiesIsModifiersScalingEnabled;
                     default:
                         return false;
                 }
             }
         }
-        protected int MaxModifiersNumber {
+
+        protected float InitialScalingValue {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesMaxModifiersNumber;
+                        return ConfigurationToUse.BossesMinModifiersNumber;
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesMaxModifiersNumber;
+                        return ConfigurationToUse.MinibossesMinModifiersNumber;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesMaxModifiersNumber;
+                        return ConfigurationToUse.EnemiesMinModifiersNumber;
                     default:
                         return 1;
                 }
             }
         }
-        protected int MaxModifiersScalingCycle {
+
+        protected float ScalingStep {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesMaxModifiersScalingCycle;
+                        return ConfigurationToUse.BossesModifiersScalingStepValue;
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesMaxModifiersScalingCycle;
+                        return ConfigurationToUse.MinibossesModifiersScalingStepValue;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesMaxModifiersScalingCycle;
+                        return ConfigurationToUse.EnemiesModifiersScalingStepValue;
+                    default:
+                        return 1;
+                }
+            }
+        }
+        protected int StepsCap {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Boss:
+                        return ConfigurationToUse.BossesModifiersStepsCapValue;
+                    case ChallengeEnemyType.Miniboss:
+                        return ConfigurationToUse.MinibossesModifiersStepsCapValue;
+                    case ChallengeEnemyType.Regular:
+                        return ConfigurationToUse.EnemiesModifiersStepsCapValue;
                     default:
                         return 1;
                 }
@@ -91,27 +105,13 @@ namespace BossChallengeMod.Modifiers.Managers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesEnableRandomModifiersScaling;
+                        return ConfigurationToUse.BossesIsRandomModifiersScalingEnabled;
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesEnableRandomModifiersScaling;
+                        return ConfigurationToUse.MinibossesIsRandomModifiersScalingEnabled;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesEnableRandomModifiersScaling;
+                        return ConfigurationToUse.EnemiesIsRandomModifiersScalingEnabled;
                     default:
                         return false;
-                }
-            }
-        }
-        protected int RandomModifiersScalingStartDeath {
-            get {
-                switch (EnemyType) {
-                    case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesMaxModifiersNumber;
-                    case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesMaxModifiersNumber; ;
-                    case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesMaxModifiersNumber; ;
-                    default:
-                        return 1;
                 }
             }
         }
@@ -119,11 +119,11 @@ namespace BossChallengeMod.Modifiers.Managers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesMinRandomModifiersNumber;
+                        return ConfigurationToUse.BossesMinRandomModifiersScalingValue;
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesMinRandomModifiersNumber; ;
+                        return ConfigurationToUse.MinibossesMinRandomModifiersScalingValue; ;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesMinRandomModifiersNumber;
+                        return ConfigurationToUse.EnemiesMinRandomModifiersScalingValue;
                     default:
                         return 1;
                 }
@@ -133,11 +133,11 @@ namespace BossChallengeMod.Modifiers.Managers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesMaxRandomModifiersNumber;
+                        return ConfigurationToUse.BossesMaxRandomModifiersScalingValue;
                     case ChallengeEnemyType.Miniboss:
-                        return ConfigurationToUse.MinibossesMaxRandomModifiersNumber; ;
+                        return ConfigurationToUse.MinibossesMaxRandomModifiersScalingValue; ;
                     case ChallengeEnemyType.Regular:
-                        return ConfigurationToUse.EnemiesMaxRandomModifiersNumber; ;
+                        return ConfigurationToUse.EnemiesMaxRandomModifiersScalingValue; ;
                     default:
                         return 1;
                 }
@@ -171,7 +171,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             }
             SetupModifiersLists();
             modifiersNumber = CalculateModifiersNumber(0);
-            AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
+            AllowRepeating = challengeConfiguration.IsRepeatingEnabled;
         }
 
         private void Start() {
@@ -181,7 +181,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void OnRevival() {
-            if (ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+            if (ConfigurationToUse.ModifiersStartDeath <= monsterController.KillCounter) {
                 NotifyModifiersOnDeath();
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
@@ -195,7 +195,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void ForceRollBeforeEngage() {
-            if (_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+            if (_isFirstEngage && ConfigurationToUse.ModifiersStartDeath <= monsterController.KillCounter) {
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
 
@@ -204,7 +204,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void OnEngage() {
-            if(_isFirstEngage && ConfigurationToUse.ModifiersStartFromDeath <= monsterController.KillCounter) {
+            if(_isFirstEngage && ConfigurationToUse.ModifiersStartDeath <= monsterController.KillCounter) {
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
 
@@ -265,7 +265,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 return;
             }
 
-            if (iteration < challengeConfiguration.ModifiersStartFromDeath) {
+            if (iteration < challengeConfiguration.ModifiersStartDeath) {
                 Selected.Clear();
                 return;
             }
@@ -382,21 +382,32 @@ namespace BossChallengeMod.Modifiers.Managers {
         private int CalculateModifiersNumber(int iteration) {
             var result = 0;
 
-            if (EnableModifiersScaling) {
-                int baseScalingValue = 1;
-                float progress = MaxModifiersScalingCycle > 0 ? (float)Math.Max(iteration, 0) / MathF.Max(MaxModifiersScalingCycle, 1) : 1;
-                float progressMultiplier = MathF.Min(1, progress);
-                int scalingDiff = Math.Abs(MaxModifiersNumber);
-                result += Math.Max(baseScalingValue, (int)Math.Round(scalingDiff * progressMultiplier, MidpointRounding.AwayFromZero));
+            if(!EnableModifiersScaling && !EnableRandomModifiersScaling) {
+                return 1;
             }
 
-            if (EnableRandomModifiersScaling && iteration >= RandomModifiersScalingStartDeath) {
+            if (EnableModifiersScaling) {
+                int value = 0;
+
+                int deathsToScale = Math.Max(0, iteration - ConfigurationToUse.ModifiersStartDeath);
+                int stepsToScale = deathsToScale;
+
+                if(StepsCap != -1) {
+                    stepsToScale = Math.Min(deathsToScale, StepsCap);
+                }
+
+                value = (int)Math.Floor(InitialScalingValue + stepsToScale * ScalingStep);
+
+                result += value;
+            }
+
+            if (EnableRandomModifiersScaling) {
                 int value = BossChallengeMod.Random.Next(MinRandomModifiersNumber, MaxRandomModifiersNumber + 1);
 
                 result += value;
-            } else {
-                result = Math.Max(1, result);
             }
+
+            result = Math.Max(0, result);
 
             return result;
         }
@@ -421,7 +432,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             SetupModifiersLists();
 
             modifiersNumber = CalculateModifiersNumber(0);
-            AllowRepeating = challengeConfiguration.AllowRepeatModifiers;
+            AllowRepeating = challengeConfiguration.IsRepeatingEnabled;
 
             //if (challengeConfiguration.ModifiersStartFromDeath == 0 && !_isStartRolled) {
             //    RollModifiers(0);

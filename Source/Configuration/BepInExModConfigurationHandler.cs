@@ -37,13 +37,10 @@ namespace BossChallengeMod.Configuration {
         private ChallengeConfigurationManager ChallengeConfigurationManager = null!;
         private UIConfiguration UIConfiguration = null!;
 
-
-
         public BepInExModConfigurationHandler(
             ConfigFile config,
             ChallengeConfigurationManager challengeConfigurationManager,
-            UIConfiguration uIConfiguration,
-            StoryChallengeConfigurationManager storyChallengeConfigurationManager) {
+            UIConfiguration uIConfiguration) {
 
             Config = config;
             ChallengeConfigurationManager = challengeConfigurationManager;
@@ -493,10 +490,10 @@ namespace BossChallengeMod.Configuration {
                 "modifiers enabled",
                 false,
                 new ConfigDescription(
-                    LocalizationResolver.Localize("config_modifiers_modifiers_enabled_name"),
+                    LocalizationResolver.Localize("config_modifiers_modifiers_enabled_desc"),
                     null,
                     new ConfigurationManagerAttributes {
-                        DispName = LocalizationResolver.Localize("config_modifiers_modifiers_enabled_desc"),
+                        DispName = LocalizationResolver.Localize("config_modifiers_modifiers_enabled_name"),
                         Order = 0,
                     }, 
                     modifiersTabsDrawer.GetConfigAttributes()));
@@ -526,7 +523,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_affect_bosses_name"),
-                        Order = 0,
+                        Order = 5,
                     }));
             configHolder.AffectBosses.SettingChanged += (_, _) => {
                 ChallengeConfigurationManager.ChallengeConfiguration.AffectBosses = configHolder.AffectBosses.Value;
@@ -541,7 +538,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_boss_deaths_number_name"),
-                        Order = 1,
+                        Order = 4,
                     }));
             configHolder.MaxBossCycles.SettingChanged += (_, _) => {
                 ChallengeConfigurationManager.ChallengeConfiguration.MaxBossCycles = configHolder.MaxBossCycles.Value;
@@ -643,7 +640,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_boss_speed_scaling_enabled_name"),
-                        Order = 2
+                        Order = 3
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -746,7 +743,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_boss_modifiers_scaling_enabled_name"),
-                        Order = 3
+                        Order = 2
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -825,7 +822,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_boss_rand_speed_scaling_enabled_name"),
-                        Order = 4
+                        Order = 1
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -904,7 +901,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_boss_rand_modifiers_scaling_enabled_name"),
-                        Order = 5
+                        Order = 0
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -920,7 +917,7 @@ namespace BossChallengeMod.Configuration {
 
         #region Miniboss config
         private void InitMinibossesConfig() {
-            string sectionName = "3. Minibosses config";
+            string sectionName = "4. Minibosses config";
 
             configHolder.AffectMinibosses = Config.Bind(
                 sectionName,
@@ -931,7 +928,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_affect_minibosses_name"),
-                        Order = 0,
+                        Order = 5,
                     }));
             configHolder.AffectMinibosses.SettingChanged += (_, _) => {
                 ChallengeConfigurationManager.ChallengeConfiguration.AffectMinibosses = configHolder.AffectMinibosses.Value;
@@ -946,7 +943,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_miniboss_deaths_number_name"),
-                        Order = 1,
+                        Order = 4,
                     }));
             configHolder.MaxMinibossCycles.SettingChanged += (_, _) => {
                 ChallengeConfigurationManager.ChallengeConfiguration.MaxMinibossCycles = configHolder.MaxMinibossCycles.Value;
@@ -1048,7 +1045,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_miniboss_speed_scaling_enabled_name"),
-                        Order = 2
+                        Order = 3
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1151,7 +1148,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_miniboss_modifiers_scaling_enabled_name"),
-                        Order = 3
+                        Order = 2
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1230,7 +1227,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_miniboss_rand_speed_scaling_enabled_name"),
-                        Order = 4
+                        Order = 1
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1309,7 +1306,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_miniboss_rand_modifiers_scaling_enabled_name"),
-                        Order = 5
+                        Order = 0
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1325,7 +1322,7 @@ namespace BossChallengeMod.Configuration {
 
         #region Enemy config
         private void InitEnemiesConfig() {
-            string sectionName = "3. Enemies config";
+            string sectionName = "5. Enemies config";
 
             configHolder.AffectEnemies = Config.Bind(
                 sectionName,
@@ -1336,7 +1333,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_affect_enemies_name"),
-                        Order = 0,
+                        Order = 5,
                     }));
             configHolder.AffectEnemies.SettingChanged += (_, _) => {
                 ChallengeConfigurationManager.ChallengeConfiguration.AffectEnemies = configHolder.AffectEnemies.Value;
@@ -1351,7 +1348,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_enemy_deaths_number_name"),
-                        Order = 1,
+                        Order = 4,
                     }));
             configHolder.MaxEnemyCycles.SettingChanged += (_, _) => {
                 ChallengeConfigurationManager.ChallengeConfiguration.MaxEnemyCycles = configHolder.MaxEnemyCycles.Value;
@@ -1453,7 +1450,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_enemy_speed_scaling_enabled_name"),
-                        Order = 2
+                        Order = 3
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1556,7 +1553,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_enemy_modifiers_scaling_enabled_name"),
-                        Order = 3
+                        Order = 2
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1635,7 +1632,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_enemy_rand_speed_scaling_enabled_name"),
-                        Order = 4
+                        Order = 1
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1714,7 +1711,7 @@ namespace BossChallengeMod.Configuration {
                     null,
                     new ConfigurationManagerAttributes {
                         DispName = LocalizationResolver.Localize("config_enemy_rand_modifiers_scaling_enabled_name"),
-                        Order = 5
+                        Order = 0
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
@@ -1830,36 +1827,38 @@ namespace BossChallengeMod.Configuration {
         }
 
         public void InitializeUIConfiguration() {
+            string configSection = "6. UI";
+
             isCounterUIEnabled = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.1.1 Right panel(killer counter and modifiers list) UI enabled",
                 true,
                 LocalizationResolver.Localize("config_ui_counter_enabled_description"));
             isCounterUIEnabled.SettingChanged += (_, _) => { UIConfiguration.CounterUIEnabled = isCounterUIEnabled.Value; };
 
             useCustomCounterPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.1.2 Use custom right panel position",
                 false,
                 LocalizationResolver.Localize("config_ui_counter_custom_description"));
             useCustomCounterPosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomCounterPosition = useCustomCounterPosition.Value; };
 
             counterCustomXPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.1.3 Custom right panel X position",
                 0f,
                 LocalizationResolver.Localize("config_ui_counter_custom_x_description"));
             counterCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.CounterXPos = counterCustomXPosition.Value; };
 
             counterCustomYPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.1.4 Custom right panel Y position",
                 0f,
                 LocalizationResolver.Localize("config_ui_counter_custom_y_description"));
             counterCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.CounterYPos = counterCustomYPosition.Value; };
 
             counterScale = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.1.5 Right panel UI scale",
                 1f,
                 LocalizationResolver.Localize("config_ui_counter_scale_description"));
@@ -1867,35 +1866,35 @@ namespace BossChallengeMod.Configuration {
 
 
             isTimerUIEnabled = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.2.1 Timer UI enabled",
                 true,
                 LocalizationResolver.Localize("config_ui_timer_enabled_description"));
             isTimerUIEnabled.SettingChanged += (_, _) => { UIConfiguration.TimerUIEnabled = isTimerUIEnabled.Value; };
 
             useCustomTimerPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.2.2 Use custom timer position",
                 false,
                 LocalizationResolver.Localize("config_ui_timer_custom_description"));
             useCustomTimerPosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomTimerPosition = useCustomTimerPosition.Value; };
 
             timerCustomXPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.2.3 Custom timer X position",
                 0f,
                 LocalizationResolver.Localize("config_ui_timer_custom_x_description"));
             timerCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.TimerXPos = timerCustomXPosition.Value; };
 
             timerCustomYPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.2.4 Custom timer Y position",
                 0f,
                 LocalizationResolver.Localize("config_ui_timer_custom_y_description"));
             timerCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.TimerYPos = timerCustomYPosition.Value; };
 
             timerScale = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.2.5 Timer UI scale",
                 1f,
                 LocalizationResolver.Localize("config_ui_timer_scale_description"));
@@ -1903,35 +1902,35 @@ namespace BossChallengeMod.Configuration {
 
 
             isTalismanModeUIEnabled = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.3.1 Talisman Mode UI enabled",
                 true,
                 LocalizationResolver.Localize("config_ui_talisman_mode_enabled_description"));
             isTalismanModeUIEnabled.SettingChanged += (_, _) => { UIConfiguration.TalismanModeUIEnabled = isTalismanModeUIEnabled.Value; };
 
             useCustomTalismanModePosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.3.2 Use custom talisman mode position",
                 false,
                 LocalizationResolver.Localize("config_ui_talisman_mode_custom_description"));
             useCustomTalismanModePosition.SettingChanged += (_, _) => { UIConfiguration.UseCustomTalismanModePosition = useCustomTalismanModePosition.Value; };
 
             talismanModeCustomXPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.3.3 Custom talisman mode X position",
                 0f,
                 LocalizationResolver.Localize("config_ui_talisman_mode_custom_x_description"));
             talismanModeCustomXPosition.SettingChanged += (_, _) => { UIConfiguration.TalismanModeXPos = talismanModeCustomXPosition.Value; };
 
             talismanModeCustomYPosition = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.3.4 Custom talisman mode Y position",
                 0f,
                 LocalizationResolver.Localize("config_ui_talisman_mode_custom_y_description"));
             talismanModeCustomYPosition.SettingChanged += (_, _) => { UIConfiguration.TalismanModeYPos = talismanModeCustomYPosition.Value; };
 
             talismanModeScale = Config.Bind(
-                "4. UI",
+                configSection,
                 "4.3.5 Talisman mode UI scale",
                 1f,
                 LocalizationResolver.Localize("config_ui_talisman_mode_scale_description"));

@@ -10,11 +10,15 @@
         <NoWarn>MSB3277</NoWarn>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Resources\Bundles\items.bundle" />
       <None Remove="Resources\Languages\translations_en-us.json" />
       <None Remove="Resources\Languages\translations_ru-ru.json" />
       <None Remove="Resources\Languages\translations_zh-cn.json" />
       <None Remove="Resources\Languages\translations_zh-tw.json" />
       <None Remove="Resources\ModConfig\modconfig.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Bundles\items.bundle" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="Resources\Languages\translations_en-us.json" />

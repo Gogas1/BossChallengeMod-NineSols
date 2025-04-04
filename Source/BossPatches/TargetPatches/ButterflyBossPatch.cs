@@ -23,7 +23,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             var result = new List<MonsterState>();
 
             try {
-                if (ConfigurationToUse.EnableMod) {
+                if (IsModEnabled) {
                     var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                     var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
                     resetBossState.AssignChallengeConfig(ConfigurationToUse);
@@ -44,7 +44,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                         result.Add(cloneResetBossState);
                     }
 
-                    if (ConfigurationToUse.EnableMod && UseKillCounter) {
+                    if (IsModEnabled && UseKillCounter) {
                         var monsterController = InitializeMainController(monsterBase, resetBossState);
 
                         var killCounter = InitializeKillCounter(monsterBase, monsterController);
@@ -81,7 +81,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if (ConfigurationToUse.EnableMod) {
+                        if (IsModEnabled) {
                             var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
                             var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
                             result.Add(resStateEnterSender);
@@ -181,7 +181,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                 GameObject.Destroy(shieldController);
             }
 
-            if (ConfigurationToUse.EnableMod && ConfigurationToUse.ModifiersEnabled) {
+            if (IsModEnabled && ConfigurationToUse.IsModifiersEnabled) {
 
                 var clones = GetClones(monsterBase);
 
