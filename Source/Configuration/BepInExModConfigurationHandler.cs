@@ -60,53 +60,22 @@ namespace BossChallengeMod.Configuration {
         }
 
         public void InitChallengeConfiguration() {
-            InitGeneralConfig();
             InitModifiersConfig();
             InitBossesConfig();
             InitMinibossesConfig();
             InitEnemiesConfig();
         }
 
-        private void InitGeneralConfig() {
-            configHolder.IsMoBEnabled = Config.Bind(
-                "1. General",
-                "mob enabled",
-                true,
-                new ConfigDescription(
-                    LocalizationResolver.Localize("config_general_mob_enabled_desc"),
-                    null,
-                    new ConfigurationManagerAttributes {
-                        DispName = LocalizationResolver.Localize("config_general_mob_enabled_name"),
-                        Order = 0,
-                    }));
-            configHolder.IsMoBEnabled.SettingChanged += (_, _) => {
-                ChallengeConfigurationManager.ChallengeConfiguration.IsEnabledInMoB = configHolder.IsMoBEnabled.Value;
-            };
-
-            configHolder.IsNormalEnabled = Config.Bind(
-                "1. General",
-                "regular enabled",
-                true,
-                new ConfigDescription(
-                    LocalizationResolver.Localize("config_general_regular_enabled_desc"),
-                    null,
-                    new ConfigurationManagerAttributes {
-                        DispName = LocalizationResolver.Localize("config_general_regular_enabled_name"),
-                        Order = 1,
-                    }));
-            configHolder.IsNormalEnabled.SettingChanged += (_, _) => {
-                ChallengeConfigurationManager.ChallengeConfiguration.IsEnabledInNormal = configHolder.IsNormalEnabled.Value;
-            };
-        }
-
         private void InitModifiersConfig() {
+            string sectionName = "1. Modifiers";
+
             string enabledText = LocalizationResolver.Localize("label_enabled");
             string disabledText = LocalizationResolver.Localize("label_disabled");
 
             #region Hidden Config
 
             configHolder.ModifiersStartDeathValue = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifiers start death",
                 1,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -115,7 +84,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsModifiersRepeatingEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifiers repeat enabled",
                 false,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -124,7 +93,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsSpeedModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier speed",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -133,7 +102,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsTimerModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier timer",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -142,7 +111,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsParryDamageModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier parry damage",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -151,7 +120,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsDamageBuildupModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier damage buildup",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -160,7 +129,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsRegenerationModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier regeneration",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -169,7 +138,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsKnockbackModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier knockback",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -178,7 +147,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsRandomArrowModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier random arrow",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -187,7 +156,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsRandomTalismanModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier random talisman",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -196,7 +165,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsEnduranceModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier endurance",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -205,7 +174,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsQiShieldModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier qi shield",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -214,7 +183,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsCooldownShieldModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier cooldown shield",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -223,7 +192,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsQiOverloadModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier qi overload",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -232,7 +201,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsDistanceShieldModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier distance shield",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -241,7 +210,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsYanlaoGunModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier yanlao gun",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -250,7 +219,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsQiBombModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier qi bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -259,7 +228,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsShieldBreakBombModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier shield bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -268,7 +237,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsQiOverloadBombModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier qi overload bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -277,7 +246,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsQiDepletionBombModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier qi depletion bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -286,7 +255,7 @@ namespace BossChallengeMod.Configuration {
             };
 
             configHolder.IsCooldownBombModifierEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifier coolldown bomb",
                 true,
                 new ConfigDescription("", null, new ConfigurationManagerAttributes { Browsable = false, }));
@@ -488,7 +457,7 @@ namespace BossChallengeMod.Configuration {
             #endregion Modifiers switches init
 
             configHolder.IsModifiersEnabled = Config.Bind(
-                "2. Modifiers",
+                sectionName,
                 "modifiers enabled",
                 false,
                 new ConfigDescription(
@@ -514,7 +483,7 @@ namespace BossChallengeMod.Configuration {
 
         #region Boss config
         private void InitBossesConfig() {
-            string sectionName = "3. Bosses config";            
+            string sectionName = "2. Bosses config";            
 
             configHolder.AffectBosses = Config.Bind(
                 sectionName,
@@ -646,12 +615,26 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.BossesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesIsSpeedScalingEnabled = configHolder.BossesIsSpeedScalingEnabled.Value;
+            };
+
             tabsDrawer.SelectedTab = configHolder.BossesIsSpeedScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
+                try {
                 configHolder.BossesIsSpeedScalingEnabled.Value = true;
+
+                } catch (Exception ex) {
+                    Log.Error($"{ex.Message}, {ex.StackTrace}");
+                }
             });
             tabsDrawer.OnTabSelectedHandlers.TryAdd(disabledText, () => {
+                try {
                 configHolder.BossesIsSpeedScalingEnabled.Value = false;
+
+                } catch (Exception ex) {
+                    Log.Error($"{ex.Message}, {ex.StackTrace}");
+                }
             });
         }
 
@@ -749,6 +732,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.BossesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesIsModifiersScalingEnabled = configHolder.BossesIsModifiersScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.BossesIsModifiersScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.BossesIsModifiersScalingEnabled.Value = true;
@@ -828,6 +814,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.BossesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesIsRandomSpeedScalingEnabled = configHolder.BossesIsRandomSpeedScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.BossesIsRandomSpeedScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.BossesIsRandomSpeedScalingEnabled.Value = true;
@@ -907,6 +896,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.BossesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.BossesIsRandomModifiersScalingEnabled = configHolder.BossesIsRandomModifiersScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.BossesIsRandomModifiersScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.BossesIsRandomModifiersScalingEnabled.Value = true;
@@ -919,7 +911,7 @@ namespace BossChallengeMod.Configuration {
 
         #region Miniboss config
         private void InitMinibossesConfig() {
-            string sectionName = "4. Minibosses config";
+            string sectionName = "3. Minibosses config";
 
             configHolder.AffectMinibosses = Config.Bind(
                 sectionName,
@@ -939,7 +931,7 @@ namespace BossChallengeMod.Configuration {
             configHolder.MaxMinibossCycles = Config.Bind(
                 sectionName,
                 "minibosses deaths",
-                -1,
+                2,
                 new ConfigDescription(
                     LocalizationResolver.Localize("config_miniboss_deaths_number_desc"),
                     null,
@@ -1051,6 +1043,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.MinibossesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesIsSpeedScalingEnabled = configHolder.MinibossesIsSpeedScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.MinibossesIsSpeedScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.MinibossesIsSpeedScalingEnabled.Value = true;
@@ -1154,6 +1149,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.MinibossesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesIsModifiersScalingEnabled = configHolder.MinibossesIsModifiersScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.MinibossesIsModifiersScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.MinibossesIsModifiersScalingEnabled.Value = true;
@@ -1233,6 +1231,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.MinibossesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesIsRandomSpeedScalingEnabled = configHolder.MinibossesIsRandomSpeedScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.MinibossesIsRandomSpeedScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.MinibossesIsRandomSpeedScalingEnabled.Value = true;
@@ -1312,6 +1313,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.MinibossesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.MinibossesIsRandomModifiersScalingEnabled = configHolder.MinibossesIsRandomModifiersScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.MinibossesIsRandomModifiersScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.MinibossesIsRandomModifiersScalingEnabled.Value = true;
@@ -1324,7 +1328,7 @@ namespace BossChallengeMod.Configuration {
 
         #region Enemy config
         private void InitEnemiesConfig() {
-            string sectionName = "5. Enemies config";
+            string sectionName = "4. Enemies config";
 
             configHolder.AffectEnemies = Config.Bind(
                 sectionName,
@@ -1344,7 +1348,7 @@ namespace BossChallengeMod.Configuration {
             configHolder.MaxEnemyCycles = Config.Bind(
                 sectionName,
                 "enemies deaths",
-                -1,
+                2,
                 new ConfigDescription(
                     LocalizationResolver.Localize("config_enemy_deaths_number_desc"),
                     null,
@@ -1456,6 +1460,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.EnemiesIsSpeedScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesIsSpeedScalingEnabled = configHolder.EnemiesIsSpeedScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.EnemiesIsSpeedScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.EnemiesIsSpeedScalingEnabled.Value = true;
@@ -1559,6 +1566,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.EnemiesIsModifiersScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesIsModifiersScalingEnabled = configHolder.EnemiesIsModifiersScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.EnemiesIsModifiersScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.EnemiesIsModifiersScalingEnabled.Value = true;
@@ -1638,6 +1648,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.EnemiesIsRandomSpeedScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesIsRandomSpeedScalingEnabled = configHolder.EnemiesIsRandomSpeedScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.EnemiesIsRandomSpeedScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.EnemiesIsRandomSpeedScalingEnabled.Value = true;
@@ -1717,6 +1730,9 @@ namespace BossChallengeMod.Configuration {
                     },
                     tabsDrawer.GetConfigAttributes()
                 ));
+            configHolder.EnemiesIsRandomModifiersScalingEnabled.SettingChanged += (_, _) => {
+                ChallengeConfigurationManager.ChallengeConfiguration.EnemiesIsRandomModifiersScalingEnabled = configHolder.EnemiesIsRandomModifiersScalingEnabled.Value;
+            };
             tabsDrawer.SelectedTab = configHolder.EnemiesIsRandomModifiersScalingEnabled.Value ? 1 : 0;
             tabsDrawer.OnTabSelectedHandlers.TryAdd(enabledText, () => {
                 configHolder.EnemiesIsRandomModifiersScalingEnabled.Value = true;
@@ -1730,9 +1746,6 @@ namespace BossChallengeMod.Configuration {
 
         public void HandleChallengeConfigurationValues() {
             var config = ChallengeConfigurationManager.ChallengeConfiguration;
-
-            config.IsEnabledInMoB = configHolder.IsMoBEnabled.Value;
-            config.IsEnabledInNormal = configHolder.IsNormalEnabled.Value;
 
             config.IsModifiersEnabled = configHolder.IsModifiersEnabled.Value;
             config.ModifiersStartDeath = configHolder.ModifiersStartDeathValue.Value;
@@ -1829,7 +1842,7 @@ namespace BossChallengeMod.Configuration {
         }
 
         public void InitializeUIConfiguration() {
-            string configSection = "6. UI";
+            string configSection = "5. UI";
 
             isCounterUIEnabled = Config.Bind(
                 configSection,

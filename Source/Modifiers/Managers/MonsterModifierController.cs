@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace BossChallengeMod.Modifiers.Managers {
     public class MonsterModifierController : MonoBehaviour, IResettableComponent {
@@ -33,8 +34,10 @@ namespace BossChallengeMod.Modifiers.Managers {
         private bool _isFirstEngage = true;
 
         private ChallengeConfiguration challengeConfiguration;
-        
+
         private PlayerSensor playerSensor = null!;
+
+        private UnityEvent Events = new UnityEvent();
 
         protected ChallengeConfiguration ConfigurationToUse {
             get {
@@ -44,8 +47,7 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         protected bool IsEnabled {
             get {
-                bool isInMob = ApplicationCore.IsInBossMemoryMode;
-                return ((ConfigurationToUse.IsEnabledInMoB && isInMob) || (ConfigurationToUse.IsEnabledInNormal && !isInMob)) && ConfigurationToUse.IsModifiersEnabled;
+                return ConfigurationToUse.IsModifiersEnabled && monsterController.KillCounter >= ConfigurationToUse.ModifiersStartDeath;
             }
         }
 
@@ -53,7 +55,7 @@ namespace BossChallengeMod.Modifiers.Managers {
             get {
                 switch (EnemyType) {
                     case ChallengeEnemyType.Boss:
-                        return ConfigurationToUse.BossesIsModifiersScalingEnabled;                        
+                        return ConfigurationToUse.BossesIsModifiersScalingEnabled;
                     case ChallengeEnemyType.Miniboss:
                         return ConfigurationToUse.MinibossesIsModifiersScalingEnabled;
                     case ChallengeEnemyType.Regular:
@@ -173,9 +175,8 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void Init() {
-            ConfigurationToUse.OnIsModifiersEnabledChanged += _ => HandleGlobalActivationReconfiguration();
-            ConfigurationToUse.OnIsEnabledInMoBChanged += _ => HandleGlobalActivationReconfiguration();
-            ConfigurationToUse.OnIsEnabledInNormalChanged += _ => HandleGlobalActivationReconfiguration();
+            ConfigurationToUse.OnIsModifiersEnabledChanged += HandleGlobalActivationReconfiguration;
+            ConfigurationToUse.OnModifiersStartDeathChanged += HandleGlobalActivationReconfiguration;
 
             FindModifiers();
             if (!ApplicationCore.IsInBossMemoryMode && UseProximityShow) {
@@ -187,11 +188,9 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void OnRevival() {
-            if (ConfigurationToUse.ModifiersStartDeath <= monsterController.KillCounter) {
-                NotifyModifiersOnDeath();
-                RollModifiers(monsterController.KillCounter);
-                ApplyModifiers();
-            }
+            NotifyModifiersOnDeath();
+            RollModifiers(monsterController.KillCounter);
+            ApplyModifiers();
         }
 
         public void OnDie() {
@@ -201,7 +200,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void ForceRollBeforeEngage() {
-            if (_isFirstEngage && ConfigurationToUse.ModifiersStartDeath <= monsterController.KillCounter) {
+            if (_isFirstEngage) {
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
 
@@ -210,7 +209,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void OnEngage() {
-            if(_isFirstEngage && ConfigurationToUse.ModifiersStartDeath <= monsterController.KillCounter) {
+            if (_isFirstEngage) {
                 RollModifiers(monsterController.KillCounter);
                 ApplyModifiers();
 
@@ -264,15 +263,10 @@ namespace BossChallengeMod.Modifiers.Managers {
 
         public void RollModifiers(int iteration) {
             int modifiersNum = CalculateModifiersNumber(iteration);
+            Activated.Clear();
 
             if (_isDied) {
-                Activated.Clear();
                 OnModifiersChange?.Invoke();
-                return;
-            }
-
-            if (iteration < challengeConfiguration.ModifiersStartDeath) {
-                Activated.Clear();
                 return;
             }
 
@@ -333,9 +327,8 @@ namespace BossChallengeMod.Modifiers.Managers {
         }
 
         public void OnDestroing() {
-            ConfigurationToUse.OnIsModifiersEnabledChanged -= _ => HandleGlobalActivationReconfiguration();
-            ConfigurationToUse.OnIsEnabledInMoBChanged -= _ => HandleGlobalActivationReconfiguration();
-            ConfigurationToUse.OnIsEnabledInNormalChanged -= _ => HandleGlobalActivationReconfiguration();
+            ConfigurationToUse.OnIsModifiersEnabledChanged -= HandleGlobalActivationReconfiguration;
+            ConfigurationToUse.OnModifiersStartDeathChanged -= HandleGlobalActivationReconfiguration;
 
             NotifyDestroing();
             OnDestroyActions?.Invoke();
@@ -400,7 +393,7 @@ namespace BossChallengeMod.Modifiers.Managers {
         private int CalculateModifiersNumber(int iteration) {
             var result = 0;
 
-            if(!EnableModifiersScaling && !EnableRandomModifiersScaling) {
+            if (!EnableModifiersScaling && !EnableRandomModifiersScaling) {
                 return 1;
             }
 
@@ -410,7 +403,7 @@ namespace BossChallengeMod.Modifiers.Managers {
                 int deathsToScale = Math.Max(0, iteration - ConfigurationToUse.ModifiersStartDeath);
                 int stepsToScale = deathsToScale;
 
-                if(StepsCap != -1) {
+                if (StepsCap != -1) {
                     stepsToScale = Math.Min(deathsToScale, StepsCap);
                 }
 
@@ -497,12 +490,12 @@ namespace BossChallengeMod.Modifiers.Managers {
             return 0;
         }
 
-        private void HandleGlobalActivationReconfiguration() {
-            if(IsEnabled) {
+        private void HandleGlobalActivationReconfiguration<T>(T param) {
+            if (IsEnabled) {
                 NotifyModifiers();
             } else {
                 NotifyDeactivation();
             }
-        }        
+        }
     }
 }

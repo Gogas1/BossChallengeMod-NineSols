@@ -4,34 +4,6 @@ using System.Text;
 
 namespace BossChallengeMod.Configuration {
     public class ChallengeConfiguration {
-        #region General
-
-        private bool _isEnabledInMoB;
-        public event Action<bool>? OnIsEnabledInMoBChanged;
-        public bool IsEnabledInMoB {
-            get => _isEnabledInMoB;
-            set {
-                if (_isEnabledInMoB != value) {
-                    _isEnabledInMoB = value;
-                    OnIsEnabledInMoBChanged?.Invoke(_isEnabledInMoB);
-                }
-            }
-        }
-
-        private bool _isEnabledInNormal;
-        public event Action<bool>? OnIsEnabledInNormalChanged;
-        public bool IsEnabledInNormal {
-            get => _isEnabledInNormal;
-            set {
-                if (_isEnabledInNormal != value) {
-                    _isEnabledInNormal = value;
-                    OnIsEnabledInNormalChanged?.Invoke(_isEnabledInNormal);
-                }
-            }
-        }
-
-        #endregion General
-
         #region Modifiers
 
         private bool _isModifiersEnabled;

@@ -37,6 +37,10 @@ namespace BossChallengeMod {
             OnDie?.Invoke();
         }
 
+        public void HandleMaxCyclesChange() {
+
+        }
+
         public int GetPriority() {
             return -1;
         }

@@ -22,18 +22,14 @@ namespace BossChallengeMod.Patches {
                 ChallengeConfigurationManager challengeConfigurationManager = BossChallengeMod.Instance.ChallengeConfigurationManager;
                 ChallengeConfiguration ConfigurationToUse = challengeConfigurationManager.ChallengeConfiguration;
 
-                bool IsModEnabled = ApplicationCore.IsInBossMemoryMode ? ConfigurationToUse.IsEnabledInMoB : ConfigurationToUse.IsEnabledInNormal;
+                var targetMonster = __instance.allMonsters[0];
+                var killCountingController = targetMonster.GetComponent<MonsterKillCounter>();
 
-                if(IsModEnabled) {
-                    var targetMonster = __instance.allMonsters[0];
-                    var killCountingController = targetMonster.GetComponent<MonsterKillCounter>();
+                if (killCountingController != null && (killCountingController.KillCounter + 1 < killCountingController.MaxBossCycles || killCountingController.MaxBossCycles == -1)) {
 
-                    if (killCountingController != null && (killCountingController.KillCounter + 1 < killCountingController.MaxBossCycles || killCountingController.MaxBossCycles == -1)) {
-
-                        targetMonster.postureSystem.DieHandleingStates.Clear();
-                        targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
-                        targetMonster.postureSystem.GenerateCurrentDieHandleStacks();
-                    }
+                    targetMonster.postureSystem.DieHandleingStates.Clear();
+                    targetMonster.postureSystem.DieHandleingStates.AddRange(bossPatch.DieStates);
+                    targetMonster.postureSystem.GenerateCurrentDieHandleStacks();
                 }
             }
         }

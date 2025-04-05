@@ -47,29 +47,6 @@
   "qi_depletion_bomb": "气耗竭炸弹",
   "cooldown_bomb": "冷却炸弹",
 
-  "config_top_description": "挑战设置将在战斗开始或加载场景时应用（即在敌人初始化时）。要在战斗过程中应用更改的设置，请重新开始战斗（死亡、重新加载场景、从大厅重新进入）。\n在普通游戏模式下，模组默认处于禁用状态，模块的配置由第5、6、7部分负责。\n如果您遇到UI显示问题（如截断、比例错误），可在配置的第4部分调整设置。",
-
-  "config_cycling_enabled_description": "启用模组。\n在“Memories of Battle”游戏模式中启用模组",
-  "config_single_recording_enabled_description": "记录战斗结果，而不受配置的影响。默认情况下，每种唯一的配置状态（包括第1、2、3节）都会生成结果，以便每种设置的挑战难度都有自己的结果。启用此设置后，将会记录并使用统一的结果，而不考虑挑战设置。",
-  "config_cycles_number_description": "首领死亡次数。\n首领将在指定死亡次数后死亡（包括本次）。",
-  "config_scaling_enabled_description": "启用速度缩放。\n首领每次死亡后将获得线性速度提升。",
-  "config_scaling_minspeed_description": "缩放：初始速度。\n速度缩放的起始值。",
-  "config_scaling_maxspeed_description": "缩放：最大速度。\n速度缩放的最大值。",
-  "config_scaling_scaling_cycle_description": "达到最大速度缩放的死亡次数。\n速度缩放将在这些死亡次数后达到最大值。",
-  "config_scaling_modifiers_enabled_description": "启用修改器数量缩放。\n首领将获得更多修改器。",
-  "config_scaling_maxmodifiers_description": "缩放：修改器数量。\n修改器数量增加的最大值",
-  "config_scaling_modifiers_scaling_cycle_description": "达到最大修改器数量缩放的死亡次数。\n修改器数量增加将在这些死亡次数后达到最大值",
-
-  "config_rand_speed_scaling_enabled_description": "启用随机速度调节。\n每次死亡时，Boss将获得随机速度提升，并与线性速度调节呈乘法叠加。",
-  "config_rand_speed_scaling_start_death_description": "随机速度调节起始死亡次数。\nBoss将在此死亡之后开始获得随机速度提升。",
-  "config_rand_speed_scaling_minspeed_description": "随机加成：最小速度。\n随机速度提升的最小值。",
-  "config_rand_speed_scaling_maxspeed_description": "随机加成：最大速度。\n随机速度提升的最大值。",
-
-  "config_rand_modifiers_scaling_enabled_description": "启用随机修正调节。\n每次死亡时，Boss将获得随机数量的修正，并与线性修正增加叠加。",
-  "config_rand_modifiers_scaling_start_death_description": "随机修正调节起始死亡次数。\nBoss将在此死亡之后开始获得随机数量的修正。",
-  "config_rand_modifiers_scaling_min_description": "随机加成：最小修正数量。\n随机修正数量的最小值。",
-  "config_rand_modifiers_scaling_max_description": "随机加成：最大修正数量。\n随机修正数量的最大值。",
-
   "config_modifiers_enabled_description": "启用修改器。\n启用或禁用影响首领战的修改器。",
   "config_modifiers_start_death_description": "触发修饰符的死亡次数。\n 修饰符将在达到此数量的首领死亡后开始生效。如果设置为 0，修饰符将在战斗开始时生效。",
   "config_repeating_enabled_description": "重复修改器。\n修改器可以连续重复多次。",
@@ -92,5 +69,158 @@
   "config_modifiers_shield_break_bomb_enabled_description": "破盾炸弹修改器。\n在敌人护盾破裂后，羿身上将出现两个炸弹。敌人只有在拥有任一护盾修改器时才能获得此修改器。",
   "config_modifiers_qi_overload_bomb_enabled_description": "气过载炸弹修改器。\n达到气充能上限后，羿身上将出现一个炸弹。",
   "config_modifiers_qi_depletion_bomb_enabled_description": "气耗竭炸弹修改器。\n耗尽所有气充能后，羿身上将出现两个炸弹。",
-  "config_modifiers_cooldown_bomb_enabled_description": "冷却炸弹修正器。\n炸弹会定期生成在羿身上。"
+  "config_modifiers_cooldown_bomb_enabled_description": "冷却炸弹修正器。\n炸弹会定期生成在羿身上。",
+
+  "config_modifiers_modifiers_enabled_name": "修饰符",
+  "config_modifiers_modifiers_enabled_desc": "启用修饰符，使战斗更具挑战性",
+
+  "config_modifiers_start_death_name": "修饰符开始死亡",
+  "config_modifiers_start_death_desc": "修饰符将在达到此数量的敌人死亡后开始生效。如果设置为 0，修饰符将在战斗开始时生效。",
+
+  "config_modifiers_modifiers_repeat_enabled_name": "启用修饰符重复",
+  "config_modifiers_modifiers_repeat_enabled_desc": "修饰符可以连续多次重复。",
+
+  "config_affect_bosses_name": "影响首领",
+  "config_affect_bosses_desc": "首领增强。首领会复活，并获得修饰符和增益效果。",
+
+  "config_boss_deaths_number_name": "首领最大死亡次数",
+  "config_boss_deaths_number_desc": "首领在达到此死亡次数后会死亡。",
+
+  "config_boss_speed_scaling_enabled_name": "速度缩放",
+  "config_boss_speed_scaling_enabled_desc": "首领每次死亡后都会获得线性速度提升，并与随机速度缩放及修饰符叠加。",
+
+  "config_boss_speed_scaling_minspeed_name": "初始速度：",
+  "config_boss_speed_scaling_minspeed_desc": "速度缩放的初始值。",
+
+  "config_boss_speed_scaling_step_name": "步长值：",
+  "config_boss_speed_scaling_step_desc": "速度修饰符增加值。",
+
+  "config_boss_speed_scaling_steps_cap_name": "步数上限：",
+  "config_boss_speed_scaling_steps_cap_desc": "起始值可以增加的次数。设置为 -1 表示无限增加。",
+
+  "config_boss_modifiers_scaling_enabled_name": "修饰符数量缩放",
+  "config_boss_modifiers_scaling_enabled_desc": "首领将获得额外的修饰符，总数为缩放值与随机缩放值之和。当启用此缩放时，额外修饰符从 0 开始计算，因此默认的一个修饰符数值会被覆盖。缩放步数从修饰符开始出现后的死亡次数开始计算（例如，如果修饰符从第二次死亡后出现，而首领死亡四次，则初始值会增加两次）。",
+
+  "config_boss_modifiers_scaling_min_number_name": "初始修饰符数量：",
+  "config_boss_modifiers_scaling_min_number_desc": "修饰符缩放的初始值。",
+
+  "config_boss_modifiers_scaling_step_name": "步长值：",
+  "config_boss_modifiers_scaling_step_desc": "修饰符数量增加值。",
+
+  "config_boss_modifiers_scaling_steps_cap_name": "步数上限：",
+  "config_boss_modifiers_scaling_steps_cap_desc": "起始值可以增加的次数。设置为 -1 表示无限增加（对于修饰符，仍受可用数量限制）。",
+
+  "config_boss_rand_speed_scaling_enabled_name": "随机速度缩放。",
+  "config_boss_rand_speed_scaling_enabled_desc": "首领每次死亡后会获得随机速度提升，与线性速度缩放及修饰符叠加。",
+
+  "config_boss_rand_speed_scaling_minspeed_name": "最低速度：",
+  "config_boss_rand_speed_scaling_minspeed_desc": "随机速度缩放的最小值。",
+
+  "config_boss_rand_speed_scaling_maxspeed_name": "最高速度：",
+  "config_boss_rand_speed_scaling_maxspeed_desc": "随机速度提升的最大值。",
+
+  "config_boss_rand_modifiers_scaling_enabled_name": "随机修饰符缩放。",
+  "config_boss_rand_modifiers_scaling_enabled_desc": "首领每次死亡后会获得随机数量的修饰符，叠加在线性增加的修饰符上。",
+
+  "config_boss_rand_modifiers_scaling_min_name": "最小修饰符数量：",
+  "config_boss_rand_modifiers_scaling_min_desc": "随机修饰符数量的最小值。",
+
+  "config_boss_rand_modifiers_scaling_max_name": "最大修饰符数量：",
+  "config_boss_rand_modifiers_scaling_max_desc": "随机修饰符数量的最大值。",
+
+  "config_affect_minibosses_name": "影响小首领",
+  "config_affect_minibosses_desc": "小首领增强。小首领会复活，并获得修饰符和增益效果。",
+
+  "config_miniboss_deaths_number_name": "小首领最大死亡次数",
+  "config_miniboss_deaths_number_desc": "小首领在达到此死亡次数后会死亡。",
+
+  "config_miniboss_speed_scaling_enabled_name": "速度缩放",
+  "config_miniboss_speed_scaling_enabled_desc": "小首领每次死亡后都会获得线性速度提升，并与随机速度缩放及修饰符叠加。",
+
+  "config_miniboss_speed_scaling_minspeed_name": "初始速度：",
+  "config_miniboss_speed_scaling_minspeed_desc": "速度缩放的初始值。",
+
+  "config_miniboss_speed_scaling_step_name": "步长值：",
+  "config_miniboss_speed_scaling_step_desc": "速度修饰符增加值。",
+
+  "config_miniboss_speed_scaling_steps_cap_name": "步数上限：",
+  "config_miniboss_speed_scaling_steps_cap_desc": "起始值可以增加的次数。设置为 -1 表示无限增加。",
+
+  "config_miniboss_modifiers_scaling_enabled_name": "修饰符数量缩放",
+  "config_miniboss_modifiers_scaling_enabled_desc": "小首领将获得额外的修饰符，总数为缩放值与随机缩放值之和。当启用此缩放时，额外修饰符从 0 开始计算，因此默认的一个修饰符数值会被覆盖。缩放步数从修饰符开始出现后的死亡次数开始计算（例如，如果修饰符从第二次死亡后出现，而小首领死亡四次，则初始值会增加两次）。",
+
+  "config_miniboss_modifiers_scaling_min_number_name": "初始修饰符数量：",
+  "config_miniboss_modifiers_scaling_min_number_desc": "修饰符缩放的初始值。",
+
+  "config_miniboss_modifiers_scaling_step_name": "步长值：",
+  "config_miniboss_modifiers_scaling_step_desc": "修饰符数量增加值。",
+
+  "config_miniboss_modifiers_scaling_steps_cap_name": "步数上限：",
+  "config_miniboss_modifiers_scaling_steps_cap_desc": "起始值可以增加的次数。设置为 -1 表示无限增加（对于修饰符，仍受可用数量限制）。",
+
+  "config_miniboss_rand_speed_scaling_enabled_name": "随机速度缩放。",
+  "config_miniboss_rand_speed_scaling_enabled_desc": "小首领每次死亡后会获得随机速度提升，与线性速度缩放及修饰符叠加。",
+
+  "config_miniboss_rand_speed_scaling_minspeed_name": "最低速度：",
+  "config_miniboss_rand_speed_scaling_minspeed_desc": "随机速度缩放的最小值。",
+
+  "config_miniboss_rand_speed_scaling_maxspeed_name": "最高速度：",
+  "config_miniboss_rand_speed_scaling_maxspeed_desc": "随机速度提升的最大值。",
+
+  "config_miniboss_rand_modifiers_scaling_enabled_name": "随机修饰符缩放。",
+  "config_miniboss_rand_modifiers_scaling_enabled_desc": "小首领每次死亡后会获得随机数量的修饰符，叠加在线性增加的修饰符上。",
+
+  "config_miniboss_rand_modifiers_scaling_min_name": "最小修饰符数量：",
+  "config_miniboss_rand_modifiers_scaling_min_desc": "随机修饰符数量的最小值。",
+
+  "config_miniboss_rand_modifiers_scaling_max_name": "最大修饰符数量：",
+  "config_miniboss_rand_modifiers_scaling_max_desc": "随机修饰符数量的最大值。",
+
+  "config_affect_enemies_name": "影响敌人",
+  "config_affect_enemies_desc": "敌人增强。敌人会复活，并获得修饰符和增益效果。",
+
+  "config_enemy_deaths_number_name": "敌人最大死亡次数",
+  "config_enemy_deaths_number_desc": "敌人在达到此死亡次数后会死亡。",
+
+  "config_enemy_speed_scaling_enabled_name": "速度缩放",
+  "config_enemy_speed_scaling_enabled_desc": "敌人每次死亡后都会获得线性速度提升，并与随机速度缩放及修饰符叠加。",
+
+  "config_enemy_speed_scaling_minspeed_name": "初始速度：",
+  "config_enemy_speed_scaling_minspeed_desc": "速度缩放的初始值。",
+
+  "config_enemy_speed_scaling_step_name": "步长值：",
+  "config_enemy_speed_scaling_step_desc": "速度修饰符增加值。",
+
+  "config_enemy_speed_scaling_steps_cap_name": "步数上限：",
+  "config_enemy_speed_scaling_steps_cap_desc": "起始值可以增加的次数。设置为 -1 表示无限增加。",
+
+  "config_enemy_modifiers_scaling_enabled_name": "修饰符数量缩放",
+  "config_enemy_modifiers_scaling_enabled_desc": "敌人将获得额外的修饰符，总数为缩放值与随机缩放值之和。当启用此缩放时，额外修饰符从 0 开始计算，因此默认的一个修饰符数值会被覆盖。缩放步数从修饰符开始出现后的死亡次数开始计算（例如，如果修饰符从第二次死亡后出现，而敌人死亡四次，则初始值会增加两次）。",
+
+  "config_enemy_modifiers_scaling_min_number_name": "初始修饰符数量：",
+  "config_enemy_modifiers_scaling_min_number_desc": "修饰符缩放的初始值。",
+
+  "config_enemy_modifiers_scaling_step_name": "步长值：",
+  "config_enemy_modifiers_scaling_step_desc": "修饰符数量增加值。",
+
+  "config_enemy_modifiers_scaling_steps_cap_name": "步数上限：",
+  "config_enemy_modifiers_scaling_steps_cap_desc": "起始值可以增加的次数。设置为 -1 表示无限增加（对于修饰符，仍受可用数量限制）。",
+
+  "config_enemy_rand_speed_scaling_enabled_name": "随机速度缩放。",
+  "config_enemy_rand_speed_scaling_enabled_desc": "敌人每次死亡后会获得随机速度提升，与线性速度缩放及修饰符叠加。",
+
+  "config_enemy_rand_speed_scaling_minspeed_name": "最低速度：",
+  "config_enemy_rand_speed_scaling_minspeed_desc": "随机速度缩放的最小值。",
+
+  "config_enemy_rand_speed_scaling_maxspeed_name": "最高速度：",
+  "config_enemy_rand_speed_scaling_maxspeed_desc": "随机速度提升的最大值。",
+
+  "config_enemy_rand_modifiers_scaling_enabled_name": "随机修饰符缩放。",
+  "config_enemy_rand_modifiers_scaling_enabled_desc": "敌人每次死亡后会获得随机数量的修饰符，叠加在线性增加的修饰符上。",
+
+  "config_enemy_rand_modifiers_scaling_min_name": "最小修饰符数量：",
+  "config_enemy_rand_modifiers_scaling_min_desc": "随机修饰符数量的最小值。",
+
+  "config_enemy_rand_modifiers_scaling_max_name": "最大修饰符数量：",
+  "config_enemy_rand_modifiers_scaling_max_desc": "随机修饰符数量的最大值。"
 }

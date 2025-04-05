@@ -22,14 +22,6 @@ namespace BossChallengeMod.BossPatches {
             }
         }
 
-        protected bool IsModEnabled {
-            get {
-                if(ApplicationCore.IsInBossMemoryMode) return ConfigurationToUse.IsEnabledInMoB;
-                return ConfigurationToUse.IsEnabledInNormal;
-            }
-        }
-
-
         private MonsterBase.States bossReviveMonsterState = BossChallengeMod.Instance.MonsterStateValuesResolver.GetState("BossRevive");
         protected string resetBossStateEventType = "RestoreBoss_enter";
 
@@ -64,50 +56,46 @@ namespace BossChallengeMod.BossPatches {
         public override void PatchMonsterPostureSystem(MonsterBase monsterBase) {
             base.PatchMonsterPostureSystem(monsterBase);
 
-            if (IsModEnabled) {
-                ModifiedDieStates.Clear();
-                ModifiedDieStates.AddRange(DieStates);
+            ModifiedDieStates.Clear();
+            ModifiedDieStates.AddRange(DieStates);
 
-                int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
-                if (insertIndex >= 0 && (MaxEnemyCycles > 1 || MaxEnemyCycles <= 0)) {
-                    monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
-                    ModifiedDieStates.Insert(insertIndex, bossReviveMonsterState);
-                }
+            int insertIndex = monsterBase.postureSystem.DieHandleingStates.IndexOf(InsertPlaceState);
+            if (insertIndex >= 0 && (MaxEnemyCycles > 1 || MaxEnemyCycles <= 0)) {
+                monsterBase.postureSystem.DieHandleingStates.Insert(insertIndex, bossReviveMonsterState);
+                ModifiedDieStates.Insert(insertIndex, bossReviveMonsterState);
             }
         }
 
         public override IEnumerable<MonsterState> PatchMonsterStates(MonsterBase monsterBase) {
             var result = base.PatchMonsterStates(monsterBase).ToList();
-            
+
             try {
-                if(IsModEnabled) {
-                    var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
-                    var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
-                    resetBossState.AssignChallengeConfig(ConfigurationToUse);
+                var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
+                var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
+                resetBossState.AssignChallengeConfig(ConfigurationToUse);
 
-                    if (IsModEnabled && UseKillCounter) {
-                        var mainController = InitializeMainController(monsterBase, resetBossState);
+                if (UseKillCounter) {
+                    var mainController = InitializeMainController(monsterBase, resetBossState);
 
-                        var killCounter = InitializeKillCounter(monsterBase, mainController);
-                        var modifiersController = InitializeModifiers(monsterBase, mainController);
+                    var killCounter = InitializeKillCounter(monsterBase, mainController);
+                    var modifiersController = InitializeModifiers(monsterBase, mainController);
 
-                        resetBossState.monsterKillCounter = killCounter;
+                    resetBossState.monsterKillCounter = killCounter;
 
-                        if(!UseProximityActivation) {
-                            BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
-                            BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
-                        }
-
-                        killCounter.CheckInit();
+                    if (!UseProximityActivation) {
+                        BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(killCounter);
+                        BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
                     }
 
-
-                    monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
-                    result.Add(resetBossState);
+                    killCounter.CheckInit();
                 }
 
-            }
-            catch (Exception ex) {
+
+                monsterStatesFieldRef.SetValue(monsterBase, monsterStatesRefs.Append(resetBossState).ToArray());
+                result.Add(resetBossState);
+
+
+            } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
 
@@ -120,11 +108,10 @@ namespace BossChallengeMod.BossPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if(IsModEnabled) {
-                            var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
-                            var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateEnterEvent);
-                            result.Add(resStateEnterSender);
-                        }
+                        var eventType = eventTypesResolver.RequestType(resetBossStateEventType);
+                        var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateEnterEvent);
+                        result.Add(resStateEnterSender);
+
 
                         continue;
                     default:
@@ -136,9 +123,7 @@ namespace BossChallengeMod.BossPatches {
         }
 
         public override void PostfixPatch(MonsterBase monster) {
-            if(IsModEnabled) {
-                base.PostfixPatch(monster);
-            }
+            base.PostfixPatch(monster);
         }
 
         public override bool CanBeApplied() {
@@ -175,6 +160,7 @@ namespace BossChallengeMod.BossPatches {
             killCounter.CanBeTracked = UseKillCounterTracking;
             killCounter.UseProximityShow = UseProximityActivation;
             killCounter.UseRecording = UseRecording;
+            killCounter.MonsterResetState = bossReviveMonsterState;
 
             monsterController.OnRevivalStateEnter += killCounter.UpdateCounter;
             monsterController.OnEngage += killCounter.OnEngage;

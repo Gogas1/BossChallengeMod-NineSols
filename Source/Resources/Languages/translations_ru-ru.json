@@ -49,40 +49,6 @@
   "qi_depletion_bomb": "Бомба истощения Ци",
   "cooldown_bomb": "Периодическая бомба",
 
-  "config_top_description": "Параметры испытания применяются в начале битвы или при загрузке локации (то есть в момент инициализации врагов). Чтобы применить изменения настроек, внесённые в процессе битвы, начните битву заново (смерть, перезагрузка локации, повторный вход из лобби) \n Мод в обычном режиме игры отключён по-умолчанию, секции 5,6,7 отвечают за настройку мода. Модификаторы отключены в любом режиме игры по-умолчанию. В случае проблем с UI мода, используйте секцию 4 конфигурации. Если вы испытываете визуальные проблемы с UI(выходит за рамки, неподходящий масштаб), вы можете изменить настройки в секции 4 конфигурации",
-
-
-  "config_cycling_enabled_description": "Включить мод.\nВключает мод в режиме игры \"Боевые воспоминания\"",
-  "config_cycles_number_description": "Количество смертей босса.\n Босс умрёт после указанного количества смертей(учитывая эту по счёту).",
-
-  "config_single_recording_enabled_description": "Записывать результаты боёв независимо от конфигурации. По умолчанию, записи результатов создаются для каждого уникального состояния конфигурации(учитываются секции 1,2,3) что бы для каждой настроенной сложности испытания были свои результаты. Включение этой настройки будет записывать и использовать одни результаты, независимо от настроек испытания",
-
-  "config_boss_deaths_randomized_enabled_description": "Включить случайное количество смертей босса.\n Максимальное количество смертей босса будет случайно определяться в начале боя",
-  "config_boss_deaths_randomized_min_description": "Минимум смертей. \n Минимальное значение случайного количества смертей босса",
-  "config_boss_deaths_randomized_max_description": "Максимум смертей. \n Максимальное значение случайного количества смертей босса",
-
-  "config_scaling_enabled_description": "Включить усиление скорости.\n Боссы будут получать линейное усиление скорости с каждой смертью. Совмещается со случайным ускорением босса мультипликативно",
-  "config_scaling_minspeed_description": "Усиление: начальная скорость.\n С какого значения начнётся увеличение скорости.",
-  "config_scaling_maxspeed_description": "Усиление: максимальная скорость.\n Максимальное значение увеличения скорости.",
-  "config_scaling_scaling_cycle_description": "Максимальное усиление скорости.\n Усиление скорости достигнет максимума после этого количества смертей",
-
-  "config_scaling_modifiers_enabled_description": "Включить увеличение количества модификаторов.\n Боссы будут получать большее количество модификаторов. Полученное число модификаторов суммируется со случайным увеличением модификаторов",
-  "config_scaling_maxmodifiers_description": "Усиление: количество модификаторов. \n Максимальное значение увеличения количества модификаторов",
-  "config_scaling_modifiers_scaling_cycle_description": "Максимальное увеличение количества модификаторов.\n Увеличение количества модификаторов достигнет максимума после этого количества смертей",
-
-  "config_rand_speed_scaling_enabled_description": "Включить случайное усиление скорости.\n Боссы будут получать случайное усиление скорости с каждой смертью. Совмещается с линейным ускорением босса мультипликативно",
-  "config_rand_speed_scaling_start_death_description": "Применение после смерти. \n После какой смерти босса он начнёт получать случайное ускорение",
-  "config_rand_speed_scaling_minspeed_description": "Случайное усиление: минимальное ускорение.\n Минимальное значение случайного усиления скорости",
-  "config_rand_speed_scaling_maxspeed_description": "Случайное усиление: максимальное ускорение.\n Максимальное значение случайного усиления скорости",
-
-  "config_rand_modifiers_scaling_enabled_description": "Включить случайное увеличение количества модификаторов.\n Боссы будут получать случайное количество модификаторов с каждой смертью. Полученное число модификаторов суммируется с линейным увеличением модификаторов",
-  "config_rand_modifiers_scaling_start_death_description": "Применение после смерти. \n После какой смерти босса он начнёт получать случайное количество модификаторов",
-  "config_rand_modifiers_scaling_min_description": "Случайное усиление: минимальное количество модификаторов.\n Минимальное значение случайного количества модификаторов",
-  "config_rand_modifiers_scaling_max_description": "Случайное усиление: максимальное количество модификаторов.\n Максимальное значение случайного количества модификаторов",
-
-  "config_modifiers_enabled_description": "Включить модификаторы.\n Включить или отключить модификаторы, влияющие на бой с боссом.",
-  "config_modifiers_start_death_description": "Номер смерти для появления модификаторов.\n Модификаторы начнут применяться после этого количества смертей босса. При значении 0 модификаторы будут применяться в начале боя.",
-  "config_repeating_enabled_description": "Повтор модификаторов.\n Модификаторы могут повторяться несколько раз подряд.",
   "config_modifiers_speed_enabled_description": "Модификатор скорости.\n +20% ускорение босса. Совмещается усилением скорости мультипликативно",
   "config_modifiers_timer_enabled_description": "Модификатор таймера.\n Запускает таймер на убийство босса. По истечению времени И умирает",
   "config_modifiers_parry_damage_enabled_description": "Модификатор отключения неточных парирований.\n Неточные парирования не защищают И.",
@@ -104,21 +70,162 @@
   "config_modifiers_qi_depletion_bomb_enabled_description": "Модификатор бомбы расхода Ци.\n Две бомбы появятся на И после опустошения всех зарядов Ци.",
   "config_modifiers_cooldown_bomb_enabled_description": "Модификатор периодической бомбы.\n Бомба периодически будет появляться на И.",
 
-  "config_story_enabled_description": "Включает работу мода в обычном режиме игры.",
+  "label_disabled": "Отключено",
+  "label_enabled": "Включено",
+  "label_limited": "Ограничено",
+  "label_unlimited": "Неограничено",
 
-  "config_story_miniboss_cycles_number_description": "Количество смертей минибосса.\n Минибосс умрёт после указанного количества смертей(учитывая эту по счёту).",
-  "config_story_enemy_cycles_number_description": "Количество смертей обычного врага.\n Обычный враг умрёт после указанного количества смертей(учитывая эту по счёту).",
+  "config_modifiers_modifiers_enabled_name": "Модификаторы",
+  "config_modifiers_modifiers_enabled_desc": "Включает модификаторы, делающие бои сложнее",
 
-  "config_story_affect_bosses_description": "Усиление боссов. Боссы будут возрождаться, получать модификаторы и усиления.",
-  "config_story_affect_minibosses_description": "Усиление минибоссов. Минибоссы будут возрождаться, получать модификаторы и усиления.",
-  "config_story_affect_enemies_description": "Усиление обычных врагов. Обычные враги будут возрождаться, получать модификаторы и усиления.",
+  "config_modifiers_start_death_name": "Начало смерти модификаторов",
+  "config_modifiers_start_death_desc": "Модификаторы начнут действовать после указанного количества смертей врагов. Если установлено 0, модификаторы будут применены в начале боя.",
 
-  "config_story_miniboss_deaths_randomized_description": "Включить случайное количество смертей минибосса.\n Максимальное количество смертей минибосса будет случайно определяться при входе на локацию",
-  "config_story_miniboss_deaths_randomized_min_description": "Минимум смертей. \n Минимальное значение случайного количества смертей минибосса",
-  "config_story_miniboss_deaths_randomized_max_description": "Максимум смертей. \n Максимальное значение случайного количества смертей минибосса",
+  "config_modifiers_modifiers_repeat_enabled_name": "Включить повторение модификаторов",
+  "config_modifiers_modifiers_repeat_enabled_desc": "Модификаторы могут повторяться несколько раз подряд.",
 
-  "config_story_enemy_deaths_randomized_description": "Включить случайное количество смертей обычного врага.\n Максимальное количество смертей обычного врага будет случайно определяться при входе на локацию",
-  "config_story_enemy_deaths_randomized_min_description": "Минимум смертей. \n Минимальное значение случайного количества смертей минибосса",
-  "config_story_enemy_deaths_randomized_max_description": "Максимум смертей. \n Максимальное значение случайного количества смертей минибосса"
+  "config_affect_bosses_name": "Влияние на боссов",
+  "config_affect_bosses_desc": "Усиление боссов. Боссы будут возрождаться, получать модификаторы и усиления.",
+
+  "config_boss_deaths_number_name": "Максимальное число смертей босса",
+  "config_boss_deaths_number_desc": "Босс умрет после этого количества смертей.",
+
+  "config_boss_speed_scaling_enabled_name": "Масштабирование скорости",
+  "config_boss_speed_scaling_enabled_desc": "Боссы будут получать линейное увеличение скорости с каждой смертью, суммируясь с случайным увеличением скорости и модификаторами.",
+
+  "config_boss_speed_scaling_minspeed_name": "Начальная скорость:",
+  "config_boss_speed_scaling_minspeed_desc": "Начальное значение для масштабирования скорости.",
+
+  "config_boss_speed_scaling_step_name": "Шаг:",
+  "config_boss_speed_scaling_step_desc": "Значение прироста модификатора скорости.",
+
+  "config_boss_speed_scaling_steps_cap_name": "Ограничение шагов:",
+  "config_boss_speed_scaling_steps_cap_desc": "Сколько раз может быть увеличено начальное значение. Установите -1 для неограниченного увеличения.",
+
+  "config_boss_modifiers_scaling_enabled_name": "Масштабирование количества модификаторов",
+  "config_boss_modifiers_scaling_enabled_desc": "Боссы получат дополнительные модификаторы, общее количество которых равно сумме значения масштабирования и случайного значения. Когда масштабирование включено, дополнительные модификаторы рассчитываются от базового значения 0, поэтому стандартное значение одного модификатора заменяется. Количество шагов масштабирования рассчитывается, начиная со смерти, после которой появляются модификаторы (например, если модификаторы появляются со второй смерти, а босс умер четыре раза, то начальное значение увеличится дважды).",
+
+  "config_boss_modifiers_scaling_min_number_name": "Начальное количество модификаторов:",
+  "config_boss_modifiers_scaling_min_number_desc": "Начальное значение для масштабирования модификаторов.",
+
+  "config_boss_modifiers_scaling_step_name": "Шаг:",
+  "config_boss_modifiers_scaling_step_desc": "Значение прироста количества модификаторов.",
+
+  "config_boss_modifiers_scaling_steps_cap_name": "Ограничение шагов:",
+  "config_boss_modifiers_scaling_steps_cap_desc": "Сколько раз может быть увеличено начальное значение. Установите -1 для неограниченного увеличения (в случае модификаторов, количество всё же ограничено доступным числом модификаторов).",
+
+  "config_boss_rand_speed_scaling_enabled_name": "Случайное масштабирование скорости.",
+  "config_boss_rand_speed_scaling_enabled_desc": "Боссы будут получать случайное ускорение с каждой смертью, суммируясь с линейным масштабированием скорости и модификаторами.",
+
+  "config_boss_rand_speed_scaling_minspeed_name": "Минимальная скорость:",
+  "config_boss_rand_speed_scaling_minspeed_desc": "Минимальное значение для случайного масштабирования скорости.",
+
+  "config_boss_rand_speed_scaling_maxspeed_name": "Максимальная скорость:",
+  "config_boss_rand_speed_scaling_maxspeed_desc": "Максимальное значение для случайного ускорения.",
+
+  "config_boss_rand_modifiers_scaling_enabled_name": "Случайное масштабирование модификаторов.",
+  "config_boss_rand_modifiers_scaling_enabled_desc": "Боссы будут получать случайное количество модификаторов с каждой смертью, добавляемое к линейному приросту модификаторов.",
+
+  "config_boss_rand_modifiers_scaling_min_name": "Минимальное количество модификаторов:",
+  "config_boss_rand_modifiers_scaling_min_desc": "Минимальное значение для случайного количества модификаторов.",
+
+  "config_boss_rand_modifiers_scaling_max_name": "Максимальное количество модификаторов:",
+  "config_boss_rand_modifiers_scaling_max_desc": "Максимальное значение для случайного количества модификаторов.",
+
+  "config_affect_minibosses_name": "Влияние на минибоссов",
+  "config_affect_minibosses_desc": "Усиление минибоссов. Минибоссы будут возрождаться, получать модификаторы и усиления.",
+
+  "config_miniboss_deaths_number_name": "Максимальное число смертей минибосса",
+  "config_miniboss_deaths_number_desc": "Минибосс умрет после этого количества смертей.",
+
+  "config_miniboss_speed_scaling_enabled_name": "Масштабирование скорости",
+  "config_miniboss_speed_scaling_enabled_desc": "Минибоссы будут получать линейное увеличение скорости с каждой смертью, суммируясь с случайным увеличением скорости и модификаторами.",
+
+  "config_miniboss_speed_scaling_minspeed_name": "Начальная скорость:",
+  "config_miniboss_speed_scaling_minspeed_desc": "Начальное значение для масштабирования скорости.",
+
+  "config_miniboss_speed_scaling_step_name": "Шаг:",
+  "config_miniboss_speed_scaling_step_desc": "Значение прироста модификатора скорости.",
+
+  "config_miniboss_speed_scaling_steps_cap_name": "Ограничение шагов:",
+  "config_miniboss_speed_scaling_steps_cap_desc": "Сколько раз может быть увеличено начальное значение. Установите -1 для неограниченного увеличения.",
+
+  "config_miniboss_modifiers_scaling_enabled_name": "Масштабирование количества модификаторов",
+  "config_miniboss_modifiers_scaling_enabled_desc": "Минибоссы получат дополнительные модификаторы, общее количество которых равно сумме значения масштабирования и случайного значения. Когда масштабирование включено, дополнительные модификаторы рассчитываются от базового значения 0, поэтому стандартное значение одного модификатора заменяется. Количество шагов масштабирования рассчитывается, начиная со смерти, после которой появляются модификаторы (например, если модификаторы появляются со второй смерти, а минибосс умер четыре раза, то начальное значение увеличится дважды).",
+
+  "config_miniboss_modifiers_scaling_min_number_name": "Начальное количество модификаторов:",
+  "config_miniboss_modifiers_scaling_min_number_desc": "Начальное значение для масштабирования модификаторов.",
+
+  "config_miniboss_modifiers_scaling_step_name": "Шаг:",
+  "config_miniboss_modifiers_scaling_step_desc": "Значение прироста количества модификаторов.",
+
+  "config_miniboss_modifiers_scaling_steps_cap_name": "Ограничение шагов:",
+  "config_miniboss_modifiers_scaling_steps_cap_desc": "Сколько раз может быть увеличено начальное значение. Установите -1 для неограниченного увеличения (в случае модификаторов, количество всё же ограничено доступным числом модификаторов).",
+
+  "config_miniboss_rand_speed_scaling_enabled_name": "Случайное масштабирование скорости.",
+  "config_miniboss_rand_speed_scaling_enabled_desc": "Минибоссы будут получать случайное ускорение с каждой смертью, суммируясь с линейным масштабированием скорости и модификаторами.",
+
+  "config_miniboss_rand_speed_scaling_minspeed_name": "Минимальная скорость:",
+  "config_miniboss_rand_speed_scaling_minspeed_desc": "Минимальное значение для случайного масштабирования скорости.",
+
+  "config_miniboss_rand_speed_scaling_maxspeed_name": "Максимальная скорость:",
+  "config_miniboss_rand_speed_scaling_maxspeed_desc": "Максимальное значение для случайного ускорения.",
+
+  "config_miniboss_rand_modifiers_scaling_enabled_name": "Случайное масштабирование модификаторов.",
+  "config_miniboss_rand_modifiers_scaling_enabled_desc": "Минибоссы будут получать случайное количество модификаторов с каждой смертью, добавляемое к линейному приросту модификаторов.",
+
+  "config_miniboss_rand_modifiers_scaling_min_name": "Минимальное количество модификаторов:",
+  "config_miniboss_rand_modifiers_scaling_min_desc": "Минимальное значение для случайного количества модификаторов.",
+
+  "config_miniboss_rand_modifiers_scaling_max_name": "Максимальное количество модификаторов:",
+  "config_miniboss_rand_modifiers_scaling_max_desc": "Максимальное значение для случайного количества модификаторов.",
+
+  "config_affect_enemies_name": "Влияние на врагов",
+  "config_affect_enemies_desc": "Усиление врагов. Враги будут возрождаться, получать модификаторы и усиления.",
+
+  "config_enemy_deaths_number_name": "Максимальное число смертей врага",
+  "config_enemy_deaths_number_desc": "Враг умрет после этого количества смертей.",
+
+  "config_enemy_speed_scaling_enabled_name": "Масштабирование скорости",
+  "config_enemy_speed_scaling_enabled_desc": "Враги будут получать линейное увеличение скорости с каждой смертью, суммируясь с случайным масштабированием скорости и модификаторами.",
+
+  "config_enemy_speed_scaling_minspeed_name": "Начальная скорость:",
+  "config_enemy_speed_scaling_minspeed_desc": "Начальное значение для масштабирования скорости.",
+
+  "config_enemy_speed_scaling_step_name": "Шаг:",
+  "config_enemy_speed_scaling_step_desc": "Значение прироста модификатора скорости.",
+
+  "config_enemy_speed_scaling_steps_cap_name": "Ограничение шагов:",
+  "config_enemy_speed_scaling_steps_cap_desc": "Сколько раз может быть увеличено начальное значение. Установите -1 для неограниченного увеличения.",
+
+  "config_enemy_modifiers_scaling_enabled_name": "Масштабирование количества модификаторов",
+  "config_enemy_modifiers_scaling_enabled_desc": "Враги получат дополнительные модификаторы, общее количество которых равно сумме значения масштабирования и случайного значения. Когда масштабирование включено, дополнительные модификаторы рассчитываются от базового значения 0, поэтому стандартное значение одного модификатора заменяется. Количество шагов масштабирования рассчитывается, начиная со смерти, после которой появляются модификаторы (например, если модификаторы появляются со второй смерти, а враг умер четыре раза, то начальное значение увеличится дважды).",
+
+  "config_enemy_modifiers_scaling_min_number_name": "Начальное количество модификаторов:",
+  "config_enemy_modifiers_scaling_min_number_desc": "Начальное значение для масштабирования модификаторов.",
+
+  "config_enemy_modifiers_scaling_step_name": "Шаг:",
+  "config_enemy_modifiers_scaling_step_desc": "Значение прироста количества модификаторов.",
+
+  "config_enemy_modifiers_scaling_steps_cap_name": "Ограничение шагов:",
+  "config_enemy_modifiers_scaling_steps_cap_desc": "Сколько раз может быть увеличено начальное значение. Установите -1 для неограниченного увеличения (в случае модификаторов, количество всё же ограничено доступным числом модификаторов).",
+
+  "config_enemy_rand_speed_scaling_enabled_name": "Случайное масштабирование скорости.",
+  "config_enemy_rand_speed_scaling_enabled_desc": "Враги будут получать случайное ускорение с каждой смертью, суммируясь с линейным масштабированием скорости и модификаторами.",
+
+  "config_enemy_rand_speed_scaling_minspeed_name": "Минимальная скорость:",
+  "config_enemy_rand_speed_scaling_minspeed_desc": "Минимальное значение для случайного масштабирования скорости.",
+
+  "config_enemy_rand_speed_scaling_maxspeed_name": "Максимальная скорость:",
+  "config_enemy_rand_speed_scaling_maxspeed_desc": "Максимальное значение для случайного ускорения.",
+
+  "config_enemy_rand_modifiers_scaling_enabled_name": "Случайное масштабирование модификаторов.",
+  "config_enemy_rand_modifiers_scaling_enabled_desc": "Враги будут получать случайное количество модификаторов с каждой смертью, добавляемое к линейному приросту модификаторов.",
+
+  "config_enemy_rand_modifiers_scaling_min_name": "Минимальное количество модификаторов:",
+  "config_enemy_rand_modifiers_scaling_min_desc": "Минимальное значение для случайного количества модификаторов.",
+
+  "config_enemy_rand_modifiers_scaling_max_name": "Максимальное количество модификаторов:",
+  "config_enemy_rand_modifiers_scaling_max_desc": "Максимальное значение для случайного количества модификаторов."
 
 }

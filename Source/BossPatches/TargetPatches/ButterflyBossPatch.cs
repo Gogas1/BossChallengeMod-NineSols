@@ -23,7 +23,6 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             var result = new List<MonsterState>();
 
             try {
-                if (IsModEnabled) {
                     var monsterStatesRefs = (MonsterState[])monsterStatesFieldRef.GetValue(monsterBase);
                     var resetBossState = (ResetBossState)InstantiateStateObject(monsterBase.gameObject, typeof(ResetBossState), "ResetBoss", ResetStateConfiguration);
                     resetBossState.AssignChallengeConfig(ConfigurationToUse);
@@ -44,7 +43,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                         result.Add(cloneResetBossState);
                     }
 
-                    if (IsModEnabled && UseKillCounter) {
+                    if (UseKillCounter) {
                         var monsterController = InitializeMainController(monsterBase, resetBossState);
 
                         var killCounter = InitializeKillCounter(monsterBase, monsterController);
@@ -66,7 +65,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                     }
 
                     PatchGroundBreaking(monsterBase);
-                }
+                
             } catch (Exception ex) {
                 Log.Error($"{ex.Message}, {ex.StackTrace}");
             }
@@ -81,11 +80,9 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             foreach (var state in monsterStates) {
                 switch (state) {
                     case ResetBossState resState:
-                        if (IsModEnabled) {
-                            var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
-                            var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
-                            result.Add(resStateEnterSender);
-                        }
+                        var eventType = eventTypesResolver.RequestType(resetBossStateExitEventType);
+                        var resStateEnterSender = CreateEventSender(resState.gameObject, eventType, resState.stateEvents.StateExitEvent);
+                        result.Add(resStateEnterSender);
 
                         continue;
                     default:

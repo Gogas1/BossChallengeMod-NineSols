@@ -47,29 +47,6 @@
   "qi_depletion_bomb": "氣耗竭炸彈",
   "cooldown_bomb": "冷卻炸彈",
 
-  "config_top_description": "挑戰設定會在戰鬥開始或載入場景時應用（也就是在敵人初始化的時刻）。要在戰鬥過程中應用變更的設定，請重新開始戰鬥（死亡、重新載入場景、從大廳重新進入）。\n在一般遊戲模式下，模組預設為停用狀態，第5、6、7部分負責配置該模組。\n如果您遇到UI顯示問題（如裁切、比例錯誤），可在配置的第4部分調整設定。",
-
-  "config_cycling_enabled_description": "啟用模組。\n在「Memories of Battle」遊戲模式中啟用模組",
-  "config_single_recording_enabled_description": "記錄戰鬥結果，而不受配置影響。預設情況下，每種唯一的配置狀態（包括第1、2、3節）都會生成結果，以便每種設定的挑戰難度都有自己的結果。啟用此設定後，將會記錄並使用統一的結果，而不考慮挑戰設定。",
-  "config_cycles_number_description": "首領死亡次數。\n首領將在指定死亡次數後死亡（包括本次）。",
-  "config_scaling_enabled_description": "啟用速度縮放。\n首領每次死亡後將獲得線性速度提升。",
-  "config_scaling_minspeed_description": "縮放：初始速度。\n速度縮放的起始值。",
-  "config_scaling_maxspeed_description": "縮放：最大速度。\n速度縮放的最大值。",
-  "config_scaling_scaling_cycle_description": "達到最大速度縮放的死亡次數。\n速度縮放將在這些死亡次數後達到最大值。",
-  "config_scaling_modifiers_enabled_description": "啟用修改器數量縮放。\n首領將獲得更多修改器。",
-  "config_scaling_maxmodifiers_description": "縮放：修改器數量。\n修改器數量增加的最大值",
-  "config_scaling_modifiers_scaling_cycle_description": "達到最大修改器數量縮放的死亡次數。\n修改器數量增加將在這些死亡次數後達到最大值",
-
-  "config_rand_speed_scaling_enabled_description": "啟用隨機速度調整。\n每次死亡時，首領將獲得隨機的速度提升。此提升與線性速度調整呈乘法疊加。",
-  "config_rand_speed_scaling_start_death_description": "隨機速度調整啟始死亡次數。\n在此死亡次數之後，首領將開始獲得隨機速度提升。",
-  "config_rand_speed_scaling_minspeed_description": "隨機加成：最小速度。\n隨機速度提升的最小值。",
-  "config_rand_speed_scaling_maxspeed_description": "隨機加成：最大速度。\n隨機速度提升的最大值。",
-
-  "config_rand_modifiers_scaling_enabled_description": "啟用隨機修正調整。\n每次死亡時，首領將獲得隨機數量的修正，並與線性修正增益疊加。",
-  "config_rand_modifiers_scaling_start_death_description": "隨機修正調整啟始死亡次數。\n在此死亡次數之後，首領將開始獲得隨機數量的修正。",
-  "config_rand_modifiers_scaling_min_description": "隨機加成：最小修正數量。\n隨機修正數量的最小值。",
-  "config_rand_modifiers_scaling_max_description": "隨機加成：最大修正數量。\n隨機修正數量的最大值。",
-
   "config_modifiers_enabled_description": "啟用修改器。\n啟用或停用影響首領戰的修改器。",
   "config_modifiers_start_death_description": "觸發修飾符的死亡次數。\n 修飾符將在達到此數量的首領死亡後開始生效。如果設定為 0，修飾符將在戰鬥開始時生效。",
   "config_repeating_enabled_description": "重複修改器。\n修改器可以連續重複多次。",
@@ -92,5 +69,158 @@
   "config_modifiers_shield_break_bomb_enabled_description": "破盾炸彈修改器。\n在敵人護盾破裂後，羿身上將出現兩個炸彈。敵人只有在擁有任一護盾修改器時才能獲得此修改器。",
   "config_modifiers_qi_overload_bomb_enabled_description": "氣過載炸彈修改器。\n達到氣充能上限後，羿身上將出現一個炸彈。",
   "config_modifiers_qi_depletion_bomb_enabled_description": "氣耗竭炸彈修改器。\n耗盡所有氣充能後，羿身上將出現兩個炸彈。",
-  "config_modifiers_cooldown_bomb_enabled_description": "冷卻炸彈修正器。\n炸彈會定期生成在羿身上。"
+  "config_modifiers_cooldown_bomb_enabled_description": "冷卻炸彈修正器。\n炸彈會定期生成在羿身上。",
+
+  "config_modifiers_modifiers_enabled_name": "修飾符",
+  "config_modifiers_modifiers_enabled_desc": "啟用修飾符，使戰鬥更具挑戰性",
+
+  "config_modifiers_start_death_name": "修飾符開始死亡",
+  "config_modifiers_start_death_desc": "修飾符將在達到此數量的敵人死亡後開始生效。如果設置為 0，修飾符將在戰鬥開始時生效。",
+
+  "config_modifiers_modifiers_repeat_enabled_name": "啟用修飾符重複",
+  "config_modifiers_modifiers_repeat_enabled_desc": "修飾符可以連續多次重複。",
+
+  "config_affect_bosses_name": "影響首領",
+  "config_affect_bosses_desc": "首領增強。首領會復活，並獲得修飾符和增益效果。",
+
+  "config_boss_deaths_number_name": "首領最大死亡次數",
+  "config_boss_deaths_number_desc": "首領在達到此死亡次數後會死亡。",
+
+  "config_boss_speed_scaling_enabled_name": "速度縮放",
+  "config_boss_speed_scaling_enabled_desc": "首領每次死亡後都會獲得線性速度提升，並與隨機速度縮放及修飾符疊加。",
+
+  "config_boss_speed_scaling_minspeed_name": "初始速度：",
+  "config_boss_speed_scaling_minspeed_desc": "速度縮放的初始值。",
+
+  "config_boss_speed_scaling_step_name": "步長值：",
+  "config_boss_speed_scaling_step_desc": "速度修飾符增加值。",
+
+  "config_boss_speed_scaling_steps_cap_name": "步數上限：",
+  "config_boss_speed_scaling_steps_cap_desc": "起始值可以增加的次數。設置為 -1 表示無限增加。",
+
+  "config_boss_modifiers_scaling_enabled_name": "修飾符數量縮放",
+  "config_boss_modifiers_scaling_enabled_desc": "首領將獲得額外的修飾符，總數為縮放值與隨機縮放值之和。當啟用此縮放時，額外修飾符從 0 開始計算，因此預設的一個修飾符數值會被覆蓋。縮放步數從修飾符開始出現後的死亡次數開始計算（例如，如果修飾符從第二次死亡後出現，而首領死亡四次，則初始值會增加兩次）。",
+
+  "config_boss_modifiers_scaling_min_number_name": "初始修飾符數量：",
+  "config_boss_modifiers_scaling_min_number_desc": "修飾符縮放的初始值。",
+
+  "config_boss_modifiers_scaling_step_name": "步長值：",
+  "config_boss_modifiers_scaling_step_desc": "修飾符數量增加值。",
+
+  "config_boss_modifiers_scaling_steps_cap_name": "步數上限：",
+  "config_boss_modifiers_scaling_steps_cap_desc": "起始值可以增加的次數。設置為 -1 表示無限增加（對於修飾符，仍受可用數量限制）。",
+
+  "config_boss_rand_speed_scaling_enabled_name": "隨機速度縮放。",
+  "config_boss_rand_speed_scaling_enabled_desc": "首領每次死亡後會獲得隨機速度提升，與線性速度縮放及修飾符疊加。",
+
+  "config_boss_rand_speed_scaling_minspeed_name": "最低速度：",
+  "config_boss_rand_speed_scaling_minspeed_desc": "隨機速度縮放的最小值。",
+
+  "config_boss_rand_speed_scaling_maxspeed_name": "最高速度：",
+  "config_boss_rand_speed_scaling_maxspeed_desc": "隨機速度提升的最大值。",
+
+  "config_boss_rand_modifiers_scaling_enabled_name": "隨機修飾符縮放。",
+  "config_boss_rand_modifiers_scaling_enabled_desc": "首領每次死亡後會獲得隨機數量的修飾符，疊加在線性增加的修飾符上。",
+
+  "config_boss_rand_modifiers_scaling_min_name": "最小修飾符數量：",
+  "config_boss_rand_modifiers_scaling_min_desc": "隨機修飾符數量的最小值。",
+
+  "config_boss_rand_modifiers_scaling_max_name": "最大修飾符數量：",
+  "config_boss_rand_modifiers_scaling_max_desc": "隨機修飾符數量的最大值。",
+
+  "config_affect_minibosses_name": "影響小首領",
+  "config_affect_minibosses_desc": "小首領增強。小首領會復活，並獲得修飾符和增益效果。",
+
+  "config_miniboss_deaths_number_name": "小首領最大死亡次數",
+  "config_miniboss_deaths_number_desc": "小首領在達到此死亡次數後會死亡。",
+
+  "config_miniboss_speed_scaling_enabled_name": "速度縮放",
+  "config_miniboss_speed_scaling_enabled_desc": "小首領每次死亡後都會獲得線性速度提升，並與隨機速度縮放及修飾符疊加。",
+
+  "config_miniboss_speed_scaling_minspeed_name": "初始速度：",
+  "config_miniboss_speed_scaling_minspeed_desc": "速度縮放的初始值。",
+
+  "config_miniboss_speed_scaling_step_name": "步長值：",
+  "config_miniboss_speed_scaling_step_desc": "速度修飾符增加值。",
+
+  "config_miniboss_speed_scaling_steps_cap_name": "步數上限：",
+  "config_miniboss_speed_scaling_steps_cap_desc": "起始值可以增加的次數。設置為 -1 表示無限增加。",
+
+  "config_miniboss_modifiers_scaling_enabled_name": "修飾符數量縮放",
+  "config_miniboss_modifiers_scaling_enabled_desc": "小首領將獲得額外的修飾符，總數為縮放值與隨機縮放值之和。當啟用此縮放時，額外修飾符從 0 開始計算，因此預設的一個修飾符數值會被覆蓋。縮放步數從修飾符開始出現後的死亡次數開始計算（例如，如果修飾符從第二次死亡後出現，而小首領死亡四次，則初始值會增加兩次）。",
+
+  "config_miniboss_modifiers_scaling_min_number_name": "初始修飾符數量：",
+  "config_miniboss_modifiers_scaling_min_number_desc": "修飾符縮放的初始值。",
+
+  "config_miniboss_modifiers_scaling_step_name": "步長值：",
+  "config_miniboss_modifiers_scaling_step_desc": "修飾符數量增加值。",
+
+  "config_miniboss_modifiers_scaling_steps_cap_name": "步數上限：",
+  "config_miniboss_modifiers_scaling_steps_cap_desc": "起始值可以增加的次數。設置為 -1 表示無限增加（對於修飾符，仍受可用數量限制）。",
+
+  "config_miniboss_rand_speed_scaling_enabled_name": "隨機速度縮放。",
+  "config_miniboss_rand_speed_scaling_enabled_desc": "小首領每次死亡後會獲得隨機速度提升，與線性速度縮放及修飾符疊加。",
+
+  "config_miniboss_rand_speed_scaling_minspeed_name": "最低速度：",
+  "config_miniboss_rand_speed_scaling_minspeed_desc": "隨機速度縮放的最小值。",
+
+  "config_miniboss_rand_speed_scaling_maxspeed_name": "最高速度：",
+  "config_miniboss_rand_speed_scaling_maxspeed_desc": "隨機速度提升的最大值。",
+
+  "config_miniboss_rand_modifiers_scaling_enabled_name": "隨機修飾符縮放。",
+  "config_miniboss_rand_modifiers_scaling_enabled_desc": "小首領每次死亡後會獲得隨機數量的修飾符，疊加在線性增加的修飾符上。",
+
+  "config_miniboss_rand_modifiers_scaling_min_name": "最小修飾符數量：",
+  "config_miniboss_rand_modifiers_scaling_min_desc": "隨機修飾符數量的最小值。",
+
+  "config_miniboss_rand_modifiers_scaling_max_name": "最大修飾符數量：",
+  "config_miniboss_rand_modifiers_scaling_max_desc": "隨機修飾符數量的最大值。",
+
+  "config_affect_enemies_name": "影響敵人",
+  "config_affect_enemies_desc": "敵人增強。敵人會復活，並獲得修飾符和增益效果。",
+
+  "config_enemy_deaths_number_name": "敵人最大死亡次數",
+  "config_enemy_deaths_number_desc": "敵人在達到此死亡次數後會死亡。",
+
+  "config_enemy_speed_scaling_enabled_name": "速度縮放",
+  "config_enemy_speed_scaling_enabled_desc": "敵人每次死亡後都會獲得線性速度提升，並與隨機速度縮放及修飾符疊加。",
+
+  "config_enemy_speed_scaling_minspeed_name": "初始速度：",
+  "config_enemy_speed_scaling_minspeed_desc": "速度縮放的初始值。",
+
+  "config_enemy_speed_scaling_step_name": "步長值：",
+  "config_enemy_speed_scaling_step_desc": "速度修飾符增加值。",
+
+  "config_enemy_speed_scaling_steps_cap_name": "步數上限：",
+  "config_enemy_speed_scaling_steps_cap_desc": "起始值可以增加的次數。設置為 -1 表示無限增加。",
+
+  "config_enemy_modifiers_scaling_enabled_name": "修飾符數量縮放",
+  "config_enemy_modifiers_scaling_enabled_desc": "敵人將獲得額外的修飾符，總數為縮放值與隨機縮放值之和。當啟用此縮放時，額外修飾符從 0 開始計算，因此預設的一個修飾符數值會被覆蓋。縮放步數從修飾符開始出現後的死亡次數開始計算（例如，如果修飾符從第二次死亡後出現，而敵人死亡四次，則初始值會增加兩次）。",
+
+  "config_enemy_modifiers_scaling_min_number_name": "初始修飾符數量：",
+  "config_enemy_modifiers_scaling_min_number_desc": "修飾符縮放的初始值。",
+
+  "config_enemy_modifiers_scaling_step_name": "步長值：",
+  "config_enemy_modifiers_scaling_step_desc": "修飾符數量增加值。",
+
+  "config_enemy_modifiers_scaling_steps_cap_name": "步數上限：",
+  "config_enemy_modifiers_scaling_steps_cap_desc": "起始值可以增加的次數。設置為 -1 表示無限增加（對於修飾符，仍受可用數量限制）。",
+
+  "config_enemy_rand_speed_scaling_enabled_name": "隨機速度縮放。",
+  "config_enemy_rand_speed_scaling_enabled_desc": "敵人每次死亡後會獲得隨機速度提升，與線性速度縮放及修飾符疊加。",
+
+  "config_enemy_rand_speed_scaling_minspeed_name": "最低速度：",
+  "config_enemy_rand_speed_scaling_minspeed_desc": "隨機速度縮放的最小值。",
+
+  "config_enemy_rand_speed_scaling_maxspeed_name": "最高速度：",
+  "config_enemy_rand_speed_scaling_maxspeed_desc": "隨機速度提升的最大值。",
+
+  "config_enemy_rand_modifiers_scaling_enabled_name": "隨機修飾符縮放。",
+  "config_enemy_rand_modifiers_scaling_enabled_desc": "敵人每次死亡後會獲得隨機數量的修飾符，疊加在線性增加的修飾符上。",
+
+  "config_enemy_rand_modifiers_scaling_min_name": "最小修飾符數量：",
+  "config_enemy_rand_modifiers_scaling_min_desc": "隨機修飾符數量的最小值。",
+
+  "config_enemy_rand_modifiers_scaling_max_name": "最大修飾符數量：",
+  "config_enemy_rand_modifiers_scaling_max_desc": "隨機修飾符數量的最大值。"
 }

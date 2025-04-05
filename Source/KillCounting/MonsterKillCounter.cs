@@ -63,11 +63,25 @@ namespace BossChallengeMod.KillCounting {
         { 
             get => showDistance;
         }
+        public int MaxBossCycles {
+            get {
+                switch (EnemyType) {
+                    case ChallengeEnemyType.Regular:
+                        return challengeConfiguration.MaxEnemyCycles;
+                    case ChallengeEnemyType.Miniboss:
+                        return challengeConfiguration.MaxMinibossCycles;
+                    case ChallengeEnemyType.Boss:
+                        return challengeConfiguration.MaxBossCycles;
+                    default:
+                        return -1;
+                }
+            }
+        }
 
+        public MonsterBase.States MonsterResetState;
         public ChallengeEnemyType EnemyType { get; set; }
         public bool UseRecording { get; set; }
         public bool CanBeTracked { get; set; }
-        public int MaxBossCycles { get; set; } = -1;
         public bool UseProximityShow { get; set; }
         public Action? OnUpdate { get; set; }
         public Action? OnDestroyActions { get; set; }
@@ -95,14 +109,24 @@ namespace BossChallengeMod.KillCounting {
         }
 
         public void CheckInit() {
+            switch (EnemyType) {
+                case ChallengeEnemyType.Regular:
+                    ConfigurationToUse.OnMaxBossCyclesChanged += HandleMaxCyclingReconfiguration;
+                    break;
+                case ChallengeEnemyType.Miniboss:
+                    ConfigurationToUse.OnMaxMinibossCyclesChanged += HandleMaxCyclingReconfiguration;
+                    break;
+                case ChallengeEnemyType.Boss:
+                    ConfigurationToUse.OnMaxEnemyCyclesChanged += HandleMaxCyclingReconfiguration;
+                    break;
+            }
+
             KillCounter = monsterController.KillCounter;
             if (CanRecord) {
                 var bossEntry = Task.Run<BossEntry>(() => challengeConfigurationManager.GetRecordForBoss(monster, challengeConfiguration)).GetAwaiter().GetResult();
                 BestCount = bossEntry.BestValue;
                 LastCount = bossEntry.LastValue;
             }
-
-            CalculateMaxCycles();
         }
 
         public void UpdateCounter() {
@@ -120,7 +144,24 @@ namespace BossChallengeMod.KillCounting {
         }
 
         public void OnDestroing() {
+            switch (EnemyType) {
+                case ChallengeEnemyType.Regular:
+                    ConfigurationToUse.OnMaxBossCyclesChanged -= HandleMaxCyclingReconfiguration;
+                    break;
+                case ChallengeEnemyType.Miniboss:
+                    ConfigurationToUse.OnMaxMinibossCyclesChanged -= HandleMaxCyclingReconfiguration;
+                    break;
+                case ChallengeEnemyType.Boss:
+                    ConfigurationToUse.OnMaxEnemyCyclesChanged -= HandleMaxCyclingReconfiguration;
+                    break;
+            }
             OnDestroyActions?.Invoke();
+        }
+
+        public void HandleMaxCyclingReconfiguration<T>(T arg) {
+            if (KillCounter + 1 == MaxBossCycles) {
+                monster.postureSystem.DieHandleingStates.Remove(MonsterResetState);
+            }
         }
 
         public void OnEngage() {
@@ -132,20 +173,6 @@ namespace BossChallengeMod.KillCounting {
         public void OnDisengage() {
             if (CanBeTracked && UseProximityShow) {
                 BossChallengeMod.Instance.MonsterUIController.ChangeKillCounter(null);
-            }
-        }
-
-        private void CalculateMaxCycles() {
-            switch (EnemyType) {
-                case ChallengeEnemyType.Regular:
-                    MaxBossCycles = challengeConfiguration.MaxEnemyCycles;
-                    break;
-                case ChallengeEnemyType.Miniboss:
-                    MaxBossCycles = challengeConfiguration.MaxMinibossCycles;
-                    break;
-                case ChallengeEnemyType.Boss:
-                    MaxBossCycles = challengeConfiguration.MaxBossCycles;
-                    break;
             }
         }
 
