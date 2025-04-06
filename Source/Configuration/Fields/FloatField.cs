@@ -30,6 +30,10 @@ namespace BossChallengeMod.Configuration.Fields {
         }
 
         protected override bool Validate(string input) {
+            if(!input.Contains('.')) {
+                return false;
+            }
+
             return float.TryParse(input,
                 NumberStyles.AllowLeadingWhite |
                 NumberStyles.AllowTrailingWhite |

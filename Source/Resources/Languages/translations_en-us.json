@@ -89,8 +89,8 @@
   "config_affect_bosses_name": "Affect Bosses",
   "config_affect_bosses_desc": "Boss enhancement. Bosses will revive, gain modifiers and boosts.",
 
-  "config_boss_deaths_number_name": "Max boss deaths",
-  "config_boss_deaths_number_desc": "Boss will die after this number of deaths.",
+  "config_boss_deaths_number_name": "Max boss deaths(see tooltip)",
+  "config_boss_deaths_number_desc": "Boss will die after this number of deaths. This setting does not support changing the configuration mid-fight",
 
 
   "config_boss_speed_scaling_enabled_name": "Speed Scaling",
@@ -143,8 +143,8 @@
   "config_affect_minibosses_name": "Affect Minibosses",
   "config_affect_minibosses_desc": "Miniboss enhancement. Minibosses will revive, gain modifiers and boosts.",
 
-  "config_miniboss_deaths_number_name": "Max miniboss deaths",
-  "config_miniboss_deaths_number_desc": "Miniboss will die after this number of deaths.",
+  "config_miniboss_deaths_number_name": "Max miniboss deaths(see tooltip)",
+  "config_miniboss_deaths_number_desc": "Miniboss will die after this number of deaths. This setting does not support changing the configuration mid-fight",
 
 
   "config_miniboss_speed_scaling_enabled_name": "Speed Scaling",
@@ -197,8 +197,8 @@
   "config_affect_enemies_name": "Affect Enemies",
   "config_affect_enemies_desc": "Enemy enhancement. Enemies will revive, gain modifiers and boosts.",
 
-  "config_enemy_deaths_number_name": "Max enemy deaths",
-  "config_enemy_deaths_number_desc": "Enemy will die after this number of deaths.",
+  "config_enemy_deaths_number_name": "Max enemy deaths(see tooltip)",
+  "config_enemy_deaths_number_desc": "Enemy will die after this number of deaths.  This setting does not support changing the configuration mid fight.",
 
 
   "config_enemy_speed_scaling_enabled_name": "Speed Scaling",

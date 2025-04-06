@@ -83,8 +83,8 @@
   "config_affect_bosses_name": "影响首领",
   "config_affect_bosses_desc": "首领增强。首领会复活，并获得修饰符和增益效果。",
 
-  "config_boss_deaths_number_name": "首领最大死亡次数",
-  "config_boss_deaths_number_desc": "首领在达到此死亡次数后会死亡。",
+  "config_boss_deaths_number_name": "首领最大死亡次数(见工具提示)",
+  "config_boss_deaths_number_desc": "首领在达到此死亡次数后会死亡。此设置不支持在战斗中更改配置.此设置不支持在战斗中更改配置.",
 
   "config_boss_speed_scaling_enabled_name": "速度缩放",
   "config_boss_speed_scaling_enabled_desc": "首领每次死亡后都会获得线性速度提升，并与随机速度缩放及修饰符叠加。",
@@ -131,8 +131,8 @@
   "config_affect_minibosses_name": "影响小首领",
   "config_affect_minibosses_desc": "小首领增强。小首领会复活，并获得修饰符和增益效果。",
 
-  "config_miniboss_deaths_number_name": "小首领最大死亡次数",
-  "config_miniboss_deaths_number_desc": "小首领在达到此死亡次数后会死亡。",
+  "config_miniboss_deaths_number_name": "小首领最大死亡次数(见工具提示)",
+  "config_miniboss_deaths_number_desc": "小首领在达到此死亡次数后会死亡。此设置不支持在战斗中更改配置.",
 
   "config_miniboss_speed_scaling_enabled_name": "速度缩放",
   "config_miniboss_speed_scaling_enabled_desc": "小首领每次死亡后都会获得线性速度提升，并与随机速度缩放及修饰符叠加。",
@@ -179,8 +179,8 @@
   "config_affect_enemies_name": "影响敌人",
   "config_affect_enemies_desc": "敌人增强。敌人会复活，并获得修饰符和增益效果。",
 
-  "config_enemy_deaths_number_name": "敌人最大死亡次数",
-  "config_enemy_deaths_number_desc": "敌人在达到此死亡次数后会死亡。",
+  "config_enemy_deaths_number_name": "敌人最大死亡次数(见工具提示)",
+  "config_enemy_deaths_number_desc": "敌人在达到此死亡次数后会死亡。此设置不支持在战斗中更改配置.",
 
   "config_enemy_speed_scaling_enabled_name": "速度缩放",
   "config_enemy_speed_scaling_enabled_desc": "敌人每次死亡后都会获得线性速度提升，并与随机速度缩放及修饰符叠加。",

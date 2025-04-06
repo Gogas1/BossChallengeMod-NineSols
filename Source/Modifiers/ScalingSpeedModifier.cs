@@ -1,10 +1,12 @@
 ﻿using BossChallengeMod.BossPatches;
 using BossChallengeMod.Configuration;
+using BossChallengeMod.Patches;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using static UnityEngine.UIElements.StylePropertyAnimationSystem;
 
 namespace BossChallengeMod.Modifiers {
     public class ScalingSpeedModifier : ModifierBase {
@@ -129,15 +131,19 @@ namespace BossChallengeMod.Modifiers {
             randomScaling = CalculateRandomModifier();
         }
 
+        public ScalingSpeedModifier() {
+            enabled = false;
+            
+        }
+
         public override void Awake() {
             base.Awake();
-            enabled = true;
 
             switch (EnemyType) {
                 case ChallengeEnemyType.Boss:
                     challengeConfiguration.OnBossesIsSpeedScalingEnabledChanged += HandleSpeedScalingReconfiguration;
                     challengeConfiguration.OnBossesMinSpeedScalingValueChanged += HandleSpeedScalingReconfiguration;
-                    challengeConfiguration.OnBossesSpeedScalingStepValueChanged +=  HandleSpeedScalingReconfiguration;
+                    challengeConfiguration.OnBossesSpeedScalingStepValueChanged += HandleSpeedScalingReconfiguration;
                     challengeConfiguration.OnBossesSpeedStepsCapValueChanged += HandleSpeedScalingReconfiguration;
 
                     challengeConfiguration.OnBossesIsRandomSpeedScalingEnabledChanged += HandleRandomSpeedScalingReconfiguration;
@@ -201,7 +207,6 @@ namespace BossChallengeMod.Modifiers {
 
         private float CalculateLinearModifier(int iteration) {
             var result = 1f;
-
             if (EnableSpeedScaling) {
                 int stepsToScale = iteration;
                 if (ScalingStepsCap != -1) {
@@ -263,6 +268,14 @@ namespace BossChallengeMod.Modifiers {
                     challengeConfiguration.OnEnemiesMinRandomSpeedScalingValueChanged -= HandleRandomSpeedScalingReconfiguration;
                     challengeConfiguration.OnEnemiesMaxRandomSpeedScalingValueChanged -= HandleRandomSpeedScalingReconfiguration;
                     break;
+            }
+        }
+
+        public override void CustomNotify(object message) {
+            if (message is MonsterNotifyType notifyType) {
+                if(notifyType == MonsterNotifyType.BeforeEngage) {
+                    NotifyEngage();
+                }
             }
         }
     }

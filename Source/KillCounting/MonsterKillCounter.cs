@@ -109,18 +109,6 @@ namespace BossChallengeMod.KillCounting {
         }
 
         public void CheckInit() {
-            switch (EnemyType) {
-                case ChallengeEnemyType.Regular:
-                    ConfigurationToUse.OnMaxBossCyclesChanged += HandleMaxCyclingReconfiguration;
-                    break;
-                case ChallengeEnemyType.Miniboss:
-                    ConfigurationToUse.OnMaxMinibossCyclesChanged += HandleMaxCyclingReconfiguration;
-                    break;
-                case ChallengeEnemyType.Boss:
-                    ConfigurationToUse.OnMaxEnemyCyclesChanged += HandleMaxCyclingReconfiguration;
-                    break;
-            }
-
             KillCounter = monsterController.KillCounter;
             if (CanRecord) {
                 var bossEntry = Task.Run<BossEntry>(() => challengeConfigurationManager.GetRecordForBoss(monster, challengeConfiguration)).GetAwaiter().GetResult();
@@ -144,24 +132,7 @@ namespace BossChallengeMod.KillCounting {
         }
 
         public void OnDestroing() {
-            switch (EnemyType) {
-                case ChallengeEnemyType.Regular:
-                    ConfigurationToUse.OnMaxBossCyclesChanged -= HandleMaxCyclingReconfiguration;
-                    break;
-                case ChallengeEnemyType.Miniboss:
-                    ConfigurationToUse.OnMaxMinibossCyclesChanged -= HandleMaxCyclingReconfiguration;
-                    break;
-                case ChallengeEnemyType.Boss:
-                    ConfigurationToUse.OnMaxEnemyCyclesChanged -= HandleMaxCyclingReconfiguration;
-                    break;
-            }
             OnDestroyActions?.Invoke();
-        }
-
-        public void HandleMaxCyclingReconfiguration<T>(T arg) {
-            if (KillCounter + 1 == MaxBossCycles) {
-                monster.postureSystem.DieHandleingStates.Remove(MonsterResetState);
-            }
         }
 
         public void OnEngage() {

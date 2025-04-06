@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using BossChallengeMod.Modifiers.Managers;
 using BossChallengeMod.UI;
+using BossChallengeMod.Patches;
 
 namespace BossChallengeMod.BossPatches.TargetPatches {
     public class ButterflyBossPatch : RevivalChallengeBossPatch {
@@ -49,6 +50,7 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
                         var killCounter = InitializeKillCounter(monsterBase, monsterController);
 
                         var modifiersController = InitializeModifiers(monsterBase, monsterController);
+                        modifiersController.CustomNotify(MonsterNotifyType.BeforeEngage);
 
                         BossChallengeMod.Instance.MonsterUIController.ChangeModifiersController(modifiersController);
 
@@ -177,7 +179,6 @@ namespace BossChallengeMod.BossPatches.TargetPatches {
             if (shieldController != null) {
                 GameObject.Destroy(shieldController);
             }
-
 
             var clones = GetClones(monsterBase);
 

@@ -277,7 +277,6 @@ namespace BossChallengeMod.BossPatches {
             Component? controllerComponent) {
             modifier.Key = modifierConfig.Key;
             modifier.EnemyType = EnemyType;
-            modifier.challengeConfiguration = ConfigurationToUse;
 
             if (controllerComponent != null) {
                 modifier.SetController(controllerComponent);

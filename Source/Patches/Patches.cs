@@ -19,5 +19,6 @@ public enum MonsterNotifyType {
     Generic,
     OnExplode,
     OnChargeAttack,
-    OnShieldBroken
+    OnShieldBroken,
+    BeforeEngage
 }

@@ -11,7 +11,7 @@ namespace BossChallengeMod.Modifiers {
         public bool IsPaused { get; protected set; }
         public string Key { get; set; } = string.Empty;
         public MonsterBase? Monster { get; protected set; }
-        public ChallengeConfiguration challengeConfiguration { get;  set; }
+        public ChallengeConfiguration challengeConfiguration { get;  set; } = BossChallengeMod.Instance.ChallengeConfigurationManager.ChallengeConfiguration;
         public ChallengeEnemyType EnemyType { get; set; }
 
         protected int deathNumber;

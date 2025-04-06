@@ -2,6 +2,7 @@
 using BossChallengeMod.Configuration;
 using BossChallengeMod.Interfaces;
 using BossChallengeMod.KillCounting;
+using BossChallengeMod.Patches;
 using NineSolsAPI.Utils;
 using System;
 using System.Collections.Generic;
@@ -185,6 +186,13 @@ namespace BossChallengeMod.Modifiers.Managers {
             SetupModifiersLists();
             modifiersNumber = CalculateModifiersNumber(0);
             AllowRepeating = challengeConfiguration.IsRepeatingEnabled;
+        }
+
+        private void Start() {
+            if (RollOnStart) {
+                ForceRollBeforeEngage();
+                CustomNotify(MonsterNotifyType.BeforeEngage);
+            }
         }
 
         public void OnRevival() {
