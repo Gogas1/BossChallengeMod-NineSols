@@ -45,7 +45,7 @@ namespace BossChallengeMod.Modifiers {
             SpawnAtPlayer();
         }
 
-        public void OnDestroy() {
+        public override void NotifyDestroing() {
             _subscribers.Remove(this);
         }
     }

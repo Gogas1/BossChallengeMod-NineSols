@@ -47,10 +47,12 @@ namespace BossChallengeMod.Modifiers {
         }
 
         public void NotifySubscriber(object args) {
-            SpawnAtPlayer();
+            if(gameObject.activeInHierarchy) {
+                SpawnAtPlayer();
+            }
         }
 
-        public void OnDestroy() {
+        public override void NotifyDestroing() {
             _subscribers.Remove(this);
         }
     }

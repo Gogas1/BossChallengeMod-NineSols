@@ -423,6 +423,14 @@ public class BossChallengeMod : BaseUnityPlugin {
             .CreateModifierBuilder<QiOverloadBombModifier>("qi_overload_bomb", "QiOverloadBombModifier")
             .AddCanBeRolledConditionPredicate((_,_) => bombCondition(ConfigurationToUse.IsQiOverloadBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_depletion_bomb"])
             .BuildAndAdd();
 
@@ -430,6 +438,14 @@ public class BossChallengeMod : BaseUnityPlugin {
             .CreateModifierBuilder<QiDepletionBombModifier>("qi_depletion_bomb", "QiDepletionBombModifier")
             .AddCanBeRolledConditionPredicate((_,_) => bombCondition(ConfigurationToUse.IsQiDepletionBombModifierEnabled))
             .AddController(typeof(MonsterBombController), true)
+            .AddIgnoredMonsters([
+                "StealthGameMonster_Boss_ButterFly Variant (1)",
+                "StealthGameMonster_Boss_ButterFly Variant (2)",
+                "StealthGameMonster_Boss_ButterFly Variant (3)",
+                "StealthGameMonster_Boss_ButterFly Variant (4)",
+                "StealthGameMonster_BossZombieSpear",
+                "StealthGameMonster_BossZombieHammer",
+                ])
             .AddIncompatibles(["ya_gun", "shield_break_bomb", "qi_bomb", "qi_overload_bomb"])
             .BuildAndAdd();
 
