@@ -57,6 +57,7 @@ public class BossChallengeMod : BaseUnityPlugin {
 
     private ModConfig _modConfig = null!;
     private bool isVersionValid = false;
+    private bool isLatestPatch = false;
 
     protected ChallengeConfiguration ConfigurationToUse {
         get {
@@ -122,15 +123,30 @@ public class BossChallengeMod : BaseUnityPlugin {
         ProcessModConfig();
 
         if(isVersionValid) {
-            StartCoroutine(Preloader.Preload());
+
+            if(isLatestPatch) {
+                Preloader.PreloadLatest();
+            }
+            else {
+                StartCoroutine(Preloader.PreloadOld());
+            }
         }
     }
 
     private void ProcessModConfig() {
         _modConfig = AssemblyUtils.GetEmbeddedJson<ModConfig>($"BossChallengeMod.Resources.ModConfig.modconfig.json")!;
 
+        if(_modConfig == null) {
+            Log.Error("Mod config not found!");
+            return;
+        }
+
         var gameVer = ConfigManager.Instance.Version.Trim();
-        if(gameVer == _modConfig?.ValidVersion) {
+
+        if(gameVer.Contains(_modConfig?.LatestVersion)) {
+            isLatestPatch = true;
+            isVersionValid = true;
+        } else if(gameVer.Contains(_modConfig.StableVersion)) {
             isVersionValid = true;
         }
     }
@@ -193,7 +209,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         if(versionNotificationCounter > 0 && !isVersionValid) {
             if(SingletonBehaviour<GameCore>.IsAvailable()) {
                 versionNotificationCounter--;
-                SingletonBehaviour<GameCore>.Instance.notificationUI.ShowNotification($"Boss Challenge mod version is built for different game version: {_modConfig.ValidVersion}. Some features were disabled.", null, PlayerInfoPanelType.Undefined, null);
+                SingletonBehaviour<GameCore>.Instance.notificationUI.ShowNotification($"Boss Challenge mod version is built for different game versions: {_modConfig.StableVersion.Substring(0, 16)} or {_modConfig.LatestVersion.Substring(0, 16)}. Some features were disabled.", null, PlayerInfoPanelType.Undefined, null);
             }
         }
     }

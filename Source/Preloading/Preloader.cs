@@ -12,20 +12,39 @@ namespace BossChallengeMod.Preloading {
 
         Dictionary<string, Dictionary<string, GameObject>> preloads = new();
 
-        private Dictionary<string, Dictionary<string, List<IPreloadTarget>>> preloadConsumers = new(); 
+        private Dictionary<string, Dictionary<string, List<IPreloadTarget>>> preloadConsumers = new();
+        private Dictionary<string, List<IPreloadTarget>> simpleConsumers = new();
 
         public void AddPreload(string scene, string path, IPreloadTarget preloadTarget) {
-            if (!preloadConsumers.TryGetValue(scene, out var scenePreloadsConsumers)) {
-                scenePreloadsConsumers = [];
-                preloadConsumers[scene] = scenePreloadsConsumers;
-            }
-
-            if (!preloadConsumers[scene].TryGetValue(path, out var consumers)) {
+            if(!simpleConsumers.TryGetValue(path, out var consumers)) {
                 consumers = [];
-                preloadConsumers[scene][path] = consumers;
+                simpleConsumers[path] = consumers;
+            }
+            consumers.Add(preloadTarget);
+        }
+        private void PreloadAssets() {
+            var bundle = AssemblyUtils.GetEmbeddedAssetBundle("BossChallengeMod.Resources.Bundles.bcmbundle.bundle");
+
+            if(bundle == null) {
+                Log.Error($"BCM bundle not loaded");
+                return;
             }
 
-            consumers.Add(preloadTarget);
+            var assets = bundle.LoadAllAssets<GameObject>();
+
+            foreach (var asset in assets) {
+                var assetInstance = GameObject.Instantiate(asset);
+                assetInstance.hideFlags = HideFlags.HideAndDontSave;
+
+                if (!simpleConsumers.TryGetValue(asset.name, out var consumers)) {
+                    continue;
+                }
+
+
+                foreach (var consumer in consumers) {
+                    consumer.Set(assetInstance);
+                }
+            }
         }
 
         private IEnumerator PreloadScenes() {
@@ -91,9 +110,12 @@ namespace BossChallengeMod.Preloading {
 
         }
 
-        public IEnumerator Preload() {
+        public IEnumerator PreloadOld() {
             yield return PreloadScenes();
-            
+        }
+
+        public void PreloadLatest() {
+            PreloadAssets();
         }
     }
 }

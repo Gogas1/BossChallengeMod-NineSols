@@ -4,6 +4,7 @@ using System.Text;
 
 namespace BossChallengeMod {
     internal class ModConfig {
-        public string ValidVersion { get; set; } = string.Empty;
+        public string StableVersion { get; set; } = string.Empty;
+        public string LatestVersion { get; set; } = string.Empty;
     }
 }

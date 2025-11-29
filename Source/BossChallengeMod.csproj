@@ -13,8 +13,9 @@
 		<NineSolsPath Condition="'$(OS)' != 'Windows_NT'">$(HOME)/.local/share/Steam/steamapps/common/Nine Sols</NineSolsPath>
 		<DllPath>$(NineSolsPath)/NineSols_Data/Managed</DllPath>
 		
-    </PropertyGroup>
+	</PropertyGroup>
     <ItemGroup>
+      <None Remove="Resources\Bundles\bcmbundle.bundle" />
       <None Remove="Resources\Bundles\items.bundle" />
       <None Remove="Resources\Languages\translations_en-us.json" />
       <None Remove="Resources\Languages\translations_ru-ru.json" />
@@ -23,6 +24,7 @@
       <None Remove="Resources\ModConfig\modconfig.json" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="Resources\Bundles\bcmbundle.bundle" />
       <EmbeddedResource Include="Resources\Bundles\items.bundle" />
     </ItemGroup>
     <ItemGroup>
