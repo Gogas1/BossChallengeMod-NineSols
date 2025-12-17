@@ -209,6 +209,7 @@ public class BossChallengeMod : BaseUnityPlugin {
         if(versionNotificationCounter > 0 && !isVersionValid) {
             if(SingletonBehaviour<GameCore>.IsAvailable()) {
                 versionNotificationCounter--;
+                Log.Warning($"Current version is {ConfigManager.Instance.Version.Trim()}");
                 SingletonBehaviour<GameCore>.Instance.notificationUI.ShowNotification($"Boss Challenge mod version is built for different game versions: {_modConfig.StableVersion.Substring(0, 16)} or {_modConfig.LatestVersion.Substring(0, 16)}. Some features were disabled.", null, PlayerInfoPanelType.Undefined, null);
             }
         }
